@@ -11,8 +11,10 @@ interface SupplierCardProps {
   onViewDetails: (supplier: Supplier) => void
 }
 
-function isTBCOrNotRequired(value: string): boolean {
-  return value.toLowerCase().includes("tbc") || value.toLowerCase().includes("not required")
+function isTBCOrNotRequired(value?: string): boolean {
+  if (!value) return false
+  const v = value.toLowerCase()
+  return v.includes("tbc") || v.includes("not required")
 }
 
 export function SupplierCard({ supplier, onViewDetails }: SupplierCardProps) {
@@ -58,32 +60,32 @@ export function SupplierCard({ supplier, onViewDetails }: SupplierCardProps) {
         </div>
         <div className="px-4 py-0.5 border-l-2 border-black">
           <div className="text-sm leading-none">Equipment removal</div>
-          <div className={`font-bold leading-tight ${isTBCOrNotRequired(supplier.fields.equipmentRemoval) ? "bg-yellow-200 px-2 py-0.5 inline-block" : ""}`}>
-            {supplier.fields.equipmentRemoval}
+          <div className={`font-bold leading-tight ${isTBCOrNotRequired(supplier.fields.equipmentRemoval ?? undefined) ? "bg-yellow-200 px-2 py-0.5 inline-block" : ""}`}>
+            {supplier.fields.equipmentRemoval ?? "—"}
           </div>
         </div>
         <div className="px-4 py-0.5 border-l-2 border-black">
           <div className="text-sm leading-none">Unit location</div>
-          <div className={`font-bold leading-tight ${isTBCOrNotRequired(supplier.fields.unitLocation) ? "bg-yellow-200 px-2 py-0.5 inline-block" : ""}`}>
-            {supplier.fields.unitLocation}
+          <div className={`font-bold leading-tight ${isTBCOrNotRequired(supplier.fields.unitLocation ?? undefined) ? "bg-yellow-200 px-2 py-0.5 inline-block" : ""}`}>
+            {supplier.fields.unitLocation ?? "—"}
           </div>
         </div>
         <div className="px-4 py-0.5 border-l-2 border-black">
           <div className="text-sm leading-none">Electrical work</div>
-          <div className={`font-bold leading-tight ${isTBCOrNotRequired(supplier.fields.electricalWork) ? "bg-yellow-200 px-2 py-0.5 inline-block" : ""}`}>
-            {supplier.fields.electricalWork}
+          <div className={`font-bold leading-tight ${isTBCOrNotRequired(supplier.fields.electricalWork ?? undefined) ? "bg-yellow-200 px-2 py-0.5 inline-block" : ""}`}>
+            {supplier.fields.electricalWork ?? "—"}
           </div>
         </div>
         <div className="px-4 py-0.5 border-l-2 border-black">
           <div className="text-sm leading-none">Noise</div>
-          <div className={`font-bold leading-tight ${isTBCOrNotRequired(supplier.fields.noiseControl) ? "bg-yellow-200 px-2 py-0.5 inline-block" : ""}`}>
-            {supplier.fields.noiseControl}
+          <div className={`font-bold leading-tight ${isTBCOrNotRequired(supplier.fields.noiseControl ?? undefined) ? "bg-yellow-200 px-2 py-0.5 inline-block" : ""}`}>
+            {supplier.fields.noiseControl ?? "—"}
           </div>
         </div>
         <div className="pl-4 py-0.5 border-l-2 border-black">
           <div className="text-sm leading-none">Operating temps</div>
-          <div className={`font-bold leading-tight ${isTBCOrNotRequired(supplier.fields.operatingTemps) ? "bg-yellow-200 px-2 py-0.5 inline-block" : ""}`}>
-            {supplier.fields.operatingTemps}
+          <div className={`font-bold leading-tight ${isTBCOrNotRequired(supplier.fields.operatingTemps ?? undefined) ? "bg-yellow-200 px-2 py-0.5 inline-block" : ""}`}>
+            {supplier.fields.operatingTemps ?? "—"}
           </div>
         </div>
       </div>

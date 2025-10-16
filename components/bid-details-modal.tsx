@@ -18,7 +18,7 @@ function isTBCOrNotRequired(value: string): boolean {
 }
 
 export function BidDetailsModal({ supplier, open, onOpenChange }: BidDetailsModalProps) {
-  const [expandedSections, setExpandedSections] = useState<string[]>(["Technical Requirements"])
+  const [expandedSections, setExpandedSections] = useState<string[]>(["Price", "Financial Model"])
 
   if (!supplier) return null
 
@@ -28,92 +28,316 @@ export function BidDetailsModal({ supplier, open, onOpenChange }: BidDetailsModa
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-2xl overflow-y-auto border-l-2 border-black">
-        <SheetHeader className="border-b-2 border-black pb-4">
+      <SheetContent className="w-full sm:max-w-2xl overflow-y-auto">
+        <SheetHeader className="pb-4">
           <div className="flex items-center gap-4">
             <Image
               src={supplier.logo || "/placeholder.svg"}
               alt={`${supplier.name} logo`}
               width={48}
               height={48}
-              className="border border-black"
             />
             <SheetTitle className="text-2xl">{supplier.name}</SheetTitle>
           </div>
         </SheetHeader>
 
         <div className="mt-6 space-y-4">
-          {/* Technical Requirements */}
-          <div className="border-2 border-black">
+          {/* Download Documents CTA at top */}
+          <Button className="w-full border-2 border-black bg-transparent" variant="outline">
+            <FileText className="mr-2 h-4 w-4" />
+            Download their pricing documents
+          </Button>
+          {/* Contact Supplier CTA */}
+          <Button className="w-full border-2 border-black bg-black text-white hover:bg-black/90">
+            Contact Supplier
+          </Button>
+          {/* Price */}
+          <div>
             <button
-              onClick={() => toggleSection("Technical Requirements")}
+              onClick={() => toggleSection("Price")}
               className="w-full p-4 flex items-center justify-between font-bold hover:bg-gray-50"
             >
-              <span>Technical Requirements</span>
+              <span>Price</span>
               <ChevronDown
                 className={`h-5 w-5 transition-transform ${
-                  expandedSections.includes("Technical Requirements") ? "" : "-rotate-90"
+                  expandedSections.includes("Price") ? "" : "-rotate-90"
                 }`}
               />
             </button>
-            {expandedSections.includes("Technical Requirements") && (
-              <div className="p-4 border-t-2 border-black space-y-3">
+            {expandedSections.includes("Price") && (
+              <div className="p-4 space-y-3">
                 <div>
-                  <div className="text-sm font-medium">Equipment removal included</div>
-                  <div
-                    className={`text-sm ${
-                      isTBCOrNotRequired(supplier.fields.equipmentRemoval) ? "bg-yellow-200 px-2 py-1 inline-block" : ""
-                    }`}
-                  >
-                    {supplier.fields.equipmentRemoval}
-                  </div>
+                  <div className="text-sm font-medium">Total CAPEX</div>
+                  <div className="text-sm">£100,000</div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Financial Model */}
+          <div>
+            <button
+              onClick={() => toggleSection("Financial Model")}
+              className="w-full p-4 flex items-center justify-between font-bold hover:bg-gray-50"
+            >
+              <span>Financial Model</span>
+              <ChevronDown
+                className={`h-5 w-5 transition-transform ${
+                  expandedSections.includes("Financial Model") ? "" : "-rotate-90"
+                }`}
+              />
+            </button>
+            {expandedSections.includes("Financial Model") && (
+              <div className="p-4 space-y-3">
+                <div>
+                  <div className="text-sm font-medium">PPA Term</div>
+                  <div className="text-sm">20 years</div>
                 </div>
                 <div>
-                  <div className="text-sm font-medium">Unit location</div>
-                  <div
-                    className={`text-sm ${
-                      isTBCOrNotRequired(supplier.fields.unitLocation) ? "bg-yellow-200 px-2 py-1 inline-block" : ""
-                    }`}
-                  >
-                    {supplier.fields.unitLocation}
-                  </div>
+                  <div className="text-sm font-medium">First Year Cost</div>
+                  <div className="text-sm">£511.11</div>
                 </div>
                 <div>
-                  <div className="text-sm font-medium">Electrical work included</div>
-                  <div
-                    className={`text-sm ${
-                      isTBCOrNotRequired(supplier.fields.electricalWork) ? "bg-yellow-200 px-2 py-1 inline-block" : ""
-                    }`}
-                  >
-                    {supplier.fields.electricalWork}
-                  </div>
+                  <div className="text-sm font-medium">Tariff Rate</div>
+                  <div className="text-sm">£0.16/kWh</div>
                 </div>
                 <div>
-                  <div className="text-sm font-medium">Noise control addressed</div>
-                  <div
-                    className={`text-sm ${
-                      isTBCOrNotRequired(supplier.fields.noiseControl) ? "bg-yellow-200 px-2 py-1 inline-block" : ""
-                    }`}
-                  >
-                    {supplier.fields.noiseControl}
-                  </div>
+                  <div className="text-sm font-medium">Annual Increase</div>
+                  <div className="text-sm">2.5%</div>
                 </div>
                 <div>
-                  <div className="text-sm font-medium">Operating temperatures compliant</div>
-                  <div
-                    className={`text-sm ${
-                      isTBCOrNotRequired(supplier.fields.operatingTemps) ? "bg-yellow-200 px-2 py-1 inline-block" : ""
-                    }`}
-                  >
-                    {supplier.fields.operatingTemps}
-                  </div>
+                  <div className="text-sm font-medium">Maintenance Cost</div>
+                  <div className="text-sm">£150 per year</div>
+                </div>
+                <div>
+                  <div className="text-sm font-medium">Ten Year Savings</div>
+                  <div className="text-sm">-£607.76</div>
+                </div>
+                <div>
+                  <div className="text-sm font-medium">Twenty Year Savings</div>
+                  <div className="text-sm">-£1,150.40</div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* How do they compare? */}
+          <div>
+            <button
+              onClick={() => toggleSection("How do they compare?")}
+              className="w-full p-4 flex items-center justify-between font-bold hover:bg-gray-50"
+            >
+              <span>How do they compare?</span>
+              <ChevronDown
+                className={`h-5 w-5 transition-transform ${
+                  expandedSections.includes("How do they compare?") ? "" : "-rotate-90"
+                }`}
+              />
+            </button>
+            {expandedSections.includes("How do they compare?") && (
+              <div className="p-4 space-y-3">
+                <div className="text-sm">
+                  Cannot compare as this is the only bid provided in the dataset
+                </div>
+                <div className="text-sm">
+                  PPA model suggests focus on zero upfront cost with long-term energy savings potential
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Additional costs */}
+          <div>
+            <button
+              onClick={() => toggleSection("Additional costs")}
+              className="w-full p-4 flex items-center justify-between font-bold hover:bg-gray-50"
+            >
+              <span>Additional costs</span>
+              <ChevronDown
+                className={`h-5 w-5 transition-transform ${
+                  expandedSections.includes("Additional costs") ? "" : "-rotate-90"
+                }`}
+              />
+            </button>
+            {expandedSections.includes("Additional costs") && (
+              <div className="p-4 space-y-3">
+                <div className="text-sm">
+                  Maintenance costs of £150 per year
+                </div>
+                <div className="text-sm">
+                  Battery storage included in the offer (capacity not specified)
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Why is this important? */}
+          <div>
+            <button
+              onClick={() => toggleSection("Why is this important?")}
+              className="w-full p-4 flex items-center justify-between font-bold hover:bg-gray-50"
+            >
+              <span>Why is this important?</span>
+              <ChevronDown
+                className={`h-5 w-5 transition-transform ${
+                  expandedSections.includes("Why is this important?") ? "" : "-rotate-90"
+                }`}
+              />
+            </button>
+            {expandedSections.includes("Why is this important?") && (
+              <div className="p-4 space-y-3">
+                <div className="text-sm">
+                  Integrated battery storage can improve system efficiency and provide backup power capability
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Activities */}
+          <div>
+            <button
+              onClick={() => toggleSection("Activities")}
+              className="w-full p-4 flex items-center justify-between font-bold hover:bg-gray-50"
+            >
+              <span>Activities</span>
+              <ChevronDown
+                className={`h-5 w-5 transition-transform ${
+                  expandedSections.includes("Activities") ? "" : "-rotate-90"
+                }`}
+              />
+            </button>
+            {expandedSections.includes("Activities") && (
+              <div className="p-4 space-y-3">
+                <div className="text-sm">
+                  Battery storage installation included where other suppliers may not offer this
+                </div>
+                <div className="text-sm">
+                  Insufficient data to determine excluded activities
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Further information */}
+          <div>
+            <button
+              onClick={() => toggleSection("Further information")}
+              className="w-full p-4 flex items-center justify-between font-bold hover:bg-gray-50"
+            >
+              <span>Further information</span>
+              <ChevronDown
+                className={`h-5 w-5 transition-transform ${
+                  expandedSections.includes("Further information") ? "" : "-rotate-90"
+                }`}
+              />
+            </button>
+            {expandedSections.includes("Further information") && (
+              <div className="p-4 space-y-3">
+                <div>
+                  <div className="text-sm font-medium">Company established</div>
+                  <div className="text-sm">2022</div>
+                </div>
+                <div>
+                  <div className="text-sm font-medium">Works completed</div>
+                  <div className="text-sm">Over 1000</div>
+                </div>
+                <div>
+                  <div className="text-sm font-medium">Work focus</div>
+                  <div className="text-sm">100% commercial work</div>
+                </div>
+                <div>
+                  <div className="text-sm font-medium">Company size</div>
+                  <div className="text-sm">Small company (10 employees)</div>
+                </div>
+                <div>
+                  <div className="text-sm font-medium">Key staff</div>
+                  <div className="text-sm">Rich Amos noted as "best installer in the world"</div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Maintenance Offering */}
+          <div>
+            <button
+              onClick={() => toggleSection("Maintenance Offering")}
+              className="w-full p-4 flex items-center justify-between font-bold hover:bg-gray-50"
+            >
+              <span>Maintenance Offering</span>
+              <ChevronDown
+                className={`h-5 w-5 transition-transform ${
+                  expandedSections.includes("Maintenance Offering") ? "" : "-rotate-90"
+                }`}
+              />
+            </button>
+            {expandedSections.includes("Maintenance Offering") && (
+              <div className="p-4 space-y-3">
+                <div>
+                  <div className="text-sm font-medium">Annual maintenance cost</div>
+                  <div className="text-sm">£150</div>
+                </div>
+                <div className="text-sm">
+                  Specific maintenance details not provided in submission
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Equipment */}
+          <div>
+            <button
+              onClick={() => toggleSection("Equipment")}
+              className="w-full p-4 flex items-center justify-between font-bold hover:bg-gray-50"
+            >
+              <span>Equipment</span>
+              <ChevronDown
+                className={`h-5 w-5 transition-transform ${
+                  expandedSections.includes("Equipment") ? "" : "-rotate-90"
+                }`}
+              />
+            </button>
+            {expandedSections.includes("Equipment") && (
+              <div className="p-4 space-y-3">
+                <div>
+                  <div className="text-sm font-medium">Solar Panels</div>
+                  <div className="text-sm">Insufficient information provided in submission</div>
+                </div>
+                <div>
+                  <div className="text-sm font-medium">Inverters</div>
+                  <div className="text-sm">Insufficient information provided in submission</div>
+                </div>
+                <div>
+                  <div className="text-sm font-medium">Warranty</div>
+                  <div className="text-sm">No specific warranty information provided in submission</div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Timelines */}
+          <div>
+            <button
+              onClick={() => toggleSection("Timelines")}
+              className="w-full p-4 flex items-center justify-between font-bold hover:bg-gray-50"
+            >
+              <span>Timelines</span>
+              <ChevronDown
+                className={`h-5 w-5 transition-transform ${
+                  expandedSections.includes("Timelines") ? "" : "-rotate-90"
+                }`}
+              />
+            </button>
+            {expandedSections.includes("Timelines") && (
+              <div className="p-4 space-y-3">
+                <div className="text-sm">
+                  Insufficient information provided about specific delivery and lead times
                 </div>
               </div>
             )}
           </div>
 
           {/* Cost & Financial */}
-          <div className="border-2 border-black">
+          <div>
             <button
               onClick={() => toggleSection("Cost & Financial")}
               className="w-full p-4 flex items-center justify-between font-bold hover:bg-gray-50"
@@ -126,7 +350,7 @@ export function BidDetailsModal({ supplier, open, onOpenChange }: BidDetailsModa
               />
             </button>
             {expandedSections.includes("Cost & Financial") && (
-              <div className="p-4 border-t-2 border-black">
+              <div className="p-4">
                 <div className="text-sm font-medium">Total price</div>
                 <div className="text-2xl font-bold">£{supplier.price.toLocaleString()}</div>
               </div>
@@ -134,7 +358,7 @@ export function BidDetailsModal({ supplier, open, onOpenChange }: BidDetailsModa
           </div>
 
           {/* Additional Notes */}
-          <div className="border-2 border-black">
+          <div>
             <button
               onClick={() => toggleSection("Additional Notes")}
               className="w-full p-4 flex items-center justify-between font-bold hover:bg-gray-50"
@@ -147,30 +371,12 @@ export function BidDetailsModal({ supplier, open, onOpenChange }: BidDetailsModa
               />
             </button>
             {expandedSections.includes("Additional Notes") && (
-              <div className="p-4 border-t-2 border-black">
+              <div className="p-4">
                 <p className="text-sm">{supplier.additionalNotes}</p>
               </div>
             )}
           </div>
 
-          {/* Documents */}
-          <div className="border-2 border-black p-4">
-            <div className="font-bold mb-3 flex items-center gap-2">
-              <FileText className="h-5 w-5" />
-              Download Documents
-            </div>
-            <div className="space-y-2">
-              {supplier.documents.map((doc, index) => (
-                <a key={index} href={doc.url} className="block text-sm hover:underline">
-                  - {doc.name}
-                </a>
-              ))}
-            </div>
-          </div>
-
-          <Button className="w-full border-2 border-black bg-transparent" variant="outline">
-            Contact Supplier
-          </Button>
         </div>
       </SheetContent>
     </Sheet>

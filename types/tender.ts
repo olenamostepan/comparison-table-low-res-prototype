@@ -4,11 +4,30 @@ export type Supplier = {
   logo: string
   price: number
   fields: {
-    equipmentRemoval: string
-    unitLocation: string
-    electricalWork: string
-    noiseControl: string
-    operatingTemps: string
+    // Lighting comparison fields
+    systemType?: string
+    manufacturer?: string
+    numberOfLights?: string
+    installationCostsIncluded?: string
+    replacementType?: string
+    labourAndOtherCosts?: string
+    materialCosts?: string
+    meetsTechnicalRequirements?: string
+    meetsTenderRequirements?: string
+    controlStrategyMeetsRegulations?: string
+    emergencyLightingIncluded?: string
+
+    // Legacy fields kept for other prototypes
+    equipmentRemoval?: string
+    unitLocation?: string
+    electricalWork?: string
+    noiseControl?: string
+    operatingTemps?: string
+
+    // Rome fields
+    romeCompliance?: string
+    romeCertification?: string
+    romeStandards?: string
   }
   additionalNotes: string
   keyDifferentiator: string

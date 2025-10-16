@@ -91,12 +91,8 @@ export default function TenderComparisonPage() {
             Back to Projects
           </button>
 
-          <div className="mb-4 flex items-center justify-between gap-4 flex-wrap">
+          <div className="mb-4">
             <h1 className="text-3xl font-bold">Project Name: Heat Pump Pilot Kamekestraße</h1>
-            <Button onClick={exportToCsv} variant="outline" className="border-2 border-black bg-transparent">
-              Export Results
-              <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
           </div>
 
           <div className="mb-4 p-4 border-2 border-black bg-gray-50">
@@ -166,6 +162,7 @@ export default function TenderComparisonPage() {
             suppliers={sortedSuppliers}
             onSupplierClick={setSelectedSupplier}
             onShowKeyFields={() => setShowKeyFields(true)}
+            onExportCsv={exportToCsv}
           />
         </div>
       </main>
