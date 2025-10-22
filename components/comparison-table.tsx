@@ -68,24 +68,29 @@ export function ComparisonTable({ suppliers, onSupplierClick, onShowKeyFields, o
   }
 
   return (
-    <div className="border border-gray-200 bg-white shadow-sm">
-      <div className="p-5 border-b border-gray-200 flex items-center justify-between gap-3">
-        <h2 className="text-xl font-bold text-[#1E2832]">Detailed Comparison</h2>
-        <div className="flex items-center gap-3">
+    <div className="flex flex-col items-start gap-4 self-stretch rounded-lg border border-[#F3F4F6] bg-white" style={{ padding: '32px 24px 16px 24px' }}>
+      <div className="flex items-center justify-between gap-3 w-full">
+        <h2 className="text-[#1E2832] font-extrabold" style={{ fontSize: '20px', lineHeight: 'normal' }}>Detailed Comparison</h2>
+        <div className="flex items-center gap-6">
           {onShowKeyFields && (
             <button
               onClick={onShowKeyFields}
-              className="flex items-center gap-1 text-sm text-blue-600 hover:underline"
+              className="flex items-center gap-1 text-sm text-[#1C75BC] hover:underline font-bold"
+              style={{ fontSize: '14px', lineHeight: 'normal' }}
             >
               <Info className="h-4 w-4" />
               Key fields explained
             </button>
           )}
           {onExportCsv && (
-            <Button onClick={onExportCsv} className="border border-gray-300 bg-white hover:bg-gray-50 text-[#1E2832]" variant="outline">
-              <Download className="mr-2 h-4 w-4" />
+            <button 
+              onClick={onExportCsv} 
+              className="flex h-10 px-3 justify-center items-center gap-4 rounded-lg border border-[#D3D7DC] bg-[#F9FAFB] text-[#1E2832] hover:bg-gray-100"
+              style={{ fontSize: '14px', fontWeight: 700, lineHeight: 'normal' }}
+            >
+              <Download className="h-4 w-4" />
               Download
-            </Button>
+            </button>
           )}
         </div>
       </div>
@@ -118,9 +123,9 @@ export function ComparisonTable({ suppliers, onSupplierClick, onShowKeyFields, o
                     ))}
                   </tr>
 
-                  {/* Score Results row - first in each category */}
-                  {isExpanded && (
-                    <tr className="border-b border-gray-200 bg-white hover:bg-gray-50">
+                         {/* Score Results row - first in each category */}
+                         {isExpanded && (
+                           <tr className="border-b border-gray-200 bg-white hover:bg-blue-50">
                       <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm w-64 leading-tight font-medium text-[#4D5761]">
                         Score Results
                       </td>
@@ -131,7 +136,8 @@ export function ComparisonTable({ suppliers, onSupplierClick, onShowKeyFields, o
                         >
                           <button
                             onClick={() => openScoreModal(category.name, supplier.name)}
-                            className="text-blue-600 hover:text-blue-800 hover:underline cursor-pointer"
+                            className="text-[#1C75BC] hover:text-[#1C75BC] hover:underline cursor-pointer font-bold"
+                            style={{ fontSize: '14px', lineHeight: 'normal' }}
                           >
                             {getScore(category.name, supplier.id)}/5
                           </button>
@@ -141,37 +147,38 @@ export function ComparisonTable({ suppliers, onSupplierClick, onShowKeyFields, o
                   )}
 
                   {/* Field rows */}
-                  {isExpanded && category.fields.map((field) => (
-                    <tr key={`${category.name}-${field.label}`} className="border-b border-gray-200 bg-white hover:bg-gray-50">
-                      <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm w-64 leading-tight font-medium text-[#4D5761]">
-                        {field.label}
-                      </td>
-                      {suppliers.map((supplier) => {
-                        const value = supplier.fields[field.key as keyof typeof supplier.fields] || "—"
-                        return (
-                          <td
-                            key={`${category.name}-${field.label}-${supplier.id}`}
-                            className="p-3 border-r border-gray-200 last:border-r-0 text-sm w-56 leading-tight text-[#4D5761]"
-                          >
-                            <span
-                              className={
-                                isTBCOrNotRequired(value)
-                                  ? "bg-orange-100 text-orange-700 px-2 py-1 inline-block text-xs rounded"
-                                  : ""
-                              }
-                            >
-                              {value}
-                            </span>
-                          </td>
-                        )
-                      })}
-                    </tr>
-                  ))}
+                         {isExpanded && category.fields.map((field) => (
+                           <tr key={`${category.name}-${field.label}`} className="border-b border-gray-200 bg-white hover:bg-blue-50">
+                             <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm w-64 leading-tight font-medium text-[#4D5761]">
+                               {field.label}
+                             </td>
+                             {suppliers.map((supplier) => {
+                               const value = supplier.fields[field.key as keyof typeof supplier.fields] || "—"
+                               return (
+                                 <td
+                                   key={`${category.name}-${field.label}-${supplier.id}`}
+                                   className="p-3 border-r border-gray-200 last:border-r-0 text-sm w-56 leading-tight text-[#4D5761]"
+                                 >
+                                   <span
+                                     className={
+                                       isTBCOrNotRequired(value)
+                                         ? "bg-orange-100 text-orange-700 px-2 py-1 inline-block rounded"
+                                         : ""
+                                     }
+                                     style={isTBCOrNotRequired(value) ? { fontSize: '14px' } : {}}
+                                   >
+                                     {value}
+                                   </span>
+                                 </td>
+                               )
+                             })}
+                           </tr>
+                         ))}
                 </Fragment>
               )
             })}
             {/* Price row */}
-            <tr className="border-b border-gray-200 bg-white hover:bg-gray-50 text-sm">
+            <tr className="border-b border-gray-200 bg-white hover:bg-blue-50 text-sm">
               <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm w-64 leading-tight font-medium text-[#4D5761]">Price</td>
               {suppliers.map((supplier) => (
                 <td key={`price-${supplier.id}`} className="p-3 border-r border-gray-200 last:border-r-0 text-sm w-56 leading-tight font-bold text-[#1E2832]">
@@ -179,21 +186,21 @@ export function ComparisonTable({ suppliers, onSupplierClick, onShowKeyFields, o
                 </td>
               ))}
             </tr>
-            {/* Contact CTA row */}
-            <tr className="border-b border-gray-200 bg-white text-sm">
-              <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm w-64 leading-tight font-medium text-[#4D5761]">Contact</td>
-              {suppliers.map((supplier) => (
-                <td key={`contact-${supplier.id}`} className="p-3 border-r border-gray-200 last:border-r-0 text-sm w-56 leading-tight">
-                  <Button
-                    size="sm"
-                    className="bg-green-600 hover:bg-green-700 text-white border-0 text-xs"
-                    onClick={() => {/* placeholder for contact action */}}
-                  >
-                    Contact supplier
-                  </Button>
-                </td>
-              ))}
-            </tr>
+                   {/* Contact CTA row */}
+                   <tr className="border-b border-gray-200 bg-white text-sm">
+                     <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm w-64 leading-tight font-medium text-[#4D5761]">Contact</td>
+                     {suppliers.map((supplier) => (
+                       <td key={`contact-${supplier.id}`} className="p-3 border-r border-gray-200 last:border-r-0 text-sm w-56 leading-tight">
+                         <button
+                           className="w-full flex h-10 px-4 flex-col justify-center items-center gap-2 rounded-lg bg-[#29B273] text-white hover:bg-[#239f63]"
+                           style={{ boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.02)', fontSize: '14px', fontWeight: 700, lineHeight: 'normal' }}
+                           onClick={() => {/* placeholder for contact action */}}
+                         >
+                           Contact supplier
+                         </button>
+                       </td>
+                     ))}
+                   </tr>
           </tbody>
         </table>
       </div>

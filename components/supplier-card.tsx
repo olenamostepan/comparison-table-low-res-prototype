@@ -19,25 +19,25 @@ function isTBCOrNotRequired(value?: string): boolean {
 
 export function SupplierCard({ supplier, onViewDetails }: SupplierCardProps) {
   return (
-    <Card className="p-5 border border-gray-200 w-full shadow-sm">
+    <Card className="flex flex-col justify-center items-start gap-5 self-stretch border border-gray-200 w-full" style={{ padding: '20px' }}>
       {/* Header: name on left, logo and actions on right */}
-      <div className="flex items-start justify-between mb-4">
+      <div className="flex items-start justify-between w-full">
         <div className="flex-1">
           <h3 className="text-lg font-bold mb-1 text-[#1E2832]">{supplier.name}</h3>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col justify-center items-start gap-2.5 h-10">
           <Image
             src={supplier.logo || "/placeholder.svg"}
             alt={`${supplier.name} logo`}
             width={80}
             height={40}
-            className="object-contain"
+            className="object-contain h-full w-auto"
           />
         </div>
       </div>
 
       {/* Field boxes with borders and proper styling */}
-      <div className="mb-3 flex gap-3">
+      <div className="flex gap-3 w-full">
         <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
           <div className="text-xs text-[#4D5761] font-normal">Price</div>
           <div className="text-base font-bold text-[#1E2832]">£{supplier.price.toLocaleString()}</div>
@@ -74,30 +74,34 @@ export function SupplierCard({ supplier, onViewDetails }: SupplierCardProps) {
         </div>
       </div>
 
-      {/* Key Differentiator box */}
-      <div className="p-3 bg-[#E8F1F8] border border-blue-100 rounded mb-3">
-        <span className="font-semibold text-sm text-[#1E2832]">Key Differentiator: </span>
-        <span className="text-sm text-[#4D5761]">{supplier.keyDifferentiator}</span>
-      </div>
+      {/* Key Differentiator box and Action buttons in same row */}
+      <div className="flex items-start gap-3 w-full">
+        {/* Key Differentiator box */}
+        <div className="flex items-start gap-2 flex-1 rounded-lg border border-[#D2E3F2] bg-[#E8F1F8]" style={{ padding: '12px 16px' }}>
+          <span className="text-[#1E2832] whitespace-nowrap" style={{ fontSize: '14px', fontWeight: 700, lineHeight: 'normal' }}>💡 Key Differentiator: </span>
+          <span className="text-sm text-[#4D5761]">{supplier.keyDifferentiator}</span>
+        </div>
 
-      {/* Action buttons at bottom */}
-      <div className="flex items-center gap-3">
-        <Button
-          type="button"
-          className="bg-green-600 hover:bg-green-700 text-white border-0"
-          onClick={() => {/* placeholder for contact action */}}
-        >
-          Contact Supplier
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          className="border border-gray-300 bg-white hover:bg-gray-50 text-[#1E2832]"
-          onClick={() => onViewDetails(supplier)}
-        >
-          View full details
-          <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
+        {/* Action buttons */}
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            className="flex h-10 px-4 flex-col justify-center items-center gap-2 rounded-lg bg-[#29B273] text-white hover:bg-[#239f63] whitespace-nowrap"
+            style={{ boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.02)', fontSize: '14px', fontWeight: 700, lineHeight: 'normal' }}
+            onClick={() => {/* placeholder for contact action */}}
+          >
+            Contact Supplier
+          </button>
+          <button
+            type="button"
+            className="flex h-10 px-3 justify-center items-center gap-4 rounded-lg border border-[#D3D7DC] bg-[#F9FAFB] text-[#1E2832] hover:bg-gray-100 whitespace-nowrap"
+            style={{ fontSize: '14px', fontWeight: 700, lineHeight: 'normal' }}
+            onClick={() => onViewDetails(supplier)}
+          >
+            View full details
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </button>
+        </div>
       </div>
     </Card>
   )

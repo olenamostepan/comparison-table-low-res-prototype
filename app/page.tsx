@@ -83,20 +83,31 @@ export default function TenderComparisonPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#F9FAFB]">
       {/* Header */}
-      <header className="px-6 pt-6 pb-3 bg-white">
+      <header className="bg-white border-t border-b border-[#F3F4F6]">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex justify-between items-center py-3">
             <button className="flex items-center gap-2 hover:underline text-sm font-extrabold text-[#1E2832]">
               <ArrowLeft className="h-4 w-4" />
               Back to Tenders
             </button>
             
-            <button className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center hover:bg-gray-400">
-              <ChevronDown className="h-4 w-4" />
+            <button className="flex items-center gap-2 hover:opacity-80">
+              <Image 
+                src="/site elements/profile.svg" 
+                alt="Profile" 
+                width={32} 
+                height={32}
+              />
+              <ChevronDown className="h-4 w-4 text-[#1E2832]" />
             </button>
           </div>
+        </div>
+      </header>
+
+      {/* Project Info Section */}
+      <div className="max-w-7xl mx-auto px-6 pt-6 pb-3">
 
           <div className="flex items-start gap-4 mb-4">
             <div className="w-12 h-12 rounded flex items-center justify-center flex-shrink-0">
@@ -119,16 +130,27 @@ export default function TenderComparisonPage() {
             </div>
           </div>
 
-          <div className="mb-4 p-4 bg-[#E8F1F8] border border-gray-200 rounded">
-            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div className="mb-4 flex flex-col items-start gap-4 p-4 rounded-lg border border-[#F3F4F6] bg-white">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between w-full">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-4 mb-2">
                   <div className="font-bold text-[#1E2832]">Tender Overview:</div>
                   <button
                     onClick={() => setShowOverviewDetails((v) => !v)}
-                    className="text-sm text-blue-600 hover:underline"
+                    className="text-sm text-[#1C75BC] hover:underline font-bold flex items-center gap-1"
+                    style={{ fontSize: '14px', lineHeight: 'normal' }}
                   >
-                    {showOverviewDetails ? "Hide details" : "Show details"}
+                    {showOverviewDetails ? (
+                      <>
+                        Hide details
+                        <ChevronUp className="h-4 w-4" />
+                      </>
+                    ) : (
+                      <>
+                        Show details
+                        <ChevronDown className="h-4 w-4" />
+                      </>
+                    )}
                   </button>
                 </div>
                 <div className="text-sm text-[#4D5761]">
@@ -136,7 +158,7 @@ export default function TenderComparisonPage() {
                   (<span className="font-semibold">20% response rate</span>)
                 </div>
                 {showOverviewDetails && (
-                  <div className="mt-3">
+                  <div className="mt-3 flex flex-col items-start gap-4 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB] self-stretch w-full">
                     <ul className="list-disc pl-6 space-y-1 text-sm text-[#4D5761]">
                       <li>5 unavailable (couldn't meet timeline)</li>
                       <li>3 no capacity (project too large)</li>
@@ -144,7 +166,7 @@ export default function TenderComparisonPage() {
                       <li>1 excluded by CQuel (incomplete pricing)</li>
                       <li>4 submitted and ready to compare ✓</li>
                     </ul>
-                    <div className="mt-4 text-sm text-[#4D5761]">
+                    <div className="text-sm text-[#4D5761]">
                       <span>Tender closed: 15 Oct 2025</span>
                       <span className="mx-2">|</span>
                       <span>Duration: 14 days</span>
@@ -153,25 +175,32 @@ export default function TenderComparisonPage() {
                 )}
               </div>
               <div className="md:ml-6">
-                <div className="inline-block px-3 py-1 bg-white border border-gray-300 rounded text-sm font-medium text-[#1E2832]">Closed: 15 Oct</div>
+                <div className="flex h-6 px-3 items-center gap-1 rounded-[20px] border border-[#1C75BC] bg-[#1C75BC] text-white font-bold" style={{ fontSize: '14px', lineHeight: 'normal' }}>
+                  Closed: 15 Oct
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </header>
+      </div>
 
       {/* Supplier Cards */}
       <main className="max-w-7xl mx-auto pt-0 px-6 pb-6">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-[#1E2832]">Interim Tender Results</h2>
-          <Button onClick={scrollToTable} className="border border-gray-300 bg-white hover:bg-gray-50 text-[#1E2832]">
-            Compare Bids
-          </Button>
-        </div>
-        <div className="space-y-3 mb-8">
-          {sortedSuppliers.map((supplier) => (
-            <SupplierCard key={supplier.id} supplier={supplier} onViewDetails={setSelectedSupplier} />
-          ))}
+        <div className="flex flex-col items-start gap-4 self-stretch rounded-lg border border-[#F3F4F6] bg-white mb-8" style={{ padding: '32px 24px 16px 24px' }}>
+          <div className="w-full flex items-center justify-between">
+            <h2 className="text-[#1E2832] font-extrabold" style={{ fontSize: '20px', lineHeight: 'normal' }}>Interim Tender Results</h2>
+            <button 
+              onClick={scrollToTable} 
+              className="flex h-10 px-3 justify-center items-center gap-4 rounded-lg border border-[#D3D7DC] bg-[#F9FAFB] text-[#1E2832] hover:bg-gray-100"
+              style={{ fontSize: '14px', fontWeight: 700, lineHeight: 'normal' }}
+            >
+              Compare Bids
+            </button>
+          </div>
+          <div className="space-y-3 w-full">
+            {sortedSuppliers.map((supplier) => (
+              <SupplierCard key={supplier.id} supplier={supplier} onViewDetails={setSelectedSupplier} />
+            ))}
+          </div>
         </div>
 
         {/* Comparison Table - Auto-reveal on scroll */}
