@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { ArrowLeft, Info, ChevronDown, ChevronUp } from "lucide-react"
+import { ArrowLeft, Info, ChevronDown, ChevronUp, Building2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { SupplierCard } from "@/components/supplier-card"
 import { ComparisonTable } from "@/components/comparison-table"
@@ -86,34 +86,47 @@ export default function TenderComparisonPage() {
       {/* Header */}
       <header className="px-6 pt-6 pb-3 bg-white">
         <div className="max-w-7xl mx-auto">
-          <button className="flex items-center gap-2 mb-4 hover:underline">
-            <ArrowLeft className="h-4 w-4" />
-            Back to Projects
-          </button>
-
-          <div className="mb-4">
-            <h1 className="text-3xl font-bold">Project Name: Heat Pump Pilot Kamekestraße</h1>
+          <div className="flex items-center justify-between mb-6">
+            <button className="flex items-center gap-2 hover:underline text-sm">
+              <ArrowLeft className="h-4 w-4" />
+              Back to Tenders
+            </button>
+            
+            <button className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center hover:bg-gray-400">
+              <ChevronDown className="h-4 w-4" />
+            </button>
           </div>
 
-          <div className="mb-4 p-4 border-2 border-black bg-gray-50">
+          <div className="flex items-start gap-4 mb-4">
+            <div className="w-12 h-12 bg-teal-500 rounded flex items-center justify-center flex-shrink-0">
+              <Building2 className="h-6 w-6 text-white" />
+            </div>
+            <div className="flex-1">
+              <h1 className="text-2xl font-bold mb-2">Heat Pump Pilot Kamekestraße</h1>
+              <div className="text-sm text-gray-600 mb-3">Schenkendorfstraße 29, Müheim an der Ruhr, 45472, DE</div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="px-3 py-1 bg-gray-100 text-xs font-medium rounded">RESIDENTIAL</span>
+                <span className="px-3 py-1 bg-gray-100 text-xs font-medium rounded">OCCUPIED</span>
+                <span className="px-3 py-1 bg-gray-100 text-xs font-medium rounded">+ 70KW SOLAR</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-4 p-4 bg-blue-50 border border-gray-200 rounded">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="font-bold text-xl md:text-base">Tender Overview:</div>
+                <div className="flex items-center justify-between gap-4 mb-2">
+                  <div className="font-bold">Tender Overview:</div>
                   <button
                     onClick={() => setShowOverviewDetails((v) => !v)}
-                    className="px-3 py-1 border-2 border-black bg-white hover:bg-gray-100 text-sm shrink-0"
+                    className="text-sm text-blue-600 hover:underline"
                   >
-                    {showOverviewDetails ? (
-                      <span className="inline-flex items-center gap-1">Hide details <ChevronUp className="h-4 w-4" /></span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1">Show details <ChevronDown className="h-4 w-4" /></span>
-                    )}
+                    {showOverviewDetails ? "Hide details" : "Show details"}
                   </button>
                 </div>
-                <div className="mt-2 text-sm">
-                  <span className="font-medium">4</span> of <span className="font-medium">20</span> suppliers submitted
-                  (<span className="font-medium">20% response rate</span>)
+                <div className="text-sm">
+                  <span className="font-semibold">4</span> of <span className="font-semibold">20</span> suppliers submitted
+                  (<span className="font-semibold">20% response rate</span>)
                 </div>
                 {showOverviewDetails && (
                   <div className="mt-3">
@@ -133,24 +146,22 @@ export default function TenderComparisonPage() {
                 )}
               </div>
               <div className="md:ml-6">
-                <div className="inline-block px-3 py-1 border-2 border-black bg-white font-semibold">Closed: 15 Oct</div>
+                <div className="inline-block px-3 py-1 bg-white border border-gray-300 rounded text-sm font-medium">Closed: 15 Oct</div>
               </div>
             </div>
           </div>
-
-          {/* Removed Sort by and moved Key fields explained into Detailed Comparison */}
         </div>
       </header>
 
       {/* Supplier Cards */}
-      <main className="max-w-7xl mx-auto pt-0 px-0 pb-6">
-        <div className="mb-3 flex items-center justify-between">
+      <main className="max-w-7xl mx-auto pt-0 px-6 pb-6">
+        <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-bold">Interim Tender Results</h2>
-          <Button onClick={scrollToTable} className="border-2 border-black">
-            Compare bids
+          <Button onClick={scrollToTable} className="border border-gray-300 bg-white hover:bg-gray-50 text-black">
+            Compare Bids
           </Button>
         </div>
-        <div className="space-y-4 mb-6">
+        <div className="space-y-3 mb-8">
           {sortedSuppliers.map((supplier) => (
             <SupplierCard key={supplier.id} supplier={supplier} onViewDetails={setSelectedSupplier} />
           ))}

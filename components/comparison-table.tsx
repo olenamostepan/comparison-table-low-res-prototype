@@ -68,21 +68,21 @@ export function ComparisonTable({ suppliers, onSupplierClick, onShowKeyFields, o
   }
 
   return (
-    <div className="border-2 border-black bg-white">
-      <div className="p-6 border-b-2 border-black flex items-center justify-between gap-3">
+    <div className="border border-gray-200 bg-white shadow-sm">
+      <div className="p-5 border-b border-gray-200 flex items-center justify-between gap-3">
         <h2 className="text-xl font-bold">Detailed Comparison</h2>
         <div className="flex items-center gap-3">
           {onShowKeyFields && (
             <button
               onClick={onShowKeyFields}
-              className="flex items-center gap-1 text-sm underline underline-offset-2"
+              className="flex items-center gap-1 text-sm text-blue-600 hover:underline"
             >
               <Info className="h-4 w-4" />
               Key fields explained
             </button>
           )}
           {onExportCsv && (
-            <Button onClick={onExportCsv} className="border-2 border-black bg-transparent" variant="outline">
+            <Button onClick={onExportCsv} className="border border-gray-300 bg-white hover:bg-gray-50" variant="outline">
               <Download className="mr-2 h-4 w-4" />
               Download
             </Button>
@@ -98,9 +98,9 @@ export function ComparisonTable({ suppliers, onSupplierClick, onShowKeyFields, o
               return (
                 <Fragment key={category.name}>
                   {/* Category header row */}
-                  <tr className="border-b border-gray-300">
+                  <tr className="border-b border-gray-200 bg-gray-50">
                     <td
-                      className="p-2 pl-4 border-r-2 border-black sticky left-0 z-10 font-bold text-sm cursor-pointer select-none w-64"
+                      className="p-3 pl-4 border-r border-gray-200 sticky left-0 z-10 bg-gray-50 font-bold text-sm cursor-pointer select-none w-64"
                       onClick={() => toggleCategory(category.name)}
                     >
                       <span className="inline-flex items-center gap-2">
@@ -111,7 +111,7 @@ export function ComparisonTable({ suppliers, onSupplierClick, onShowKeyFields, o
                     {suppliers.map((supplier) => (
                       <td
                         key={`header-${category.name}-${supplier.id}`}
-                        className="p-2 text-sm font-bold text-gray-800 border-r border-gray-200 last:border-r-0 text-center w-56"
+                        className="p-3 text-sm font-semibold text-gray-700 border-r border-gray-200 last:border-r-0 w-56"
                       >
                         {supplier.name}
                       </td>
@@ -120,18 +120,18 @@ export function ComparisonTable({ suppliers, onSupplierClick, onShowKeyFields, o
 
                   {/* Score Results row - first in each category */}
                   {isExpanded && (
-                    <tr className="border-b border-gray-200">
-                      <td className="p-2 pl-8 border-r-2 border-black bg-gray-50 sticky left-0 z-10 text-sm w-64 leading-tight font-medium">
+                    <tr className="border-b border-gray-200 bg-white hover:bg-gray-50">
+                      <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm w-64 leading-tight font-medium">
                         Score Results
                       </td>
                       {suppliers.map((supplier) => (
                         <td
                           key={`scores-${category.name}-${supplier.id}`}
-                          className="p-2 border-r border-gray-200 last:border-r-0 text-sm w-56 leading-tight"
+                          className="p-3 border-r border-gray-200 last:border-r-0 text-sm w-56 leading-tight"
                         >
                           <button
                             onClick={() => openScoreModal(category.name, supplier.name)}
-                            className="text-blue-600 hover:text-blue-800 underline underline-offset-2 cursor-pointer"
+                            className="text-blue-600 hover:text-blue-800 hover:underline cursor-pointer"
                           >
                             {getScore(category.name, supplier.id)}/5
                           </button>
@@ -142,8 +142,8 @@ export function ComparisonTable({ suppliers, onSupplierClick, onShowKeyFields, o
 
                   {/* Field rows */}
                   {isExpanded && category.fields.map((field) => (
-                    <tr key={`${category.name}-${field.label}`} className="border-b border-gray-200">
-                      <td className="p-2 pl-8 border-r-2 border-black bg-gray-50 sticky left-0 z-10 text-sm w-64 leading-tight font-medium">
+                    <tr key={`${category.name}-${field.label}`} className="border-b border-gray-200 bg-white hover:bg-gray-50">
+                      <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm w-64 leading-tight font-medium text-gray-700">
                         {field.label}
                       </td>
                       {suppliers.map((supplier) => {
@@ -151,14 +151,12 @@ export function ComparisonTable({ suppliers, onSupplierClick, onShowKeyFields, o
                         return (
                           <td
                             key={`${category.name}-${field.label}-${supplier.id}`}
-                            className={`p-2 border-r border-gray-200 last:border-r-0 text-sm w-56 leading-tight ${
-                              isTBCOrNotRequired(value) ? "py-0.5" : ""
-                            }`}
+                            className="p-3 border-r border-gray-200 last:border-r-0 text-sm w-56 leading-tight"
                           >
                             <span
                               className={
                                 isTBCOrNotRequired(value)
-                                  ? "bg-yellow-200 px-2 py-1 inline-block text-xs"
+                                  ? "bg-orange-100 text-orange-700 px-2 py-1 inline-block text-xs rounded"
                                   : ""
                               }
                             >
@@ -173,22 +171,22 @@ export function ComparisonTable({ suppliers, onSupplierClick, onShowKeyFields, o
               )
             })}
             {/* Price row */}
-            <tr className="border-b border-gray-300 text-sm">
-              <td className="p-2 pl-8 border-r-2 border-black bg-gray-50 sticky left-0 z-10 text-sm w-64 leading-tight font-medium">Price</td>
+            <tr className="border-b border-gray-200 bg-white hover:bg-gray-50 text-sm">
+              <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm w-64 leading-tight font-medium text-gray-700">Price</td>
               {suppliers.map((supplier) => (
-                <td key={`price-${supplier.id}`} className="p-2 border-r border-gray-300 last:border-r-0 text-sm w-56 leading-tight font-bold">
+                <td key={`price-${supplier.id}`} className="p-3 border-r border-gray-200 last:border-r-0 text-sm w-56 leading-tight font-bold">
                   £{supplier.price.toLocaleString()}
                 </td>
               ))}
             </tr>
             {/* Contact CTA row */}
-            <tr className="border-b border-gray-300 text-sm">
-              <td className="p-2 pl-8 border-r-2 border-black bg-gray-50 sticky left-0 z-10 text-sm w-64 leading-tight font-medium">Contact</td>
+            <tr className="border-b border-gray-200 bg-white text-sm">
+              <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm w-64 leading-tight font-medium text-gray-700">Contact</td>
               {suppliers.map((supplier) => (
-                <td key={`contact-${supplier.id}`} className="p-2 border-r border-gray-300 last:border-r-0 text-sm w-56 leading-tight">
+                <td key={`contact-${supplier.id}`} className="p-3 border-r border-gray-200 last:border-r-0 text-sm w-56 leading-tight">
                   <Button
                     size="sm"
-                    className="border-2 border-black bg-black text-white hover:bg-black/90 text-xs"
+                    className="bg-green-600 hover:bg-green-700 text-white border-0 text-xs"
                     onClick={() => {/* placeholder for contact action */}}
                   >
                     Contact supplier
