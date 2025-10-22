@@ -70,7 +70,7 @@ export function ComparisonTable({ suppliers, onSupplierClick, onShowKeyFields, o
   return (
     <div className="border border-gray-200 bg-white shadow-sm">
       <div className="p-5 border-b border-gray-200 flex items-center justify-between gap-3">
-        <h2 className="text-xl font-bold">Detailed Comparison</h2>
+        <h2 className="text-xl font-bold text-[#1E2832]">Detailed Comparison</h2>
         <div className="flex items-center gap-3">
           {onShowKeyFields && (
             <button
@@ -82,7 +82,7 @@ export function ComparisonTable({ suppliers, onSupplierClick, onShowKeyFields, o
             </button>
           )}
           {onExportCsv && (
-            <Button onClick={onExportCsv} className="border border-gray-300 bg-white hover:bg-gray-50" variant="outline">
+            <Button onClick={onExportCsv} className="border border-gray-300 bg-white hover:bg-gray-50 text-[#1E2832]" variant="outline">
               <Download className="mr-2 h-4 w-4" />
               Download
             </Button>
@@ -100,7 +100,7 @@ export function ComparisonTable({ suppliers, onSupplierClick, onShowKeyFields, o
                   {/* Category header row */}
                   <tr className="border-b border-gray-200 bg-gray-50">
                     <td
-                      className="p-3 pl-4 border-r border-gray-200 sticky left-0 z-10 bg-gray-50 font-bold text-sm cursor-pointer select-none w-64"
+                      className="p-3 pl-4 border-r border-gray-200 sticky left-0 z-10 bg-gray-50 font-bold text-sm cursor-pointer select-none w-64 text-[#1E2832]"
                       onClick={() => toggleCategory(category.name)}
                     >
                       <span className="inline-flex items-center gap-2">
@@ -111,7 +111,7 @@ export function ComparisonTable({ suppliers, onSupplierClick, onShowKeyFields, o
                     {suppliers.map((supplier) => (
                       <td
                         key={`header-${category.name}-${supplier.id}`}
-                        className="p-3 text-sm font-semibold text-gray-700 border-r border-gray-200 last:border-r-0 w-56"
+                        className="p-3 text-sm font-semibold text-[#1E2832] border-r border-gray-200 last:border-r-0 w-56"
                       >
                         {supplier.name}
                       </td>
@@ -121,7 +121,7 @@ export function ComparisonTable({ suppliers, onSupplierClick, onShowKeyFields, o
                   {/* Score Results row - first in each category */}
                   {isExpanded && (
                     <tr className="border-b border-gray-200 bg-white hover:bg-gray-50">
-                      <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm w-64 leading-tight font-medium">
+                      <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm w-64 leading-tight font-medium text-[#4D5761]">
                         Score Results
                       </td>
                       {suppliers.map((supplier) => (
@@ -143,7 +143,7 @@ export function ComparisonTable({ suppliers, onSupplierClick, onShowKeyFields, o
                   {/* Field rows */}
                   {isExpanded && category.fields.map((field) => (
                     <tr key={`${category.name}-${field.label}`} className="border-b border-gray-200 bg-white hover:bg-gray-50">
-                      <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm w-64 leading-tight font-medium text-gray-700">
+                      <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm w-64 leading-tight font-medium text-[#4D5761]">
                         {field.label}
                       </td>
                       {suppliers.map((supplier) => {
@@ -151,7 +151,7 @@ export function ComparisonTable({ suppliers, onSupplierClick, onShowKeyFields, o
                         return (
                           <td
                             key={`${category.name}-${field.label}-${supplier.id}`}
-                            className="p-3 border-r border-gray-200 last:border-r-0 text-sm w-56 leading-tight"
+                            className="p-3 border-r border-gray-200 last:border-r-0 text-sm w-56 leading-tight text-[#4D5761]"
                           >
                             <span
                               className={
@@ -172,16 +172,16 @@ export function ComparisonTable({ suppliers, onSupplierClick, onShowKeyFields, o
             })}
             {/* Price row */}
             <tr className="border-b border-gray-200 bg-white hover:bg-gray-50 text-sm">
-              <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm w-64 leading-tight font-medium text-gray-700">Price</td>
+              <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm w-64 leading-tight font-medium text-[#4D5761]">Price</td>
               {suppliers.map((supplier) => (
-                <td key={`price-${supplier.id}`} className="p-3 border-r border-gray-200 last:border-r-0 text-sm w-56 leading-tight font-bold">
+                <td key={`price-${supplier.id}`} className="p-3 border-r border-gray-200 last:border-r-0 text-sm w-56 leading-tight font-bold text-[#1E2832]">
                   £{supplier.price.toLocaleString()}
                 </td>
               ))}
             </tr>
             {/* Contact CTA row */}
             <tr className="border-b border-gray-200 bg-white text-sm">
-              <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm w-64 leading-tight font-medium text-gray-700">Contact</td>
+              <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm w-64 leading-tight font-medium text-[#4D5761]">Contact</td>
               {suppliers.map((supplier) => (
                 <td key={`contact-${supplier.id}`} className="p-3 border-r border-gray-200 last:border-r-0 text-sm w-56 leading-tight">
                   <Button

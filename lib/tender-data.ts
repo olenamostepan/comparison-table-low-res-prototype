@@ -4,7 +4,7 @@ export const suppliers: Supplier[] = [
   {
     id: "1",
     name: "Klimaservice Malte Born",
-    logo: "/generic-company-logo.png",
+    logo: "/site elements/gogreen.svg",
     price: 45000,
     fields: {
       systemType: "Full fixture replacement",
@@ -39,7 +39,7 @@ export const suppliers: Supplier[] = [
   {
     id: "2",
     name: "Beka Solar Energie GmbH",
-    logo: "/solar-company-logo.png",
+    logo: "/site elements/beba.svg",
     price: 52000,
     fields: {
       systemType: "Full fixture replacement",
@@ -76,7 +76,7 @@ export const suppliers: Supplier[] = [
   {
     id: "3",
     name: "Eco-Heat UG",
-    logo: "/eco-heating-logo.jpg",
+    logo: "/site elements/lowcarbon.svg",
     price: 48000,
     fields: {
       systemType: "Full fixture replacement",
@@ -111,7 +111,7 @@ export const suppliers: Supplier[] = [
   {
     id: "4",
     name: "Ecowatt GmbH",
-    logo: "/energy-company-logo.jpg",
+    logo: "/site elements/hysopt.svg",
     price: 58000,
     fields: {
       systemType: "Full fixture replacement",

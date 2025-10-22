@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { ArrowLeft, Info, ChevronDown, ChevronUp, Building2 } from "lucide-react"
+import { ArrowLeft, Info, ChevronDown, ChevronUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { SupplierCard } from "@/components/supplier-card"
 import { ComparisonTable } from "@/components/comparison-table"
@@ -9,6 +9,7 @@ import { BidDetailsModal } from "@/components/bid-details-modal"
 import { KeyFieldsModal } from "@/components/key-fields-modal"
 import { suppliers, categories } from "@/lib/tender-data"
 import type { Supplier } from "@/types/tender"
+import Image from "next/image"
 
 export default function TenderComparisonPage() {
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null)
@@ -87,7 +88,7 @@ export default function TenderComparisonPage() {
       <header className="px-6 pt-6 pb-3 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-6">
-            <button className="flex items-center gap-2 hover:underline text-sm">
+            <button className="flex items-center gap-2 hover:underline text-sm font-extrabold text-[#1E2832]">
               <ArrowLeft className="h-4 w-4" />
               Back to Tenders
             </button>
@@ -98,12 +99,18 @@ export default function TenderComparisonPage() {
           </div>
 
           <div className="flex items-start gap-4 mb-4">
-            <div className="w-12 h-12 bg-teal-500 rounded flex items-center justify-center flex-shrink-0">
-              <Building2 className="h-6 w-6 text-white" />
+            <div className="w-12 h-12 rounded flex items-center justify-center flex-shrink-0">
+              <Image 
+                src="/site elements/Avatar.svg" 
+                alt="Project icon" 
+                width={48} 
+                height={48}
+                className="rounded"
+              />
             </div>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold mb-2">Heat Pump Pilot Kamekestraße</h1>
-              <div className="text-sm text-gray-600 mb-3">Schenkendorfstraße 29, Müheim an der Ruhr, 45472, DE</div>
+              <h1 className="text-[28px] font-extrabold mb-2 text-[#1E2832] leading-tight">Heat Pump Pilot Kamekestraße</h1>
+              <div className="text-sm text-[#4D5761] mb-3">Schenkendorfstraße 29, Müheim an der Ruhr, 45472, DE</div>
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="px-3 py-1 bg-gray-100 text-xs font-medium rounded">RESIDENTIAL</span>
                 <span className="px-3 py-1 bg-gray-100 text-xs font-medium rounded">OCCUPIED</span>
@@ -112,11 +119,11 @@ export default function TenderComparisonPage() {
             </div>
           </div>
 
-          <div className="mb-4 p-4 bg-blue-50 border border-gray-200 rounded">
+          <div className="mb-4 p-4 bg-[#E8F1F8] border border-gray-200 rounded">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-4 mb-2">
-                  <div className="font-bold">Tender Overview:</div>
+                  <div className="font-bold text-[#1E2832]">Tender Overview:</div>
                   <button
                     onClick={() => setShowOverviewDetails((v) => !v)}
                     className="text-sm text-blue-600 hover:underline"
@@ -124,20 +131,20 @@ export default function TenderComparisonPage() {
                     {showOverviewDetails ? "Hide details" : "Show details"}
                   </button>
                 </div>
-                <div className="text-sm">
+                <div className="text-sm text-[#4D5761]">
                   <span className="font-semibold">4</span> of <span className="font-semibold">20</span> suppliers submitted
                   (<span className="font-semibold">20% response rate</span>)
                 </div>
                 {showOverviewDetails && (
                   <div className="mt-3">
-                    <ul className="list-disc pl-6 space-y-1 text-sm">
+                    <ul className="list-disc pl-6 space-y-1 text-sm text-[#4D5761]">
                       <li>5 unavailable (couldn't meet timeline)</li>
                       <li>3 no capacity (project too large)</li>
                       <li>2 planned to submit but didn't</li>
                       <li>1 excluded by CQuel (incomplete pricing)</li>
                       <li>4 submitted and ready to compare ✓</li>
                     </ul>
-                    <div className="mt-4 text-sm">
+                    <div className="mt-4 text-sm text-[#4D5761]">
                       <span>Tender closed: 15 Oct 2025</span>
                       <span className="mx-2">|</span>
                       <span>Duration: 14 days</span>
@@ -146,7 +153,7 @@ export default function TenderComparisonPage() {
                 )}
               </div>
               <div className="md:ml-6">
-                <div className="inline-block px-3 py-1 bg-white border border-gray-300 rounded text-sm font-medium">Closed: 15 Oct</div>
+                <div className="inline-block px-3 py-1 bg-white border border-gray-300 rounded text-sm font-medium text-[#1E2832]">Closed: 15 Oct</div>
               </div>
             </div>
           </div>
@@ -156,8 +163,8 @@ export default function TenderComparisonPage() {
       {/* Supplier Cards */}
       <main className="max-w-7xl mx-auto pt-0 px-6 pb-6">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-bold">Interim Tender Results</h2>
-          <Button onClick={scrollToTable} className="border border-gray-300 bg-white hover:bg-gray-50 text-black">
+          <h2 className="text-xl font-bold text-[#1E2832]">Interim Tender Results</h2>
+          <Button onClick={scrollToTable} className="border border-gray-300 bg-white hover:bg-gray-50 text-[#1E2832]">
             Compare Bids
           </Button>
         </div>
