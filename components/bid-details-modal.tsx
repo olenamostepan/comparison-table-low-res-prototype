@@ -30,9 +30,12 @@ export function BidDetailsModal({ supplier, open, onOpenChange }: BidDetailsModa
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:max-w-2xl overflow-y-auto bg-white p-0">
-        {/* Header with Logo and Company Name */}
-        <SheetHeader className="p-6 pb-0">
-          <div className="flex items-center justify-between">
+        {/* Header with Logo and Company Name - Green Gradient Background */}
+        <SheetHeader 
+          className="p-6 pb-4 pr-14"
+          style={{ background: 'linear-gradient(136deg, rgba(201, 255, 230, 0.33) 26.24%, rgba(7, 163, 91, 0.27) 98.78%)' }}
+        >
+          <div className="flex items-center justify-between mb-4">
             <SheetTitle 
               className="text-[#1E2832] font-extrabold"
               style={{ fontSize: '24px', lineHeight: 'normal' }}
@@ -42,30 +45,53 @@ export function BidDetailsModal({ supplier, open, onOpenChange }: BidDetailsModa
             <Image
               src={supplier.logo || "/placeholder.svg"}
               alt={`${supplier.name} logo`}
-              width={120}
-              height={60}
+              width={80}
+              height={40}
               className="object-contain"
             />
+          </div>
+
+          {/* CTAs in header - in a row */}
+          <div className="flex gap-3">
+            <button
+              className="flex h-10 flex-1 px-4 justify-center items-center gap-2 rounded-lg bg-[#29B273] text-white hover:bg-[#239f63]"
+              style={{ boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.02)', fontSize: '14px', fontWeight: 700, lineHeight: 'normal' }}
+            >
+              Contact supplier
+            </button>
+            <button
+              className="flex h-10 flex-1 px-3 justify-center items-center gap-2 rounded-lg border border-[#D3D7DC] bg-[#F9FAFB] text-[#1E2832] hover:bg-gray-100"
+              style={{ fontSize: '14px', fontWeight: 700, lineHeight: 'normal' }}
+            >
+              <Download className="h-4 w-4" />
+              Download proposal
+            </button>
           </div>
         </SheetHeader>
 
         {/* Tabs */}
-        <div className="flex border-b border-[#F3F4F6] px-6 mt-6">
+        <div className="flex border-b border-[#F3F4F6] px-6 mt-0">
           <button
             onClick={() => setActiveTab("proposal")}
             className={`pb-3 px-1 font-semibold text-sm relative ${
               activeTab === "proposal" 
-                ? "text-[#1E2832] border-b-2 border-[#1E2832]" 
+                ? "text-[#1E2832] border-b-2 border-[#29B273]" 
                 : "text-[#4D5761]"
             }`}
           >
             Proposal
           </button>
           <button
-            onClick={() => setActiveTab("about")}
+            onClick={() => {
+              setActiveTab("about")
+              // Auto-expand Company Info when switching to About tab
+              if (!expandedSections.includes("Company Info")) {
+                setExpandedSections(prev => [...prev, "Company Info"])
+              }
+            }}
             className={`pb-3 px-1 ml-6 font-semibold text-sm relative ${
               activeTab === "about" 
-                ? "text-[#1E2832] border-b-2 border-[#1E2832]" 
+                ? "text-[#1E2832] border-b-2 border-[#29B273]" 
                 : "text-[#4D5761]"
             }`}
           >
@@ -74,20 +100,147 @@ export function BidDetailsModal({ supplier, open, onOpenChange }: BidDetailsModa
         </div>
 
         <div className="p-6 space-y-4">
-          {/* CTAs at top */}
-          <button
-            className="flex h-10 w-full px-4 justify-center items-center gap-2 rounded-lg bg-[#29B273] text-white hover:bg-[#239f63]"
-            style={{ boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.02)', fontSize: '14px', fontWeight: 700, lineHeight: 'normal' }}
-          >
-            Contact supplier
-          </button>
-          <button
-            className="flex h-10 w-full px-3 justify-center items-center gap-2 rounded-lg border border-[#D3D7DC] bg-[#F9FAFB] text-[#1E2832] hover:bg-gray-100"
-            style={{ fontSize: '14px', fontWeight: 700, lineHeight: 'normal' }}
-          >
-            <Download className="h-4 w-4" />
-            Download proposal
-          </button>
+
+          {/* About Company Tab Content */}
+          {activeTab === "about" && (
+            <div className="space-y-6">
+              {/* Company Info Section */}
+              <div className="border-0">
+                <button
+                  onClick={() => toggleSection("Company Info")}
+                  className="w-full py-3 px-0 flex items-center justify-between text-[#1E2832] font-extrabold hover:opacity-70 transition-opacity"
+                  style={{ fontSize: '20px', lineHeight: 'normal' }}
+                >
+                  <span>Company Info</span>
+                  {expandedSections.includes("Company Info") ? (
+                    <ChevronUp className="h-5 w-5" />
+                  ) : (
+                    <ChevronDown className="h-5 w-5" />
+                  )}
+                </button>
+                {expandedSections.includes("Company Info") && (
+                  <div className="pt-3 pb-4 space-y-6">
+                    {/* Experience */}
+                    <div>
+                      <div className="font-bold text-base text-[#1E2832] mb-2">Experience</div>
+                      <p className="text-sm text-[#4D5761]">
+                        <span className="font-bold">18+ years</span> in the solar industry.
+                      </p>
+                    </div>
+
+                    {/* Projects Delivered */}
+                    <div>
+                      <div className="font-bold text-base text-[#1E2832] mb-2">Projects Delivered</div>
+                      <p className="text-sm text-[#4D5761] mb-2">
+                        <span className="font-bold">80+ commercial projects</span>, including:
+                      </p>
+                      <ul className="list-disc list-inside space-y-1 text-sm text-[#4D5761]">
+                        <li>Inverter servicing.</li>
+                        <li>1 MW system for GreenSpace Logistics</li>
+                        <li>750 kW system for Westbay Industrial Park</li>
+                      </ul>
+                    </div>
+
+                    {/* Client Focus */}
+                    <div>
+                      <div className="font-bold text-base text-[#1E2832] mb-2">Client Focus</div>
+                      <p className="text-sm text-[#4D5761]">
+                        <span className="font-bold">90%</span> of projects are large-scale commercial installations
+                      </p>
+                    </div>
+
+                    {/* Team */}
+                    <div>
+                      <div className="font-bold text-base text-[#1E2832] mb-2">Team</div>
+                      <p className="text-sm text-[#4D5761] mb-2">
+                        <span className="font-bold">120 staff members</span>, including:
+                      </p>
+                      <ul className="list-disc list-inside space-y-1 text-sm text-[#4D5761]">
+                        <li>40 certified engineers</li>
+                        <li>30 solar energy technicians</li>
+                      </ul>
+                    </div>
+
+                    {/* Credentials */}
+                    <div>
+                      <div className="font-bold text-base text-[#1E2832] mb-2">Credentials</div>
+                      <ul className="list-disc list-inside space-y-1 text-sm text-[#4D5761]">
+                        <li>NABCEP-certified installers</li>
+                        <li>ISO 9001-certified for quality management</li>
+                      </ul>
+                    </div>
+
+                    {/* Financial Stability */}
+                    <div>
+                      <div className="font-bold text-base text-[#1E2832] mb-2">Financial Stability</div>
+                      <ul className="list-disc list-inside space-y-1 text-sm text-[#4D5761]">
+                        <li>Annual turnover: <span className="font-bold">£15 million</span></li>
+                        <li><span className="font-bold">5% growth</span> over the last three years</li>
+                        <li>Net assets: <span className="font-bold">£2 million</span></li>
+                      </ul>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Case Studies Section */}
+              <div className="border-0 border-t border-[#F3F4F6] pt-4">
+                <button
+                  onClick={() => toggleSection("Case Studies")}
+                  className="w-full py-3 px-0 flex items-center justify-between text-[#1E2832] font-extrabold hover:opacity-70 transition-opacity"
+                  style={{ fontSize: '20px', lineHeight: 'normal' }}
+                >
+                  <span>Case Studies</span>
+                  {expandedSections.includes("Case Studies") ? (
+                    <ChevronUp className="h-5 w-5" />
+                  ) : (
+                    <ChevronDown className="h-5 w-5" />
+                  )}
+                </button>
+                {expandedSections.includes("Case Studies") && (
+                  <div className="pt-3 pb-4">
+                    <div className="space-y-4">
+                      {/* Case Study 1 */}
+                      <div className="rounded-lg overflow-hidden border border-[#F3F4F6]">
+                        <div className="aspect-video bg-gray-200 relative">
+                          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-2">
+                            <div className="w-2 h-2 rounded-full bg-white"></div>
+                            <div className="w-2 h-2 rounded-full bg-white/50"></div>
+                            <div className="w-2 h-2 rounded-full bg-white/50"></div>
+                          </div>
+                        </div>
+                        <div className="p-4">
+                          <h4 className="font-bold text-base text-[#1E2832] mb-1">Skyscraper of London</h4>
+                          <p className="text-sm text-[#4D5761] mb-2">Made on 23.02.2024</p>
+                          <p className="text-xl font-bold text-[#29B273]">£300,000</p>
+                        </div>
+                      </div>
+
+                      {/* Case Study 2 */}
+                      <div className="rounded-lg overflow-hidden border border-[#F3F4F6]">
+                        <div className="aspect-video bg-gray-200 relative">
+                          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-2">
+                            <div className="w-2 h-2 rounded-full bg-white/50"></div>
+                            <div className="w-2 h-2 rounded-full bg-white"></div>
+                            <div className="w-2 h-2 rounded-full bg-white/50"></div>
+                          </div>
+                        </div>
+                        <div className="p-4">
+                          <h4 className="font-bold text-base text-[#1E2832] mb-1">Students Housing in Leeds</h4>
+                          <p className="text-sm text-[#4D5761] mb-2">Made on 12.12.2024</p>
+                          <p className="text-xl font-bold text-[#29B273]">£279,000</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Proposal Tab Content */}
+          {activeTab === "proposal" && (
+            <div className="space-y-4">
           {/* Price Section */}
           <div className="border-0">
             <button
@@ -120,7 +273,7 @@ export function BidDetailsModal({ supplier, open, onOpenChange }: BidDetailsModa
                 <div className="mt-4 p-3 bg-[#E8F1F8] border border-[#D2E3F2] rounded-lg">
                   <div className="flex items-start gap-2">
                     <span className="text-[#004B75] font-bold text-sm">⚡</span>
-                    <div>
+                <div>
                       <div className="font-bold text-sm text-[#1E2832]">How do they compare?</div>
                       <ul className="list-disc list-inside space-y-1 text-sm text-[#4D5761] mt-2">
                         <li>Mid-range price, approximately 9% higher than lowest bid from Carraldo Energy</li>
@@ -311,14 +464,23 @@ export function BidDetailsModal({ supplier, open, onOpenChange }: BidDetailsModa
                   </ul>
                   <div className="mt-2 p-2 bg-gray-50 rounded text-sm text-[#4D5761]">
                     Fastest delivery time among all suppliers, 25% quicker than slowest bidder
-                  </div>
-                </div>
+              </div>
+          </div>
               </div>
             )}
           </div>
+            </div>
+          )}
 
         </div>
       </SheetContent>
     </Sheet>
   )
 }
+
+
+
+
+
+
+
