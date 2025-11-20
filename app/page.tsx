@@ -1,5 +1,15 @@
 import Link from "next/link"
+import Image from "next/image"
 import { tenderList } from "@/lib/tender-data"
+
+const getIconPath = (slug: string) => {
+  const iconMap: Record<string, string> = {
+    "heat-pump": "/site elements/LED.svg",
+    "solar-pv": "/site elements/solar.svg",
+    "hvac": "/site elements/heat pumps.svg",
+  }
+  return iconMap[slug] || "/site elements/Avatar.svg"
+}
 
 export default function HomePage() {
   return (
@@ -11,46 +21,41 @@ export default function HomePage() {
             Pick a tender scenario to explore
           </h1>
           <p className="text-base text-[#4D5761] max-w-3xl">
-            Each prototype applies the new design system across different project types.
-            Jump into the scenario you want to demo and tweak in Cursor.
+            Explore interactive prototypes for different tender scenarios. Click on any scenario below to test the comparison interface and see how suppliers are evaluated across various project types.
           </p>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-6 py-10 grid gap-6 md:grid-cols-2">
         {tenderList.map((tender) => (
-          <Link
+          <div
             key={tender.slug}
-            href={`/tender/${tender.slug}`}
-            className="group rounded-2xl border border-[#E4E7EC] bg-white shadow-sm hover:shadow-lg transition-shadow p-6 flex flex-col gap-4"
+            className="group rounded-2xl border border-[#E4E7EC] bg-white shadow-sm hover:shadow-lg transition-shadow p-6 flex flex-col gap-4 h-full"
           >
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="text-xs font-semibold text-[#4D5761] uppercase tracking-wide">Scenario</p>
-                <h2 className="text-2xl font-extrabold text-[#1E2832]">{tender.title}</h2>
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 w-16 h-16 flex items-center justify-center">
+                <Image
+                  src={getIconPath(tender.slug)}
+                  alt={tender.title}
+                  width={64}
+                  height={64}
+                  className="object-contain"
+                />
               </div>
-              <span className="text-sm font-bold text-[#1C75BC] group-hover:underline">View</span>
+              <div className="flex-1">
+                <p className="text-xs font-semibold text-[#4D5761] uppercase tracking-wide mb-1">Scenario</p>
+                <h2 className="text-2xl font-extrabold text-[#1E2832] mb-2">{tender.title}</h2>
+                <p className="text-sm text-[#4D5761]">{tender.description}</p>
+              </div>
             </div>
-            <p className="text-sm text-[#4D5761]">{tender.description}</p>
-            <div className="flex flex-wrap items-center gap-2">
-              {tender.tags.map((tag) => (
-                <span
-                  key={`${tender.slug}-${tag}`}
-                  className="px-3 py-1 bg-[#F3F4F6] text-xs font-medium rounded-full text-[#1E2832]"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-            <div className="text-sm text-[#4D5761] flex items-center gap-2">
-              <span className="font-semibold">
-                {tender.overview.submitted} / {tender.overview.invited}
-              </span>
-              suppliers
-              <span className="text-[#D3D7DC]">•</span>
-              Closed {tender.overview.closedDate}
-            </div>
-          </Link>
+            <Link
+              href={`/tender/${tender.slug}`}
+              className="flex h-10 px-4 flex-col justify-center items-center gap-2 rounded-lg bg-[#29B273] text-white hover:bg-[#239f63] transition-colors mt-auto"
+              style={{ boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.02)', fontSize: '14px', fontWeight: 700, lineHeight: 'normal' }}
+            >
+              View Scenario
+            </Link>
+          </div>
         ))}
       </main>
     </div>

@@ -44,10 +44,10 @@ export function SupplierCard({ supplier, onViewDetails }: SupplierCardProps) {
             <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
               <div className="text-xs text-[#4D5761] font-normal">Price</div>
               <div className="text-base font-bold text-[#1E2832]">
-                {supplier.fields.totalLamps !== undefined ? '€' : '£'}{supplier.price.toLocaleString()}
+                {(supplier.fields.totalLamps !== undefined || supplier.fields.systemLifespanYears !== undefined) ? '€' : '£'}{supplier.price.toLocaleString()}
               </div>
             </div>
-            {/* Show LED-specific fields if they exist, otherwise show Solar PV fields */}
+            {/* Show LED-specific fields if they exist, otherwise show HVAC or Solar PV fields */}
             {supplier.fields.totalLamps !== undefined ? (
               <>
                 <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
@@ -66,6 +66,27 @@ export function SupplierCard({ supplier, onViewDetails }: SupplierCardProps) {
                   <div className="text-xs text-[#4D5761] font-normal">Annual Energy (kWh)</div>
                   <div className="text-sm font-semibold text-[#1E2832]">
                     {supplier.fields.annualEnergykWh ?? "—"}
+                  </div>
+                </div>
+              </>
+            ) : supplier.fields.systemLifespanYears !== undefined ? (
+              <>
+                <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
+                  <div className="text-xs text-[#4D5761] font-normal">Delivery time (days)</div>
+                  <div className="text-sm font-semibold text-[#1E2832]">
+                    {supplier.fields.deliveryTime ?? "—"}
+                  </div>
+                </div>
+                <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
+                  <div className="text-xs text-[#4D5761] font-normal">System lifespan (years)</div>
+                  <div className="text-sm font-semibold text-[#1E2832]">
+                    {supplier.fields.systemLifespanYears ?? "—"}
+                  </div>
+                </div>
+                <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
+                  <div className="text-xs text-[#4D5761] font-normal">Manufacturer</div>
+                  <div className="text-sm font-semibold text-[#1E2832]">
+                    {supplier.fields.manufacturer ?? "—"}
                   </div>
                 </div>
               </>
