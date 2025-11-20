@@ -8,6 +8,7 @@ import { SupplierCard } from "@/components/supplier-card"
 import { ComparisonTable } from "@/components/comparison-table"
 import { BidDetailsModal } from "@/components/bid-details-modal"
 import { KeyFieldsModal } from "@/components/key-fields-modal"
+import Link from "next/link"
 
 type TenderComparisonPageProps = {
   config: TenderConfig
@@ -78,10 +79,10 @@ export function TenderComparisonPage({ config }: TenderComparisonPageProps) {
       <header className="bg-white border-t border-b border-[#F3F4F6]">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center py-3">
-            <button className="flex items-center gap-2 hover:underline text-sm font-extrabold text-[#1E2832]">
+            <Link href="/" className="flex items-center gap-2 hover:underline text-sm font-extrabold text-[#1E2832]">
               <ArrowLeft className="h-4 w-4" />
               Back to Tenders
-            </button>
+            </Link>
 
             <button className="flex items-center gap-2 hover:opacity-80">
               <Image

@@ -38,40 +38,70 @@ export function SupplierCard({ supplier, onViewDetails }: SupplierCardProps) {
 
       {/* Field boxes with borders and proper styling */}
       <div className="flex gap-3 w-full">
-        <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
-          <div className="text-xs text-[#4D5761] font-normal">Price</div>
-          <div className="text-base font-bold text-[#1E2832]">£{supplier.price.toLocaleString()}</div>
-        </div>
-        <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
-          <div className="text-xs text-[#4D5761] font-normal">Equipment removal</div>
-          <div className={`text-sm font-semibold text-[#1E2832] ${isTBCOrNotRequired(supplier.fields.equipmentRemoval ?? undefined) ? "bg-orange-100 text-orange-700 px-1.5 py-0.5 inline-block rounded" : ""}`}>
-            {supplier.fields.equipmentRemoval ?? "—"}
-          </div>
-        </div>
-        <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
-          <div className="text-xs text-[#4D5761] font-normal">Unit location</div>
-          <div className={`text-sm font-semibold text-[#1E2832] ${isTBCOrNotRequired(supplier.fields.unitLocation ?? undefined) ? "bg-orange-100 text-orange-700 px-1.5 py-0.5 inline-block rounded" : ""}`}>
-            {supplier.fields.unitLocation ?? "—"}
-          </div>
-        </div>
-        <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
-          <div className="text-xs text-[#4D5761] font-normal">Electrical work</div>
-          <div className={`text-sm font-semibold text-[#1E2832] ${isTBCOrNotRequired(supplier.fields.electricalWork ?? undefined) ? "bg-orange-100 text-orange-700 px-1.5 py-0.5 inline-block rounded" : ""}`}>
-            {supplier.fields.electricalWork ?? "—"}
-          </div>
-        </div>
-        <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
-          <div className="text-xs text-[#4D5761] font-normal">Noise</div>
-          <div className={`text-sm font-semibold text-[#1E2832] ${isTBCOrNotRequired(supplier.fields.noiseControl ?? undefined) ? "bg-orange-100 text-orange-700 px-1.5 py-0.5 inline-block rounded" : ""}`}>
-            {supplier.fields.noiseControl ?? "—"}
-          </div>
-        </div>
-        <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
-          <div className="text-xs text-[#4D5761] font-normal">Operating temps</div>
-          <div className={`text-sm font-semibold text-[#1E2832] ${isTBCOrNotRequired(supplier.fields.operatingTemps ?? undefined) ? "bg-orange-100 text-orange-700 px-1.5 py-0.5 inline-block rounded" : ""}`}>
-            {supplier.fields.operatingTemps ?? "—"}
-          </div>
-        </div>
+        {/* Show Price, Delivery time, Maintenance term, PPA if they exist, otherwise show legacy fields */}
+        {supplier.fields.deliveryTime !== undefined ? (
+          <>
+            <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
+              <div className="text-xs text-[#4D5761] font-normal">Price</div>
+              <div className="text-base font-bold text-[#1E2832]">£{supplier.price.toLocaleString()}</div>
+            </div>
+            <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
+              <div className="text-xs text-[#4D5761] font-normal">Delivery time (days)</div>
+              <div className="text-sm font-semibold text-[#1E2832]">
+                {supplier.fields.deliveryTime ?? "—"}
+              </div>
+            </div>
+            <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
+              <div className="text-xs text-[#4D5761] font-normal">Maintenance term (years)</div>
+              <div className="text-sm font-semibold text-[#1E2832]">
+                {supplier.fields.maintenanceTerm ?? "—"}
+              </div>
+            </div>
+            <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
+              <div className="text-xs text-[#4D5761] font-normal">PPA</div>
+              <div className="text-sm font-semibold text-[#1E2832]">
+                {supplier.fields.ppa ?? "—"}
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
+              <div className="text-xs text-[#4D5761] font-normal">Price</div>
+              <div className="text-base font-bold text-[#1E2832]">£{supplier.price.toLocaleString()}</div>
+            </div>
+            <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
+              <div className="text-xs text-[#4D5761] font-normal">Equipment removal</div>
+              <div className={`text-sm font-semibold text-[#1E2832] ${isTBCOrNotRequired(supplier.fields.equipmentRemoval ?? undefined) ? "bg-orange-100 text-orange-700 px-1.5 py-0.5 inline-block rounded" : ""}`}>
+                {supplier.fields.equipmentRemoval ?? "—"}
+              </div>
+            </div>
+            <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
+              <div className="text-xs text-[#4D5761] font-normal">Unit location</div>
+              <div className={`text-sm font-semibold text-[#1E2832] ${isTBCOrNotRequired(supplier.fields.unitLocation ?? undefined) ? "bg-orange-100 text-orange-700 px-1.5 py-0.5 inline-block rounded" : ""}`}>
+                {supplier.fields.unitLocation ?? "—"}
+              </div>
+            </div>
+            <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
+              <div className="text-xs text-[#4D5761] font-normal">Electrical work</div>
+              <div className={`text-sm font-semibold text-[#1E2832] ${isTBCOrNotRequired(supplier.fields.electricalWork ?? undefined) ? "bg-orange-100 text-orange-700 px-1.5 py-0.5 inline-block rounded" : ""}`}>
+                {supplier.fields.electricalWork ?? "—"}
+              </div>
+            </div>
+            <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
+              <div className="text-xs text-[#4D5761] font-normal">Noise</div>
+              <div className={`text-sm font-semibold text-[#1E2832] ${isTBCOrNotRequired(supplier.fields.noiseControl ?? undefined) ? "bg-orange-100 text-orange-700 px-1.5 py-0.5 inline-block rounded" : ""}`}>
+                {supplier.fields.noiseControl ?? "—"}
+              </div>
+            </div>
+            <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
+              <div className="text-xs text-[#4D5761] font-normal">Operating temps</div>
+              <div className={`text-sm font-semibold text-[#1E2832] ${isTBCOrNotRequired(supplier.fields.operatingTemps ?? undefined) ? "bg-orange-100 text-orange-700 px-1.5 py-0.5 inline-block rounded" : ""}`}>
+                {supplier.fields.operatingTemps ?? "—"}
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Key Differentiator box and Action buttons in same row */}

@@ -21,6 +21,7 @@ function isTBCOrNotRequired(value: string): boolean {
 export function ComparisonTable({ suppliers, categories, onSupplierClick, onShowKeyFields, onExportCsv }: ComparisonTableProps) {
   const [expandedCategories, setExpandedCategories] = useState<string[]>(() => categories.map((c) => c.name))
   const [selectedScoreModal, setSelectedScoreModal] = useState<{category: string, supplier: string} | null>(null)
+  const [selectedOMApproach, setSelectedOMApproach] = useState<{supplierName: string, text: string} | null>(null)
 
   useEffect(() => {
     setExpandedCategories(categories.map((c) => c.name))
@@ -98,8 +99,8 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full table-fixed">
+      <div className="overflow-x-auto w-full" style={{ maxWidth: '100%' }}>
+        <table className="min-w-full" style={{ minWidth: `${(suppliers.length + 1) * 200}px` }}>
           <tbody>
             {categories.map((category) => {
               const isExpanded = expandedCategories.includes(category.name)
@@ -108,7 +109,8 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                   {/* Category header row */}
                   <tr className="border-b border-gray-200 bg-gray-50">
                     <td
-                      className="p-3 pl-4 border-r border-gray-200 sticky left-0 z-10 bg-gray-50 font-bold text-sm cursor-pointer select-none w-64 text-[#1E2832]"
+                      className="p-3 pl-4 border-r border-gray-200 sticky left-0 z-10 bg-gray-50 font-bold text-sm cursor-pointer select-none text-[#1E2832]"
+                      style={{ minWidth: '200px', width: '200px' }}
                       onClick={() => toggleCategory(category.name)}
                     >
                       <span className="inline-flex items-center gap-2">
@@ -119,7 +121,8 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                     {suppliers.map((supplier) => (
                       <td
                         key={`header-${category.name}-${supplier.id}`}
-                        className="p-3 text-sm font-semibold text-[#1E2832] border-r border-gray-200 last:border-r-0 w-56"
+                        className="p-3 text-sm font-semibold text-[#1E2832] border-r border-gray-200 last:border-r-0"
+                        style={{ minWidth: '180px', width: '180px' }}
                       >
                         {supplier.name}
                       </td>
@@ -129,13 +132,15 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                          {/* Score Results row - first in each category */}
                          {isExpanded && (
                            <tr className="border-b border-gray-200 bg-white hover:bg-blue-50">
-                      <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm w-64 leading-tight font-medium text-[#4D5761]">
+                      <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm leading-tight font-medium text-[#4D5761]"
+                          style={{ minWidth: '200px', width: '200px' }}>
                         Score Results
                       </td>
                       {suppliers.map((supplier) => (
                         <td
                           key={`scores-${category.name}-${supplier.id}`}
-                          className="p-3 border-r border-gray-200 last:border-r-0 text-sm w-56 leading-tight"
+                          className="p-3 border-r border-gray-200 last:border-r-0 text-sm leading-tight"
+                          style={{ minWidth: '180px', width: '180px' }}
                         >
                           <button
                             onClick={() => openScoreModal(category.name, supplier.name)}
@@ -152,26 +157,57 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                   {/* Field rows */}
                          {isExpanded && category.fields.map((field) => (
                            <tr key={`${category.name}-${field.label}`} className="border-b border-gray-200 bg-white hover:bg-blue-50">
-                             <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm w-64 leading-tight font-medium text-[#4D5761]">
+                             <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm leading-tight font-medium text-[#4D5761]"
+                                 style={{ minWidth: '200px', width: '200px' }}>
                                {field.label}
                              </td>
                              {suppliers.map((supplier) => {
-                               const value = supplier.fields[field.key as keyof typeof supplier.fields] || "—"
+                               let value = supplier.fields[field.key as keyof typeof supplier.fields] || "—"
+                               // Convert TRUE/FALSE to Yes/No for better readability
+                               if (typeof value === "string") {
+                                 if (value.toUpperCase() === "TRUE") value = "Yes"
+                                 if (value.toUpperCase() === "FALSE") value = "No"
+                               }
+                               
+                               // Handle long O&M approach text
+                               const isOMApproach = field.key === "oMApproach"
+                               const isLongText = typeof value === "string" && value.length > 150
+                               const truncatedValue = isLongText ? value.substring(0, 150) + "..." : value
+                               
                                return (
                                  <td
                                    key={`${category.name}-${field.label}-${supplier.id}`}
-                                   className="p-3 border-r border-gray-200 last:border-r-0 text-sm w-56 leading-tight text-[#4D5761]"
+                                   className="p-3 border-r border-gray-200 last:border-r-0 text-sm leading-tight text-[#4D5761]"
+                                   style={{ minWidth: '180px', width: '180px', maxWidth: '180px' }}
                                  >
-                                   <span
-                                     className={
-                                       isTBCOrNotRequired(value)
-                                         ? "bg-orange-100 text-orange-700 px-2 py-1 inline-block rounded"
-                                         : ""
-                                     }
-                                     style={isTBCOrNotRequired(value) ? { fontSize: '14px' } : {}}
-                                   >
-                                     {value}
-                                   </span>
+                                   {isOMApproach && isLongText ? (
+                                     <div className="flex flex-col gap-1">
+                                       <span
+                                         className="line-clamp-3"
+                                         style={{ fontSize: '14px', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+                                       >
+                                         {truncatedValue}
+                                       </span>
+                                       <button
+                                         onClick={() => setSelectedOMApproach({ supplierName: supplier.name, text: value })}
+                                         className="text-[#1C75BC] hover:underline font-bold text-left text-sm self-start"
+                                         style={{ fontSize: '14px', lineHeight: 'normal' }}
+                                       >
+                                         Read more
+                                       </button>
+                                     </div>
+                                   ) : (
+                                     <span
+                                       className={
+                                         isTBCOrNotRequired(value)
+                                           ? "bg-orange-100 text-orange-700 px-2 py-1 inline-block rounded"
+                                           : ""
+                                       }
+                                       style={isTBCOrNotRequired(value) ? { fontSize: '14px' } : {}}
+                                     >
+                                       {value}
+                                     </span>
+                                   )}
                                  </td>
                                )
                              })}
@@ -182,18 +218,22 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
             })}
             {/* Price row */}
             <tr className="border-b border-gray-200 bg-white hover:bg-blue-50 text-sm">
-              <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm w-64 leading-tight font-medium text-[#4D5761]">Price</td>
+              <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm leading-tight font-medium text-[#4D5761]"
+                  style={{ minWidth: '200px', width: '200px' }}>Price</td>
               {suppliers.map((supplier) => (
-                <td key={`price-${supplier.id}`} className="p-3 border-r border-gray-200 last:border-r-0 text-sm w-56 leading-tight font-bold text-[#1E2832]">
+                <td key={`price-${supplier.id}`} className="p-3 border-r border-gray-200 last:border-r-0 text-sm leading-tight font-bold text-[#1E2832]"
+                    style={{ minWidth: '180px', width: '180px' }}>
                   £{supplier.price.toLocaleString()}
                 </td>
               ))}
             </tr>
                    {/* Contact CTA row */}
                    <tr className="border-b border-gray-200 bg-white text-sm">
-                     <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm w-64 leading-tight font-medium text-[#4D5761]">Contact</td>
+                     <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm leading-tight font-medium text-[#4D5761]"
+                         style={{ minWidth: '200px', width: '200px' }}>Contact</td>
                      {suppliers.map((supplier) => (
-                       <td key={`contact-${supplier.id}`} className="p-3 border-r border-gray-200 last:border-r-0 text-sm w-56 leading-tight">
+                       <td key={`contact-${supplier.id}`} className="p-3 border-r border-gray-200 last:border-r-0 text-sm leading-tight"
+                           style={{ minWidth: '180px', width: '180px' }}>
                          <button
                            className="w-full flex h-10 px-4 flex-col justify-center items-center gap-2 rounded-lg bg-[#29B273] text-white hover:bg-[#239f63]"
                            style={{ boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.02)', fontSize: '14px', fontWeight: 700, lineHeight: 'normal' }}
@@ -309,6 +349,39 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                 </div>
                 <p className="text-sm text-left">
                   We use our AI-driven ranking engine to analyse bids and identify key points to differentiate them from others. Our ranking favours installers who detail their bids clearly.
+                </p>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* O&M Approach Modal */}
+      <Dialog open={!!selectedOMApproach} onOpenChange={() => setSelectedOMApproach(null)}>
+        <DialogContent 
+          className="flex flex-col items-start rounded-lg border border-[#F3F4F6] bg-white !max-w-[850px] w-full"
+          style={{ width: '850px', padding: '32px', gap: '20px' }}
+        >
+          <DialogHeader>
+            <DialogTitle 
+              className="font-extrabold text-[#1E2832]"
+              style={{ fontSize: '20px', lineHeight: 'normal' }}
+            >
+              O&M Approach - {selectedOMApproach?.supplierName}
+            </DialogTitle>
+          </DialogHeader>
+          
+          {selectedOMApproach && (
+            <div className="flex flex-col items-start w-full">
+              <div 
+                className="flex flex-col items-start self-stretch rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]"
+                style={{ padding: '16px', gap: '12px' }}
+              >
+                <p 
+                  className="text-sm text-[#4D5761] whitespace-pre-wrap"
+                  style={{ lineHeight: '1.6' }}
+                >
+                  {selectedOMApproach.text}
                 </p>
               </div>
             </div>
