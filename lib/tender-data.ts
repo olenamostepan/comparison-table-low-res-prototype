@@ -1,6 +1,6 @@
-import type { Supplier, Category } from "@/types/tender"
+import type { Category, Supplier, TenderConfig, TenderScenario } from "@/types/tender"
 
-export const suppliers: Supplier[] = [
+const heatPumpSuppliers: Supplier[] = [
   {
     id: "1",
     name: "Klimaservice Malte Born",
@@ -18,13 +18,11 @@ export const suppliers: Supplier[] = [
       meetsTenderRequirements: "YES",
       controlStrategyMeetsRegulations: "YES",
       emergencyLightingIncluded: "Installation",
-      // legacy fields for cards
       equipmentRemoval: "Yes",
       unitLocation: "Roof",
       electricalWork: "No",
       noiseControl: "Yes",
       operatingTemps: "Yes",
-      // Rome fields
       romeCompliance: "TBC",
       romeCertification: "Not required",
       romeStandards: "Compliant",
@@ -53,13 +51,11 @@ export const suppliers: Supplier[] = [
       meetsTenderRequirements: "YES",
       controlStrategyMeetsRegulations: "YES",
       emergencyLightingIncluded: "Installation",
-      // legacy fields for cards
       equipmentRemoval: "Yes",
       unitLocation: "TBC: Roof / Outside",
       electricalWork: "Yes",
       noiseControl: "TBC on site visit",
       operatingTemps: "Yes",
-      // Rome fields
       romeCompliance: "TBC",
       romeCertification: "Not required",
       romeStandards: "TBC",
@@ -90,13 +86,11 @@ export const suppliers: Supplier[] = [
       meetsTenderRequirements: "NO",
       controlStrategyMeetsRegulations: "YES",
       emergencyLightingIncluded: "Design",
-      // legacy fields for cards
       equipmentRemoval: "Not required",
       unitLocation: "Courtyard",
       electricalWork: "Yes",
       noiseControl: "Yes based on analysis",
       operatingTemps: "Yes",
-      // Rome fields
       romeCompliance: "Not required",
       romeCertification: "TBC",
       romeStandards: "Compliant",
@@ -125,13 +119,11 @@ export const suppliers: Supplier[] = [
       meetsTenderRequirements: "YES",
       controlStrategyMeetsRegulations: "YES",
       emergencyLightingIncluded: "Yes, included but only for central battery operation",
-      // legacy fields for cards
       equipmentRemoval: "Not required",
       unitLocation: "Outside",
       electricalWork: "Yes",
       noiseControl: "Yes",
       operatingTemps: "TBC",
-      // Rome fields
       romeCompliance: "Compliant",
       romeCertification: "TBC",
       romeStandards: "Not required",
@@ -147,7 +139,7 @@ export const suppliers: Supplier[] = [
   },
 ]
 
-export const categories: Category[] = [
+const heatPumpCategories: Category[] = [
   {
     name: "Scope",
     expanded: true,
@@ -188,7 +180,7 @@ export const categories: Category[] = [
   },
 ]
 
-export const fieldExplanations: Record<string, string> = {
+const heatPumpFieldExplanations: Record<string, string> = {
   systemType: "Proposed scope of works",
   manufacturer: "Manufacturers proposed for LED lighting",
   numberOfLights: "Count of fixtures in scope",
@@ -200,4 +192,381 @@ export const fieldExplanations: Record<string, string> = {
   meetsTenderRequirements: "Compliance with tender requirements",
   controlStrategyMeetsRegulations: "Control strategy compliance",
   emergencyLightingIncluded: "Items included within emergency lighting scope",
+  romeCompliance: "Rome compliance statement",
+  romeCertification: "Rome certification evidence",
+  romeStandards: "Rome standards alignment",
+}
+
+const solarSuppliers: Supplier[] = [
+  {
+    id: "11",
+    name: "Solaris Europe",
+    logo: "/solar-company-logo.png",
+    price: 320000,
+    fields: {
+      arraySize: "1.2 MWp rooftop",
+      moduleType: "Mono PERC, Tier 1",
+      inverterTopology: "String inverters w/ DC optimisers",
+      installTimeline: "12 weeks",
+      performanceRatio: "83%",
+      degradation: "0.45% per year",
+      monitoringStack: "SolarLog + custom API feed",
+      warrantyPackage: "25y performance / 10y workmanship",
+      permits: "All local permits included",
+      gridCompliance: "VDE-AR-N 4105 ready",
+      oAndM: "Full O&M for 5 years",
+    },
+    additionalNotes: "Includes crane lifts, ballast optimisation and client training.",
+    keyDifferentiator: "Digital twin monitoring with automated alerting.",
+    documents: [
+      { name: "Solaris-technical-spec.pdf", url: "#" },
+      { name: "Solaris-costing.xlsx", url: "#" },
+    ],
+  },
+  {
+    id: "12",
+    name: "HelioNordics",
+    logo: "/site elements/lowcarbon.svg",
+    price: 295000,
+    fields: {
+      arraySize: "1.1 MWp rooftop",
+      moduleType: "Bifacial glass-glass",
+      inverterTopology: "Central inverter + string combiner",
+      installTimeline: "10 weeks",
+      performanceRatio: "81%",
+      degradation: "0.50% per year",
+      monitoringStack: "SMA Sunny Portal",
+      warrantyPackage: "30y performance / 12y workmanship",
+      permits: "Grid study excluded",
+      gridCompliance: "on going TBC",
+      oAndM: "Preventive only",
+    },
+    additionalNotes: "Requires roof access scaffolding by client.",
+    keyDifferentiator: "Lowest LCOE thanks to bifacial gain.",
+    documents: [
+      { name: "Helio-proposal.pdf", url: "#" },
+      { name: "Helio-schedule.mpp", url: "#" },
+    ],
+  },
+  {
+    id: "13",
+    name: "Photon Builders",
+    logo: "/site elements/beba.svg",
+    price: 345000,
+    fields: {
+      arraySize: "1.3 MWp rooftop + carport",
+      moduleType: "N-type TOPCon",
+      inverterTopology: "Hybrid with battery-ready AC bus",
+      installTimeline: "14 weeks",
+      performanceRatio: "85%",
+      degradation: "0.35% per year",
+      monitoringStack: "Power BI dashboards",
+      warrantyPackage: "25y performance / 15y workmanship",
+      permits: "Permits & grid study included",
+      gridCompliance: "Certified and signed",
+      oAndM: "Full-scope, includes cleaning",
+    },
+    additionalNotes: "Allows future 500 kWh battery integration.",
+    keyDifferentiator: "Hybrid-ready design with digital reporting.",
+    documents: [
+      { name: "Photon-specs.pdf", url: "#" },
+      { name: "Photon-financials.xlsx", url: "#" },
+    ],
+  },
+  {
+    id: "14",
+    name: "BrightWorks Energy",
+    logo: "/site elements/hysopt.svg",
+    price: 310000,
+    fields: {
+      arraySize: "1.0 MWp rooftop",
+      moduleType: "Half-cut mono",
+      inverterTopology: "String inverters",
+      installTimeline: "11 weeks",
+      performanceRatio: "80%",
+      degradation: "0.55% per year",
+      monitoringStack: "SCADA integration",
+      warrantyPackage: "20y performance / 5y workmanship",
+      permits: "Permits included",
+      gridCompliance: "TBC pending utility",
+      oAndM: "Reactive only",
+    },
+    additionalNotes: "Scope excludes structural reinforcement.",
+    keyDifferentiator: "Fastest delivery, utility relationships.",
+    documents: [
+      { name: "BrightWorks-offer.pdf", url: "#" },
+      { name: "BrightWorks-timeline.xlsx", url: "#" },
+    ],
+  },
+]
+
+const solarCategories: Category[] = [
+  {
+    name: "System Design",
+    expanded: true,
+    fields: [
+      { label: "Array size / scope", key: "arraySize" },
+      { label: "Module type", key: "moduleType" },
+      { label: "Inverter topology", key: "inverterTopology" },
+      { label: "Install timeline", key: "installTimeline" },
+    ],
+  },
+  {
+    name: "Performance",
+    expanded: true,
+    fields: [
+      { label: "Performance ratio", key: "performanceRatio" },
+      { label: "Annual degradation", key: "degradation" },
+      { label: "Monitoring stack", key: "monitoringStack" },
+      { label: "Warranty package", key: "warrantyPackage" },
+    ],
+  },
+  {
+    name: "Compliance",
+    expanded: true,
+    fields: [
+      { label: "Permits included", key: "permits" },
+      { label: "Grid compliance", key: "gridCompliance" },
+      { label: "O&M coverage", key: "oAndM" },
+    ],
+  },
+]
+
+const solarFieldExplanations: Record<string, string> = {
+  arraySize: "Total DC size and mounting scope.",
+  moduleType: "Module technology and manufacturer tier.",
+  inverterTopology: "Central vs string vs hybrid approach.",
+  installTimeline: "Estimated delivery schedule.",
+  performanceRatio: "Expected PR under local irradiance.",
+  degradation: "Annual loss assumed for yield models.",
+  monitoringStack: "Telemetry platform and integrations.",
+  warrantyPackage: "Performance and workmanship warranties.",
+  permits: "List of planning/grid approvals covered.",
+  gridCompliance: "Status against utility requirements.",
+  oAndM: "Operations & maintenance scope.",
+}
+
+const hvacSuppliers: Supplier[] = [
+  {
+    id: "21",
+    name: "Nordic ClimateWorks",
+    logo: "/site elements/gogreen.svg",
+    price: 610000,
+    fields: {
+      hvacScope: "Replace 6 AHUs + duct rebalancing",
+      heatSource: "Air-to-water heat pumps",
+      ventilationStrategy: "Demand-controlled w/ CO₂ sensors",
+      controlsStack: "Siemens Desigo upgrade",
+      installWindow: "18 weeks",
+      downtimePlan: "Weekend changeovers only",
+      bmsIntegration: "Native BACnet/IP",
+      commissioning: "Retro-commission + M&V",
+      warranties: "2y labour / 5y equipment",
+      servicePlan: "Gold SLA (same-day)",
+    },
+    additionalNotes: "Includes temporary chillers for switchover.",
+    keyDifferentiator: "Deep Desigo expertise and low downtime.",
+    documents: [
+      { name: "Nordic-scope.pdf", url: "#" },
+      { name: "Nordic-programme.mpp", url: "#" },
+    ],
+  },
+  {
+    id: "22",
+    name: "Metro HVAC Alliance",
+    logo: "/site elements/beba.svg",
+    price: 575000,
+    fields: {
+      hvacScope: "Refurbish AHUs, new VFDs",
+      heatSource: "Hybrid heat pump + gas backup",
+      ventilationStrategy: "Constant volume + VAV boxes",
+      controlsStack: "Honeywell Niagara",
+      installWindow: "16 weeks",
+      downtimePlan: "Night shift works",
+      bmsIntegration: "BACnet gateway only",
+      commissioning: "Standard start-up",
+      warranties: "1y labour / 3y equipment",
+      servicePlan: "Bronze SLA",
+    },
+    additionalNotes: "Client to supply scaffolding and permits.",
+    keyDifferentiator: "Balanced CapEx with staged delivery.",
+    documents: [
+      { name: "Metro-offer.pdf", url: "#" },
+      { name: "Metro-schedule.xlsx", url: "#" },
+    ],
+  },
+  {
+    id: "23",
+    name: "ClimaSphere GmbH",
+    logo: "/site elements/hysopt.svg",
+    price: 640000,
+    fields: {
+      hvacScope: "New AHUs, duct/electrical",
+      heatSource: "Water-to-water heat pumps",
+      ventilationStrategy: "Displacement ventilation",
+      controlsStack: "Schneider EcoStruxure",
+      installWindow: "20 weeks",
+      downtimePlan: "Phased block shut-downs",
+      bmsIntegration: "Full graphics refresh",
+      commissioning: "Level 5 commissioning",
+      warranties: "3y labour / 5y equipment",
+      servicePlan: "Platinum 4-hour response",
+    },
+    additionalNotes: "Includes acoustic upgrades and insulation.",
+    keyDifferentiator: "Best-in-class commissioning protocol.",
+    documents: [
+      { name: "ClimaSphere-spec.pdf", url: "#" },
+      { name: "ClimaSphere-finance.xlsx", url: "#" },
+    ],
+  },
+  {
+    id: "24",
+    name: "Ventum Solutions",
+    logo: "/site elements/lowcarbon.svg",
+    price: 590000,
+    fields: {
+      hvacScope: "AHU coil replacement + controls",
+      heatSource: "Existing chillers + new boilers",
+      ventilationStrategy: "Like-for-like constant volume",
+      controlsStack: "Existing BMS overlays",
+      installWindow: "15 weeks",
+      downtimePlan: "Client managed",
+      bmsIntegration: "Limited trending",
+      commissioning: "Factory testing only",
+      warranties: "1y equipment",
+      servicePlan: "Reactive call-out",
+    },
+    additionalNotes: "Scope excludes balancing.",
+    keyDifferentiator: "Lowest cost, limited scope.",
+    documents: [
+      { name: "Ventum-offer.pdf", url: "#" },
+    ],
+  },
+]
+
+const hvacCategories: Category[] = [
+  {
+    name: "Mechanical Scope",
+    expanded: true,
+    fields: [
+      { label: "Scope summary", key: "hvacScope" },
+      { label: "Heat/cool source", key: "heatSource" },
+      { label: "Ventilation strategy", key: "ventilationStrategy" },
+    ],
+  },
+  {
+    name: "Controls & Delivery",
+    expanded: true,
+    fields: [
+      { label: "Controls / BMS stack", key: "controlsStack" },
+      { label: "Install window", key: "installWindow" },
+      { label: "Downtime plan", key: "downtimePlan" },
+      { label: "BMS integration", key: "bmsIntegration" },
+      { label: "Commissioning approach", key: "commissioning" },
+    ],
+  },
+  {
+    name: "Support",
+    expanded: true,
+    fields: [
+      { label: "Warranty coverage", key: "warranties" },
+      { label: "Service plan", key: "servicePlan" },
+    ],
+  },
+]
+
+const hvacFieldExplanations: Record<string, string> = {
+  hvacScope: "Headline summary of mechanical works.",
+  heatSource: "Primary equipment providing heating/cooling.",
+  ventilationStrategy: "Air distribution and control strategy.",
+  controlsStack: "Controls platform and integrations.",
+  installWindow: "Duration to execute site works.",
+  downtimePlan: "How the contractor mitigates occupant disruption.",
+  bmsIntegration: "Depth of integration with existing BMS.",
+  commissioning: "Commissioning and validation approach.",
+  warranties: "Labour and equipment warranty coverage.",
+  servicePlan: "Post-handover service levels.",
+}
+
+export const tenderConfigs: Record<TenderScenario, TenderConfig> = {
+  "heat-pump": {
+    slug: "heat-pump",
+    title: "Heat Pump Pilot Kamekestraße",
+    description: "Lighting retrofit comparison for a residential block.",
+    location: "Schenkendorfstraße 29, Mülheim an der Ruhr, 45472, DE",
+    avatar: "/site elements/Avatar.svg",
+    tags: ["RESIDENTIAL", "OCCUPIED", "+ 70KW SOLAR"],
+    overview: {
+      invited: 20,
+      submitted: 4,
+      responseRate: 20,
+      details: [
+        "5 unavailable (couldn't meet timeline)",
+        "3 no capacity (project too large)",
+        "2 planned to submit but didn't",
+        "1 excluded by CQuel (incomplete pricing)",
+        "4 submitted and ready to compare ✓",
+      ],
+      closedDate: "15 Oct 2025",
+      duration: "14 days",
+    },
+    suppliers: heatPumpSuppliers,
+    categories: heatPumpCategories,
+    fieldExplanations: heatPumpFieldExplanations,
+  },
+  "solar-pv": {
+    slug: "solar-pv",
+    title: "Solar PV - Northampton Corn Exchange",
+    description: "1 MW+ rooftop PV tender for a commercial heritage site.",
+    location: "4 Market Square, Northampton, NN1 1DE, UK",
+    avatar: "/site elements/Avatar.svg",
+    tags: ["COMMERCIAL", "+1MW SOLAR"],
+    overview: {
+      invited: 20,
+      submitted: 7,
+      responseRate: 35,
+      details: [
+        "5 didn't respond",
+        "4 missed the deadline",
+        "3 didn't work on projects of this size",
+        "1 excluded (incomplete pricing)",
+        "7 submitted",
+      ],
+      closedDate: "28 Oct 2025",
+      duration: "21 days",
+    },
+    suppliers: solarSuppliers,
+    categories: solarCategories,
+    fieldExplanations: solarFieldExplanations,
+  },
+  hvac: {
+    slug: "hvac",
+    title: "HVAC Modernisation – City Offices West",
+    description: "Full AHU and controls upgrade for 32,000 m² offices.",
+    location: "Friedrichstraße 45, Berlin, DE",
+    avatar: "/site elements/Avatar.svg",
+    tags: ["COMMERCIAL", "OCCUPIED", "PHASED WORKS"],
+    overview: {
+      invited: 9,
+      submitted: 4,
+      responseRate: 44,
+      details: [
+        "1 declined (capacity)",
+        "2 pricing only bids withdrawn",
+        "2 awaiting 2025 budgets",
+        "4 complete submissions ✓",
+      ],
+      closedDate: "05 Nov 2025",
+      duration: "18 days",
+    },
+    suppliers: hvacSuppliers,
+    categories: hvacCategories,
+    fieldExplanations: hvacFieldExplanations,
+  },
+}
+
+export const tenderList = Object.values(tenderConfigs)
+
+export function getTenderConfig(slug: string): TenderConfig | undefined {
+  return tenderConfigs[slug as TenderScenario]
 }

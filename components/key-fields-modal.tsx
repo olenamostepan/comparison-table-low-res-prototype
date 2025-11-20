@@ -1,14 +1,13 @@
 "use client"
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { fieldExplanations } from "@/lib/tender-data"
-
 interface KeyFieldsModalProps {
   open: boolean
+  fieldExplanations: Record<string, string>
   onOpenChange: (open: boolean) => void
 }
 
-export function KeyFieldsModal({ open, onOpenChange }: KeyFieldsModalProps) {
+export function KeyFieldsModal({ open, fieldExplanations, onOpenChange }: KeyFieldsModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent 

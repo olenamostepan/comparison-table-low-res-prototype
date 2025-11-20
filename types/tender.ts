@@ -28,6 +28,9 @@ export type Supplier = {
     romeCompliance?: string
     romeCertification?: string
     romeStandards?: string
+
+    // Allow scenario-specific extensions
+    [key: string]: string | undefined
   }
   additionalNotes: string
   keyDifferentiator: string
@@ -48,4 +51,28 @@ export type Category = {
 export type CategoryField = {
   label: string
   key: string
+}
+
+export type TenderOverview = {
+  invited: number
+  submitted: number
+  responseRate: number
+  details: string[]
+  closedDate: string
+  duration: string
+}
+
+export type TenderScenario = "heat-pump" | "solar-pv" | "hvac"
+
+export type TenderConfig = {
+  slug: TenderScenario
+  title: string
+  description: string
+  location: string
+  avatar: string
+  tags: string[]
+  overview: TenderOverview
+  suppliers: Supplier[]
+  categories: Category[]
+  fieldExplanations: Record<string, string>
 }

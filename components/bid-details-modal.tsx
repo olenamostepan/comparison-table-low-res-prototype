@@ -484,3 +484,4 @@ export function BidDetailsModal({ supplier, open, onOpenChange }: BidDetailsModa
 
 
 
+

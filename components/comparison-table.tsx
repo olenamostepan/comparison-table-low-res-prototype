@@ -1,15 +1,14 @@
 "use client"
 
-import { useState, Fragment } from "react"
+import { useState, Fragment, useEffect } from "react"
 import { Info, ChevronUp, ChevronDown } from "lucide-react"
-import type { Supplier } from "@/types/tender"
-import { categories } from "@/lib/tender-data"
+import type { Supplier, Category } from "@/types/tender"
 import { ChevronDown as ChevronDownIcon, ChevronRight, Download } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 interface ComparisonTableProps {
   suppliers: Supplier[]
+  categories: Category[]
   onSupplierClick: (supplier: Supplier) => void
   onShowKeyFields?: () => void
   onExportCsv?: () => void
@@ -19,9 +18,13 @@ function isTBCOrNotRequired(value: string): boolean {
   return value.toLowerCase().includes("tbc") || value.toLowerCase().includes("not required")
 }
 
-export function ComparisonTable({ suppliers, onSupplierClick, onShowKeyFields, onExportCsv }: ComparisonTableProps) {
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(categories.map((c) => c.name))
+export function ComparisonTable({ suppliers, categories, onSupplierClick, onShowKeyFields, onExportCsv }: ComparisonTableProps) {
+  const [expandedCategories, setExpandedCategories] = useState<string[]>(() => categories.map((c) => c.name))
   const [selectedScoreModal, setSelectedScoreModal] = useState<{category: string, supplier: string} | null>(null)
+
+  useEffect(() => {
+    setExpandedCategories(categories.map((c) => c.name))
+  }, [categories])
 
   const toggleCategory = (categoryName: string) => {
     setExpandedCategories((prev) =>
