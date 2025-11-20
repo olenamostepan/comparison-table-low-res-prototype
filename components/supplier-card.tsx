@@ -43,26 +43,54 @@ export function SupplierCard({ supplier, onViewDetails }: SupplierCardProps) {
           <>
             <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
               <div className="text-xs text-[#4D5761] font-normal">Price</div>
-              <div className="text-base font-bold text-[#1E2832]">£{supplier.price.toLocaleString()}</div>
-            </div>
-            <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
-              <div className="text-xs text-[#4D5761] font-normal">Delivery time (days)</div>
-              <div className="text-sm font-semibold text-[#1E2832]">
-                {supplier.fields.deliveryTime ?? "—"}
+              <div className="text-base font-bold text-[#1E2832]">
+                {supplier.fields.totalLamps !== undefined ? '€' : '£'}{supplier.price.toLocaleString()}
               </div>
             </div>
-            <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
-              <div className="text-xs text-[#4D5761] font-normal">Maintenance term (years)</div>
-              <div className="text-sm font-semibold text-[#1E2832]">
-                {supplier.fields.maintenanceTerm ?? "—"}
-              </div>
-            </div>
-            <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
-              <div className="text-xs text-[#4D5761] font-normal">PPA</div>
-              <div className="text-sm font-semibold text-[#1E2832]">
-                {supplier.fields.ppa ?? "—"}
-              </div>
-            </div>
+            {/* Show LED-specific fields if they exist, otherwise show Solar PV fields */}
+            {supplier.fields.totalLamps !== undefined ? (
+              <>
+                <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
+                  <div className="text-xs text-[#4D5761] font-normal">Total Lamps</div>
+                  <div className="text-sm font-semibold text-[#1E2832]">
+                    {supplier.fields.totalLamps ?? "—"}
+                  </div>
+                </div>
+                <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
+                  <div className="text-xs text-[#4D5761] font-normal">Delivery (days)</div>
+                  <div className="text-sm font-semibold text-[#1E2832]">
+                    {supplier.fields.deliveryTime ?? "—"}
+                  </div>
+                </div>
+                <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
+                  <div className="text-xs text-[#4D5761] font-normal">Annual Energy (kWh)</div>
+                  <div className="text-sm font-semibold text-[#1E2832]">
+                    {supplier.fields.annualEnergykWh ?? "—"}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
+                  <div className="text-xs text-[#4D5761] font-normal">Delivery time (days)</div>
+                  <div className="text-sm font-semibold text-[#1E2832]">
+                    {supplier.fields.deliveryTime ?? "—"}
+                  </div>
+                </div>
+                <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
+                  <div className="text-xs text-[#4D5761] font-normal">Maintenance term (years)</div>
+                  <div className="text-sm font-semibold text-[#1E2832]">
+                    {supplier.fields.maintenanceTerm ?? "—"}
+                  </div>
+                </div>
+                <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
+                  <div className="text-xs text-[#4D5761] font-normal">PPA</div>
+                  <div className="text-sm font-semibold text-[#1E2832]">
+                    {supplier.fields.ppa ?? "—"}
+                  </div>
+                </div>
+              </>
+            )}
           </>
         ) : (
           <>

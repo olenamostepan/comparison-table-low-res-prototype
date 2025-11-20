@@ -99,8 +99,8 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
         </div>
       </div>
 
-      <div className="overflow-x-auto w-full" style={{ maxWidth: '100%' }}>
-        <table className="min-w-full" style={{ minWidth: `${(suppliers.length + 1) * 200}px` }}>
+      <div className="overflow-x-auto w-full" style={{ width: '100%', margin: 0, padding: 0 }}>
+        <table style={{ width: `${(suppliers.length + 1) * 200}px`, margin: 0, borderCollapse: 'collapse' }}>
           <tbody>
             {categories.map((category) => {
               const isExpanded = expandedCategories.includes(category.name)
@@ -118,11 +118,11 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                         {category.name}
                       </span>
                     </td>
-                    {suppliers.map((supplier) => (
+                    {suppliers.map((supplier, index) => (
                       <td
                         key={`header-${category.name}-${supplier.id}`}
-                        className="p-3 text-sm font-semibold text-[#1E2832] border-r border-gray-200 last:border-r-0"
-                        style={{ minWidth: '180px', width: '180px' }}
+                        className="p-3 text-sm font-semibold text-[#1E2832] border-r border-gray-200"
+                        style={{ minWidth: '180px', width: '180px', borderRight: index === suppliers.length - 1 ? 'none' : '1px solid #e5e7eb' }}
                       >
                         {supplier.name}
                       </td>
