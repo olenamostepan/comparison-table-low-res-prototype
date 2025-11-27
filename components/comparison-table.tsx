@@ -99,8 +99,8 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
         </div>
       </div>
 
-      <div className="overflow-x-auto w-full" style={{ width: '100%', margin: 0, padding: 0 }}>
-        <table style={{ width: `${(suppliers.length + 1) * 200}px`, margin: 0, borderCollapse: 'collapse' }}>
+      <div style={{ marginLeft: '-24px', marginRight: '-24px', paddingLeft: '24px', paddingRight: '0', overflowX: 'auto', width: 'calc(100% + 48px)', position: 'relative' }}>
+        <table style={{ width: '100%', minWidth: `${200 + (suppliers.length * 180)}px`, margin: '0', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
           <tbody>
             {categories.map((category) => {
               const isExpanded = expandedCategories.includes(category.name)
@@ -109,10 +109,10 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                   {/* Category header row */}
                   <tr className="border-b border-gray-200 bg-gray-50">
                     <td
-                      className="p-3 pl-4 border-r border-gray-200 sticky left-0 z-10 bg-gray-50 font-bold text-sm cursor-pointer select-none text-[#1E2832]"
-                      style={{ minWidth: '200px', width: '200px' }}
-                      onClick={() => toggleCategory(category.name)}
-                    >
+                      className="p-3 pl-4 border-r border-gray-200 sticky font-bold text-sm cursor-pointer select-none text-[#1E2832]"
+                      style={{ minWidth: '200px', width: '200px', left: '0', position: 'sticky', backgroundColor: '#f9fafb', zIndex: 30, boxShadow: '2px 0 4px rgba(0,0,0,0.05)' }}
+                    onClick={() => toggleCategory(category.name)}
+                  >
                       <span className="inline-flex items-center gap-2">
                         {isExpanded ? <ChevronDownIcon className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                         {category.name}
@@ -131,16 +131,16 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
 
                          {/* Score Results row - first in each category */}
                          {isExpanded && (
-                           <tr className="border-b border-gray-200 bg-white hover:bg-blue-50">
-                      <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm leading-tight font-medium text-[#4D5761]"
-                          style={{ minWidth: '200px', width: '200px' }}>
+                           <tr className="border-b border-gray-200 bg-white hover:bg-blue-50 group">
+                      <td className="p-3 pl-8 border-r border-gray-200 sticky group-hover:bg-blue-50 text-sm leading-tight font-medium text-[#4D5761]"
+                          style={{ minWidth: '200px', width: '200px', left: '0', position: 'sticky', backgroundColor: 'white', zIndex: 30, boxShadow: '2px 0 4px rgba(0,0,0,0.05)' }}>
                         Score Results
                       </td>
-                      {suppliers.map((supplier) => (
+                      {suppliers.map((supplier, index) => (
                         <td
                           key={`scores-${category.name}-${supplier.id}`}
-                          className="p-3 border-r border-gray-200 last:border-r-0 text-sm leading-tight"
-                          style={{ minWidth: '180px', width: '180px' }}
+                          className="p-3 border-r border-gray-200 text-sm leading-tight"
+                          style={{ minWidth: '180px', width: '180px', borderRight: index === suppliers.length - 1 ? 'none' : '1px solid #e5e7eb' }}
                         >
                           <button
                             onClick={() => openScoreModal(category.name, supplier.name)}
@@ -156,12 +156,12 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
 
                   {/* Field rows */}
                          {isExpanded && category.fields.map((field) => (
-                           <tr key={`${category.name}-${field.label}`} className="border-b border-gray-200 bg-white hover:bg-blue-50">
-                             <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm leading-tight font-medium text-[#4D5761]"
-                                 style={{ minWidth: '200px', width: '200px' }}>
+                           <tr key={`${category.name}-${field.label}`} className="border-b border-gray-200 bg-white hover:bg-blue-50 group">
+                             <td className="p-3 pl-8 border-r border-gray-200 sticky group-hover:bg-blue-50 text-sm leading-tight font-medium text-[#4D5761]"
+                                 style={{ minWidth: '200px', width: '200px', left: '0', position: 'sticky', backgroundColor: 'white', zIndex: 30, boxShadow: '2px 0 4px rgba(0,0,0,0.05)' }}>
                                {field.label}
                              </td>
-                             {suppliers.map((supplier) => {
+                             {suppliers.map((supplier, index) => {
                                let value = supplier.fields[field.key as keyof typeof supplier.fields] || "—"
                                // Convert TRUE/FALSE to Yes/No for better readability
                                if (typeof value === "string") {
@@ -174,11 +174,11 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                                const isLongText = typeof value === "string" && value.length > 150
                                const truncatedValue = isLongText ? value.substring(0, 150) + "..." : value
                                
-                               return (
+                          return (
                                  <td
                                    key={`${category.name}-${field.label}-${supplier.id}`}
-                                   className="p-3 border-r border-gray-200 last:border-r-0 text-sm leading-tight text-[#4D5761]"
-                                   style={{ minWidth: '180px', width: '180px', maxWidth: '180px' }}
+                                   className="p-3 border-r border-gray-200 text-sm leading-tight text-[#4D5761]"
+                                   style={{ minWidth: '180px', width: '180px', maxWidth: '180px', borderRight: index === suppliers.length - 1 ? 'none' : '1px solid #e5e7eb' }}
                                  >
                                    {isOMApproach && isLongText ? (
                                      <div className="flex flex-col gap-1">
@@ -205,35 +205,35 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                                        }
                                        style={isTBCOrNotRequired(value) ? { fontSize: '14px' } : {}}
                                      >
-                                       {value}
-                                     </span>
+                                {value}
+                              </span>
                                    )}
-                                 </td>
-                               )
-                             })}
-                           </tr>
-                         ))}
+                            </td>
+                          )
+                        })}
+                      </tr>
+                    ))}
                 </Fragment>
               )
             })}
             {/* Price row */}
-            <tr className="border-b border-gray-200 bg-white hover:bg-blue-50 text-sm">
-              <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm leading-tight font-medium text-[#4D5761]"
-                  style={{ minWidth: '200px', width: '200px' }}>Price</td>
-              {suppliers.map((supplier) => (
-                <td key={`price-${supplier.id}`} className="p-3 border-r border-gray-200 last:border-r-0 text-sm leading-tight font-bold text-[#1E2832]"
-                    style={{ minWidth: '180px', width: '180px' }}>
+            <tr className="border-b border-gray-200 bg-white hover:bg-blue-50 text-sm group">
+              <td className="p-3 pl-8 border-r border-gray-200 sticky group-hover:bg-blue-50 text-sm leading-tight font-medium text-[#4D5761]"
+                  style={{ minWidth: '200px', width: '200px', left: '0', position: 'sticky', backgroundColor: 'white', zIndex: 30, boxShadow: '2px 0 4px rgba(0,0,0,0.05)' }}>Price</td>
+              {suppliers.map((supplier, index) => (
+                <td key={`price-${supplier.id}`} className="p-3 border-r border-gray-200 text-sm leading-tight font-bold text-[#1E2832]"
+                    style={{ minWidth: '180px', width: '180px', borderRight: index === suppliers.length - 1 ? 'none' : '1px solid #e5e7eb' }}>
                   £{supplier.price.toLocaleString()}
                 </td>
               ))}
             </tr>
                    {/* Contact CTA row */}
-                   <tr className="border-b border-gray-200 bg-white text-sm">
-                     <td className="p-3 pl-8 border-r border-gray-200 sticky left-0 z-10 bg-white text-sm leading-tight font-medium text-[#4D5761]"
-                         style={{ minWidth: '200px', width: '200px' }}>Contact</td>
-                     {suppliers.map((supplier) => (
-                       <td key={`contact-${supplier.id}`} className="p-3 border-r border-gray-200 last:border-r-0 text-sm leading-tight"
-                           style={{ minWidth: '180px', width: '180px' }}>
+                   <tr className="border-b border-gray-200 bg-white text-sm group">
+                     <td className="p-3 pl-8 border-r border-gray-200 sticky text-sm leading-tight font-medium text-[#4D5761]"
+                         style={{ minWidth: '200px', width: '200px', left: '0', position: 'sticky', backgroundColor: 'white', zIndex: 30, boxShadow: '2px 0 4px rgba(0,0,0,0.05)' }}>Contact</td>
+                     {suppliers.map((supplier, index) => (
+                       <td key={`contact-${supplier.id}`} className="p-3 border-r border-gray-200 text-sm leading-tight"
+                           style={{ minWidth: '180px', width: '180px', borderRight: index === suppliers.length - 1 ? 'none' : '1px solid #e5e7eb' }}>
                          <button
                            className="w-full flex h-10 px-4 flex-col justify-center items-center gap-2 rounded-lg bg-[#29B273] text-white hover:bg-[#239f63]"
                            style={{ boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.02)', fontSize: '14px', fontWeight: 700, lineHeight: 'normal' }}

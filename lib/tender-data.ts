@@ -29,7 +29,7 @@ const heatPumpSuppliers: Supplier[] = [
       componentWarrantyYears: "3",
     },
     additionalNotes: "",
-    keyDifferentiator: "",
+    keyDifferentiator: "Very competitive pricing and comprehensive coverage. They offer the longest running hours at 6,500 per year and achieve the longest solution lifespan at 25 years.",
     documents: [
       { name: "Technical spec.pdf", url: "#" },
       { name: "Pricing breakdown.xlsx", url: "#" },
@@ -63,7 +63,7 @@ const heatPumpSuppliers: Supplier[] = [
       componentWarrantyYears: "0",
     },
     additionalNotes: "",
-    keyDifferentiator: "",
+    keyDifferentiator: "Provides the lowest total cost; however, their bid contains significant data gaps that requires further clarifications.",
     documents: [
       { name: "Technical spec.pdf", url: "#" },
       { name: "Pricing breakdown.xlsx", url: "#" },
@@ -97,7 +97,7 @@ const heatPumpSuppliers: Supplier[] = [
       componentWarrantyYears: "5",
     },
     additionalNotes: "",
-    keyDifferentiator: "",
+    keyDifferentiator: "Offers matching 5-year warranties for both lamps and workmanship (the only supplier with equal warranty periods), demonstrating confidence in both product and installation quality.",
     documents: [
       { name: "Technical spec.pdf", url: "#" },
       { name: "Pricing breakdown.xlsx", url: "#" },
@@ -131,7 +131,7 @@ const heatPumpSuppliers: Supplier[] = [
       componentWarrantyYears: "5",
     },
     additionalNotes: "",
-    keyDifferentiator: "",
+    keyDifferentiator: "Has by far the highest cost, but includes detailed cost breakdowns with €1,150 annual maintenance explicitly itemized.",
     documents: [
       { name: "Technical spec.pdf", url: "#" },
       { name: "Pricing breakdown.xlsx", url: "#" },
@@ -256,7 +256,7 @@ const solarSuppliers: Supplier[] = [
       systemLifetimeYears: "25",
     },
     additionalNotes: "",
-    keyDifferentiator: "",
+    keyDifferentiator: "Offers a comprehensive 25-year PPA option with free O&M included throughout, making it the most flexible financing option with no upfront costs.",
     documents: [
       { name: "HHT-technical-spec.pdf", url: "#" },
       { name: "HHT-costing.xlsx", url: "#" },
@@ -298,7 +298,7 @@ const solarSuppliers: Supplier[] = [
       systemLifetimeYears: "25",
     },
     additionalNotes: "",
-    keyDifferentiator: "",
+    keyDifferentiator: "Provides the longest inverter warranty at 20 years (double most competitors), significantly reducing long-term replacement costs and risk.",
     documents: [
       { name: "SONNE-proposal.pdf", url: "#" },
       { name: "SONNE-schedule.xlsx", url: "#" },
@@ -340,7 +340,7 @@ const solarSuppliers: Supplier[] = [
       systemLifetimeYears: "25",
     },
     additionalNotes: "",
-    keyDifferentiator: "",
+    keyDifferentiator: "Offers the longest workmanship warranty at 7 years along with included specialist solar panel cleaning services, providing exceptional installation quality assurance.",
     documents: [
       { name: "Carraldo-specs.pdf", url: "#" },
       { name: "Carraldo-financials.xlsx", url: "#" },
@@ -382,7 +382,7 @@ const solarSuppliers: Supplier[] = [
       systemLifetimeYears: "35",
     },
     additionalNotes: "",
-    keyDifferentiator: "",
+    keyDifferentiator: "Claims the longest system lifetime at 35 years and achieves the highest self-sufficiency rate at 80%, making it ideal for high energy users.",
     documents: [
       { name: "Alterum-offer.pdf", url: "#" },
       { name: "Alterum-timeline.xlsx", url: "#" },
@@ -424,7 +424,7 @@ const solarSuppliers: Supplier[] = [
       systemLifetimeYears: "30",
     },
     additionalNotes: "",
-    keyDifferentiator: "",
+    keyDifferentiator: "Has the longest lead time (10 weeks) and installation period (120 days) but offers the most affordable annual maintenance at £20,196 with comprehensive remote monitoring and software management.",
     documents: [
       { name: "Northern-technical-spec.pdf", url: "#" },
       { name: "Northern-costing.xlsx", url: "#" },
@@ -466,7 +466,7 @@ const solarSuppliers: Supplier[] = [
       systemLifetimeYears: "40",
     },
     additionalNotes: "",
-    keyDifferentiator: "",
+    keyDifferentiator: "Features the longest total system lifetime at 40 years with a competitive price point of £1.12M, offering the best long-term value proposition.",
     documents: [
       { name: "APN-proposal.pdf", url: "#" },
       { name: "APN-schedule.xlsx", url: "#" },
@@ -508,7 +508,7 @@ const solarSuppliers: Supplier[] = [
       systemLifetimeYears: "25",
     },
     additionalNotes: "",
-    keyDifferentiator: "",
+    keyDifferentiator: "Shows an unusual profile with annual consumption of 3,840,000 kWh (far exceeding system output). They offer the shortest inverter warranty at just 5 years.",
     documents: [
       { name: "Energis-specs.pdf", url: "#" },
       { name: "Energis-financials.xlsx", url: "#" },
@@ -642,7 +642,7 @@ const hvacSuppliers: Supplier[] = [
       systemLifespanYears: "20",
     },
     additionalNotes: "",
-    keyDifferentiator: "",
+    keyDifferentiator: "Offers zero lead time (immediate availability) and the highest materials percentage at 76.2%, suggesting they have stock readily available.",
     documents: [
       { name: "Technical spec.pdf", url: "#" },
       { name: "Pricing breakdown.xlsx", url: "#" },
@@ -676,7 +676,7 @@ const hvacSuppliers: Supplier[] = [
       systemLifespanYears: "20",
     },
     additionalNotes: "",
-    keyDifferentiator: "",
+    keyDifferentiator: "Provides the longest warranties at 4 years for both workmanship and equipment (double most competitors).",
     documents: [
       { name: "Technical spec.pdf", url: "#" },
       { name: "Pricing breakdown.xlsx", url: "#" },
@@ -710,7 +710,7 @@ const hvacSuppliers: Supplier[] = [
       systemLifespanYears: "20",
     },
     additionalNotes: "",
-    keyDifferentiator: "",
+    keyDifferentiator: "Uses R32 refrigerant (the only supplier to do so), which is more environmentally friendly with lower global warming potential compared to R410A used by all other bidders.",
     documents: [
       { name: "Technical spec.pdf", url: "#" },
       { name: "Pricing breakdown.xlsx", url: "#" },
@@ -744,7 +744,7 @@ const hvacSuppliers: Supplier[] = [
       systemLifespanYears: "20",
     },
     additionalNotes: "",
-    keyDifferentiator: "",
+    keyDifferentiator: "Offers the longest equipment warranty at 5 years while maintaining a competitive mid-range price point of €579,253, providing the best equipment protection-to-cost ratio.",
     documents: [
       { name: "Technical spec.pdf", url: "#" },
       { name: "Pricing breakdown.xlsx", url: "#" },
@@ -778,7 +778,7 @@ const hvacSuppliers: Supplier[] = [
       systemLifespanYears: "15",
     },
     additionalNotes: "",
-    keyDifferentiator: "",
+    keyDifferentiator: "Achieves the lowest cost for a 12-unit system. However, they specify only a 15-year refrigerant lifespan versus 20 years for competitors.",
     documents: [
       { name: "Technical spec.pdf", url: "#" },
       { name: "Pricing breakdown.xlsx", url: "#" },
@@ -857,8 +857,8 @@ const hvacFieldExplanations: Record<string, string> = {
 }
 
 export const tenderConfigs: Record<TenderScenario, TenderConfig> = {
-  "heat-pump": {
-    slug: "heat-pump",
+  "led": {
+    slug: "led",
     title: "LED - Waldemarstraße",
     description: "LED retrofit and controls tender for an occupied office building.",
     location: "Waldemarstraße 57, Berlin, 10997, DE",

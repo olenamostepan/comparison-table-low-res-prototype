@@ -62,7 +62,7 @@ export type TenderOverview = {
   duration: string
 }
 
-export type TenderScenario = "heat-pump" | "solar-pv" | "hvac"
+export type TenderScenario = "led" | "solar-pv" | "hvac"
 
 export type TenderConfig = {
   slug: TenderScenario

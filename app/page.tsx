@@ -4,7 +4,7 @@ import { tenderList } from "@/lib/tender-data"
 
 const getIconPath = (slug: string) => {
   const iconMap: Record<string, string> = {
-    "heat-pump": "/site elements/LED.svg",
+    "led": "/site elements/LED.svg",
     "solar-pv": "/site elements/solar.svg",
     "hvac": "/site elements/heat pumps.svg",
   }
@@ -46,7 +46,7 @@ export default function HomePage() {
                 <p className="text-xs font-semibold text-[#4D5761] uppercase tracking-wide mb-1">Scenario</p>
                 <h2 className="text-2xl font-extrabold text-[#1E2832] mb-2">{tender.title}</h2>
                 <p className="text-sm text-[#4D5761]">{tender.description}</p>
-              </div>
+          </div>
             </div>
             <Link
               href={`/tender/${tender.slug}`}
