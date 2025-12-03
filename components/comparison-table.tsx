@@ -23,7 +23,7 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
   const [selectedScoreModal, setSelectedScoreModal] = useState<{category: string, supplier: string, isGeneralScore?: boolean} | null>(null)
   const [selectedOMApproach, setSelectedOMApproach] = useState<{supplierName: string, text: string} | null>(null)
   const [tooltipVisible, setTooltipVisible] = useState<{field: string, supplierId: string} | null>(null)
-  const [activeFilter, setActiveFilter] = useState<"financial" | "relevance" | "speed">("relevance")
+  const [activeFilter, setActiveFilter] = useState<"financial" | "relevance" | "speed" | "technical">("relevance")
 
   // Reorder categories based on active filter
   const getOrderedCategories = () => {
@@ -45,6 +45,11 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
       if (categoryMap.has("Supplier relevance")) ordered.push(categoryMap.get("Supplier relevance")!)
       if (categoryMap.has("Financial scope")) ordered.push(categoryMap.get("Financial scope")!)
       if (categoryMap.has("Technical scope")) ordered.push(categoryMap.get("Technical scope")!)
+    } else if (activeFilter === "technical") {
+      if (categoryMap.has("Technical scope")) ordered.push(categoryMap.get("Technical scope")!)
+      if (categoryMap.has("Supplier relevance")) ordered.push(categoryMap.get("Supplier relevance")!)
+      if (categoryMap.has("Financial scope")) ordered.push(categoryMap.get("Financial scope")!)
+      if (categoryMap.has("Speed")) ordered.push(categoryMap.get("Speed")!)
     }
     
     // Add any remaining categories that weren't in the map
@@ -77,6 +82,8 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
       categoryToExpand = "Financial scope"
     } else if (activeFilter === "speed") {
       categoryToExpand = "Speed"
+    } else if (activeFilter === "technical") {
+      categoryToExpand = "Technical scope"
     }
     
     if (categoryToExpand) {
@@ -137,6 +144,16 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
   }
 
   const getScoreExplanation = (category: string, supplierId: string) => {
+    // Handle Supplier relevance category with custom explanation
+    if (category === "Supplier relevance") {
+      return "Based on our onboarding conversations, we weighted the score for asset type highest (70%), followed by location (20%) and then stakeholder management and asset size each at (10%)."
+    }
+    
+    // Handle Financial scope category with custom explanation
+    if (category === "Financial scope") {
+      return "The Overall Pricing Score combined the capex price (60% weight) with the availability of financing options like Hire Purchase (20%) and PPA (20%). Since not all suppliers offered those financing options, they were scored as 5 if available and 1 if not, then weighted with the capex score to get the final result."
+    }
+    
     const explanations: Record<string, Record<string, string>> = {
       "Scope": {
         "1": "The scope definition is comprehensive with clear system type specification and detailed manufacturer information. The number of lights is clearly stated at 2,494 units. However, the scope could benefit from more detailed installation specifications.",
@@ -221,6 +238,16 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
             }`}
           >
             Speed
+          </button>
+          <button
+            onClick={() => setActiveFilter("technical")}
+            className={`px-4 py-2 rounded-lg text-[14px] font-bold transition-colors ${
+              activeFilter === "technical"
+                ? 'bg-white text-[#29b273] border border-[#29b273]'
+                : 'bg-[#F9FAFB] text-[#1E2832] border border-[#D3D7DC]'
+            }`}
+          >
+            Technical
           </button>
         </div>
       </div>
@@ -408,7 +435,7 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                     style={{ minWidth: '180px', width: '180px', borderRight: index === suppliers.length - 1 ? 'none' : '1px solid #e5e7eb' }}>
                   <button
                     onClick={() => {
-                      const categoryName = activeFilter === "relevance" ? "Supplier relevance" : activeFilter === "financial" ? "Financial scope" : "Speed"
+                      const categoryName = activeFilter === "relevance" ? "Supplier relevance" : activeFilter === "financial" ? "Financial scope" : activeFilter === "speed" ? "Speed" : "Technical scope"
                       setSelectedScoreModal({ category: categoryName, supplier: supplier.name, isGeneralScore: true })
                     }}
                     className="text-[#1C75BC] hover:text-[#1C75BC] hover:underline cursor-pointer font-bold"
@@ -509,25 +536,6 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                     </div>
                   ) : null}
                 </div>
-              </div>
-
-              {/* What you might want to consider field */}
-              <div 
-                className="flex flex-col items-start self-stretch rounded-lg border border-[#FBDDD2] bg-[#FDEEE9]"
-                style={{ padding: '16px', gap: '8px' }}
-              >
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 bg-orange-300 rounded-full flex items-center justify-center text-xs">⚠</div>
-                  <h4 
-                    className="font-bold text-[#E9571F]"
-                    style={{ fontSize: '14px', lineHeight: 'normal' }}
-                  >
-                    What you might want to consider
-                  </h4>
-                </div>
-                <p className="text-sm text-left">
-                  We only ask for 4 pricing items, so it's important you understand that different installers break their prices down differently. These breakdowns are to illustrate how they have reached their price and are not directly comparable.
-                </p>
               </div>
 
               {/* Score Results section */}
