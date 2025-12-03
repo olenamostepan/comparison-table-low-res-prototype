@@ -3,7 +3,7 @@
 import type { Supplier } from "@/types/tender"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import { ChevronDown, ChevronUp, Download } from "lucide-react"
+import { ChevronDown, ChevronUp, Download, Info } from "lucide-react"
 import Image from "next/image"
 import { useState } from "react"
 
@@ -20,6 +20,7 @@ function isTBCOrNotRequired(value: string): boolean {
 export function BidDetailsModal({ supplier, open, onOpenChange }: BidDetailsModalProps) {
   const [activeTab, setActiveTab] = useState<"proposal" | "about">("proposal")
   const [expandedSections, setExpandedSections] = useState<string[]>(["Price"])
+  const [showRelevanceTooltip, setShowRelevanceTooltip] = useState(false)
 
   if (!supplier) return null
 
@@ -120,6 +121,71 @@ export function BidDetailsModal({ supplier, open, onOpenChange }: BidDetailsModa
                 </button>
                 {expandedSections.includes("Company Info") && (
                   <div className="pt-3 pb-4 space-y-6">
+                    {/* Relevance Score - Prominent Card */}
+                    {supplier.supplierRelevance?.generalScore && (
+                      <div className="rounded-lg border-2 border-[#29B273] bg-gradient-to-br from-[#E8F5E9] to-[#C8E6C9] p-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <div className="text-xs font-semibold text-[#2E7D32] uppercase tracking-wide">
+                                Relevance Score
+                              </div>
+                              <div className="relative inline-block">
+                                <button
+                                  onMouseEnter={() => setShowRelevanceTooltip(true)}
+                                  onMouseLeave={() => setShowRelevanceTooltip(false)}
+                                  className="text-[#29B273] hover:text-[#2E7D32] transition-colors"
+                                >
+                                  <Info size={14} />
+                                </button>
+                                {showRelevanceTooltip && (
+                                  <div
+                                    className="absolute z-50 w-64 p-3 text-xs bg-white border border-[#d3d7dc] rounded-lg shadow-lg"
+                                    style={{
+                                      bottom: "100%",
+                                      left: "0",
+                                      marginBottom: "8px",
+                                    }}
+                                  >
+                                    <div className="whitespace-pre-line text-[#4d5761]">
+                                      The relevance score evaluates how well the supplier matches your project requirements based on:
+                                      {"\n\n"}
+                                      • Asset type experience
+                                      {"\n"}
+                                      • Stakeholder management capabilities
+                                      {"\n"}
+                                      • Experience with similar asset sizes
+                                      {"\n"}
+                                      • Location and market presence
+                                      {"\n\n"}
+                                      Higher scores indicate better alignment with your specific project needs.
+                                    </div>
+                                    <div
+                                      className="absolute w-2 h-2 bg-white border-r border-b border-[#d3d7dc]"
+                                      style={{
+                                        bottom: "-6px",
+                                        left: "20px",
+                                        transform: "rotate(45deg)",
+                                      }}
+                                    />
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <div className="text-2xl font-extrabold text-[#1E2832]">
+                              {supplier.supplierRelevance.generalScore}<span className="text-lg text-[#4D5761]">/5</span>
+                            </div>
+                            <div className="text-xs text-[#4D5761] mt-1">
+                              Overall relevance to this project
+                            </div>
+                          </div>
+                          <div className="flex items-center justify-center w-16 h-16 rounded-full bg-[#29B273] text-white ml-4">
+                            <span className="text-2xl font-extrabold">{supplier.supplierRelevance.generalScore}</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Experience */}
                     <div>
                       <div className="font-bold text-base text-[#1E2832] mb-2">Experience</div>
