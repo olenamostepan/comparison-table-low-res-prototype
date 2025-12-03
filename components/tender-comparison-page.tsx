@@ -187,7 +187,7 @@ export function TenderComparisonPage({ config }: TenderComparisonPageProps) {
         >
           <div className="w-full flex items-center justify-between">
             <h2 className="text-[#1E2832] font-extrabold" style={{ fontSize: "20px", lineHeight: "normal" }}>
-              Interim Tender Results
+              Comparison overview
             </h2>
             <div className="flex items-center gap-3">
               <label className="text-sm text-[#4D5761]">

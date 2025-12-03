@@ -255,6 +255,19 @@ const solarSuppliers: Supplier[] = [
       workmanshipWarrantyYears: "1",
       systemLifetimeYears: "25",
     },
+    supplierRelevance: {
+      generalScore: 4.5,
+      assetType: 5,
+      stakeholderManagement: 4,
+      assetSize: 5,
+      location: 4,
+    },
+    categoryScores: {
+      financial: 4.2,
+      relevance: 4.5,
+      speed: 4.0,
+      technical: 4.3,
+    },
     additionalNotes: "",
     keyDifferentiator: "Offers a comprehensive 25-year PPA option with free O&M included throughout, making it the most flexible financing option with no upfront costs.",
     documents: [
@@ -296,6 +309,19 @@ const solarSuppliers: Supplier[] = [
       inverterWarrantyYears: "20",
       workmanshipWarrantyYears: "2",
       systemLifetimeYears: "25",
+    },
+    supplierRelevance: {
+      generalScore: 4.0,
+      assetType: 4,
+      stakeholderManagement: 4,
+      assetSize: 4,
+      location: 4,
+    },
+    categoryScores: {
+      financial: 4.0,
+      relevance: 4.0,
+      speed: 4.5,
+      technical: 4.5,
     },
     additionalNotes: "",
     keyDifferentiator: "Provides the longest inverter warranty at 20 years (double most competitors), significantly reducing long-term replacement costs and risk.",
@@ -339,6 +365,19 @@ const solarSuppliers: Supplier[] = [
       workmanshipWarrantyYears: "7",
       systemLifetimeYears: "25",
     },
+    supplierRelevance: {
+      generalScore: 4.2,
+      assetType: 4,
+      stakeholderManagement: 5,
+      assetSize: 4,
+      location: 4,
+    },
+    categoryScores: {
+      financial: 4.5,
+      relevance: 4.2,
+      speed: 3.5,
+      technical: 4.7,
+    },
     additionalNotes: "",
     keyDifferentiator: "Offers the longest workmanship warranty at 7 years along with included specialist solar panel cleaning services, providing exceptional installation quality assurance.",
     documents: [
@@ -380,6 +419,19 @@ const solarSuppliers: Supplier[] = [
       inverterWarrantyYears: "10",
       workmanshipWarrantyYears: "2",
       systemLifetimeYears: "35",
+    },
+    supplierRelevance: {
+      generalScore: 4.3,
+      assetType: 4,
+      stakeholderManagement: 4,
+      assetSize: 5,
+      location: 4,
+    },
+    categoryScores: {
+      financial: 4.1,
+      relevance: 4.3,
+      speed: 3.8,
+      technical: 4.4,
     },
     additionalNotes: "",
     keyDifferentiator: "Claims the longest system lifetime at 35 years and achieves the highest self-sufficiency rate at 80%, making it ideal for high energy users.",
@@ -423,6 +475,19 @@ const solarSuppliers: Supplier[] = [
       workmanshipWarrantyYears: "1",
       systemLifetimeYears: "30",
     },
+    supplierRelevance: {
+      generalScore: 3.5,
+      assetType: 3,
+      stakeholderManagement: 3,
+      assetSize: 4,
+      location: 4,
+    },
+    categoryScores: {
+      financial: 3.8,
+      relevance: 3.5,
+      speed: 2.5,
+      technical: 3.2,
+    },
     additionalNotes: "",
     keyDifferentiator: "Has the longest lead time (10 weeks) and installation period (120 days) but offers the most affordable annual maintenance at £20,196 with comprehensive remote monitoring and software management.",
     documents: [
@@ -464,6 +529,19 @@ const solarSuppliers: Supplier[] = [
       inverterWarrantyYears: "12",
       workmanshipWarrantyYears: "2",
       systemLifetimeYears: "40",
+    },
+    supplierRelevance: {
+      generalScore: 4.1,
+      assetType: 4,
+      stakeholderManagement: 4,
+      assetSize: 4,
+      location: 4,
+    },
+    categoryScores: {
+      financial: 4.3,
+      relevance: 4.1,
+      speed: 4.0,
+      technical: 4.6,
     },
     additionalNotes: "",
     keyDifferentiator: "Features the longest total system lifetime at 40 years with a competitive price point of £1.12M, offering the best long-term value proposition.",
@@ -507,6 +585,19 @@ const solarSuppliers: Supplier[] = [
       workmanshipWarrantyYears: "2",
       systemLifetimeYears: "25",
     },
+    supplierRelevance: {
+      generalScore: 3.8,
+      assetType: 3,
+      stakeholderManagement: 4,
+      assetSize: 4,
+      location: 4,
+    },
+    categoryScores: {
+      financial: 3.2,
+      relevance: 3.8,
+      speed: 4.2,
+      technical: 3.5,
+    },
     additionalNotes: "",
     keyDifferentiator: "Shows an unusual profile with annual consumption of 3,840,000 kWh (far exceeding system output). They offer the shortest inverter warranty at just 5 years.",
     documents: [
@@ -518,7 +609,55 @@ const solarSuppliers: Supplier[] = [
 
 const solarCategories: Category[] = [
   {
-    name: "Overview",
+    name: "Supplier relevance",
+    expanded: true,
+    fields: [
+      { 
+        label: "Asset type", 
+        key: "assetType", 
+        isScore: true,
+        tooltip: "Proven asset type experience:\n1. Retail centres\n2. Large numbers of visitors\n3. Common Parts\n4. High profile brand"
+      },
+      { 
+        label: "Stakeholder management", 
+        key: "stakeholderManagement", 
+        isScore: true,
+        tooltip: "Proven stakeholder experience:\n1. 60-200 Tenants\n2. Asset Managers"
+      },
+      { 
+        label: "Asset size", 
+        key: "assetSize", 
+        isScore: true,
+        tooltip: "Proven experience from delivering sizable solar systems to bigger commercial real estate assets with"
+      },
+      { 
+        label: "Location", 
+        key: "location", 
+        isScore: true,
+        tooltip: "Years & no. projects in UK commercial real estate"
+      },
+    ],
+  },
+  {
+    name: "Financial scope",
+    expanded: true,
+    fields: [
+      { label: "CapEx available", key: "capexAvailable" },
+      { label: "CapEx upfront (GBP)", key: "capexUpfrontGBP" },
+      { label: "CapEx annual (GBP)", key: "capexAnnualGBP" },
+      { label: "CapEx min term (years)", key: "capexMinTermYears" },
+      { label: "HP available", key: "hpAvailable" },
+      { label: "HP upfront (GBP)", key: "hpUpfrontGBP" },
+      { label: "HP annual (GBP)", key: "hpAnnualGBP" },
+      { label: "HP term (years)", key: "hpTermYears" },
+      { label: "PPA available", key: "ppaAvailable" },
+      { label: "PPA upfront (GBP)", key: "ppaUpfrontGBP" },
+      { label: "PPA annual (GBP)", key: "ppaAnnualGBP" },
+      { label: "PPA term (years)", key: "ppaTermYears" },
+    ],
+  },
+  {
+    name: "Speed",
     expanded: true,
     fields: [
       { label: "Lead time (weeks)", key: "leadTimeWeeks" },
@@ -528,46 +667,7 @@ const solarCategories: Category[] = [
     ],
   },
   {
-    name: "Capex",
-    expanded: true,
-    fields: [
-      { label: "CapEx available", key: "capexAvailable" },
-      { label: "CapEx upfront (GBP)", key: "capexUpfrontGBP" },
-      { label: "CapEx annual (GBP)", key: "capexAnnualGBP" },
-      { label: "CapEx min term (years)", key: "capexMinTermYears" },
-    ],
-  },
-  {
-    name: "Hire Purchase",
-    expanded: true,
-    fields: [
-      { label: "HP available", key: "hpAvailable" },
-      { label: "HP upfront (GBP)", key: "hpUpfrontGBP" },
-      { label: "HP annual (GBP)", key: "hpAnnualGBP" },
-      { label: "HP term (years)", key: "hpTermYears" },
-    ],
-  },
-  {
-    name: "PPA",
-    expanded: true,
-    fields: [
-      { label: "PPA available", key: "ppaAvailable" },
-      { label: "PPA upfront (GBP)", key: "ppaUpfrontGBP" },
-      { label: "PPA annual (GBP)", key: "ppaAnnualGBP" },
-      { label: "PPA term (years)", key: "ppaTermYears" },
-    ],
-  },
-  {
-    name: "Maintenance",
-    expanded: true,
-    fields: [
-      { label: "Maintenance term (years)", key: "maintenanceTerm" },
-      { label: "Maintenance price (GBP)", key: "maintenancePriceGBP" },
-      { label: "O&M approach", key: "oMApproach" },
-    ],
-  },
-  {
-    name: "Technical",
+    name: "Technical scope",
     expanded: true,
     fields: [
       { label: "Annual output (kWh)", key: "annualOutputkWh" },
@@ -578,6 +678,9 @@ const solarCategories: Category[] = [
       { label: "Inverter warranty (years)", key: "inverterWarrantyYears" },
       { label: "Workmanship warranty (years)", key: "workmanshipWarrantyYears" },
       { label: "System lifetime (years)", key: "systemLifetimeYears" },
+      { label: "Maintenance term (years)", key: "maintenanceTerm" },
+      { label: "Maintenance price (GBP)", key: "maintenancePriceGBP" },
+      { label: "O&M approach", key: "oMApproach" },
     ],
   },
 ]

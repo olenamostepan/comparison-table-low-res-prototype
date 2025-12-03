@@ -32,6 +32,19 @@ export type Supplier = {
     // Allow scenario-specific extensions
     [key: string]: string | undefined
   }
+  supplierRelevance?: {
+    generalScore: number
+    assetType: number
+    stakeholderManagement: number
+    assetSize: number
+    location: number
+  }
+  categoryScores?: {
+    financial: number
+    relevance: number
+    speed: number
+    technical: number
+  }
   additionalNotes: string
   keyDifferentiator: string
   documents: Document[]
@@ -51,6 +64,8 @@ export type Category = {
 export type CategoryField = {
   label: string
   key: string
+  tooltip?: string
+  isScore?: boolean
 }
 
 export type TenderOverview = {
