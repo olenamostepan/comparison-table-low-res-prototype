@@ -642,6 +642,7 @@ const solarCategories: Category[] = [
     name: "Financial scope",
     expanded: true,
     fields: [
+      { label: "Price", key: "price" },
       { label: "CapEx available", key: "capexAvailable" },
       { label: "CapEx upfront (GBP)", key: "capexUpfrontGBP" },
       { label: "CapEx annual (GBP)", key: "capexAnnualGBP" },

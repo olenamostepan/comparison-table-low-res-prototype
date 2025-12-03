@@ -327,6 +327,9 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                                if (category.name === "Supplier relevance" && supplier.supplierRelevance) {
                                  const relevance = supplier.supplierRelevance as any
                                  value = relevance[field.key] ?? "—"
+                               } else if (field.key === "price") {
+                                 // Handle Price field specially
+                                 value = supplier.price
                                } else {
                                  value = supplier.fields[field.key as keyof typeof supplier.fields] || "—"
                                  // Convert TRUE/FALSE to Yes/No for better readability
@@ -348,7 +351,13 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                                    className="p-3 border-r border-gray-200 text-sm leading-tight text-[#4D5761]"
                                    style={{ minWidth: '180px', width: '180px', maxWidth: '180px', borderRight: index === suppliers.length - 1 ? 'none' : '1px solid #e5e7eb' }}
                                  >
-                                   {isScore && value !== "—" ? (
+                                   {field.key === "price" && typeof value === "number" ? (
+                                     <span className="font-bold text-[#1E2832]"
+                                       style={{ fontSize: '14px', lineHeight: 'normal' }}
+                                     >
+                                       £{value.toLocaleString()}
+                                     </span>
+                                   ) : isScore && value !== "—" ? (
                                      <span className="text-[#1E2832]"
                                        style={{ fontSize: '14px', lineHeight: 'normal' }}
                                      >
@@ -390,17 +399,6 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                 </Fragment>
               )
             })}
-            {/* Price row */}
-            <tr className="border-b border-gray-200 bg-white hover:bg-blue-50 text-sm group">
-              <td className="p-3 pl-8 border-r border-gray-200 sticky group-hover:bg-blue-50 text-sm leading-tight font-medium text-[#4D5761]"
-                  style={{ minWidth: '200px', width: '200px', left: '0', position: 'sticky', backgroundColor: 'white', zIndex: 30, boxShadow: '2px 0 4px rgba(0,0,0,0.05)' }}>Price</td>
-              {suppliers.map((supplier, index) => (
-                <td key={`price-${supplier.id}`} className="p-3 border-r border-gray-200 text-sm leading-tight font-bold text-[#1E2832]"
-                    style={{ minWidth: '180px', width: '180px', borderRight: index === suppliers.length - 1 ? 'none' : '1px solid #e5e7eb' }}>
-                  £{supplier.price.toLocaleString()}
-                </td>
-              ))}
-            </tr>
             {/* General score row */}
             <tr className="border-b border-gray-200 bg-white hover:bg-blue-50 text-sm group">
               <td className="p-3 pl-8 border-r border-gray-200 sticky group-hover:bg-blue-50 text-sm leading-tight font-medium text-[#4D5761]"
