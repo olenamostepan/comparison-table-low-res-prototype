@@ -17,6 +17,16 @@ function isTBCOrNotRequired(value: string): boolean {
   return value.toLowerCase().includes("tbc") || value.toLowerCase().includes("not required")
 }
 
+// Format price in user-friendly abbreviated format (e.g., 1.16k, 1.5M)
+function formatPrice(price: number, currency: string = "£"): string {
+  if (price >= 1000000) {
+    return `${currency}${(price / 1000000).toFixed(2).replace(/\.?0+$/, '')}M`
+  } else if (price >= 1000) {
+    return `${currency}${(price / 1000).toFixed(2).replace(/\.?0+$/, '')}k`
+  }
+  return `${currency}${price.toLocaleString()}`
+}
+
 export function BidDetailsModal({ supplier, open, onOpenChange }: BidDetailsModalProps) {
   const [activeTab, setActiveTab] = useState<"proposal" | "about">("proposal")
   const [expandedSections, setExpandedSections] = useState<string[]>(["Price"])

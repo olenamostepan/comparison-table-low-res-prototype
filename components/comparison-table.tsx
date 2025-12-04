@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, Fragment, useEffect } from "react"
-import { Info, ChevronUp, ChevronDown } from "lucide-react"
+import { Info, ChevronUp, ChevronDown, GripVertical } from "lucide-react"
 import type { Supplier, Category } from "@/types/tender"
 import { ChevronDown as ChevronDownIcon, ChevronRight, Download } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -18,12 +18,179 @@ function isTBCOrNotRequired(value: string): boolean {
   return value.toLowerCase().includes("tbc") || value.toLowerCase().includes("not required")
 }
 
+
+// Format price in user-friendly abbreviated format (e.g., 1.16k, 1.5M)
+function formatPrice(price: number, currency: string = "£"): string {
+  if (price >= 1000000) {
+    return `${currency}${(price / 1000000).toFixed(2).replace(/\.?0+$/, '')}M`
+  } else if (price >= 1000) {
+    return `${currency}${(price / 1000).toFixed(2).replace(/\.?0+$/, '')}k`
+  }
+  return `${currency}${price.toLocaleString()}`
+}
+
+// Get unit for a field based on its key
+function getFieldUnit(fieldKey: string): string {
+  const unitMap: Record<string, string> = {
+    // Time units
+    deliveryTime: " days",
+    installationDays: " days",
+    installationTime: " days",
+    installationTimeDays: " days",
+    commissioningDays: " days",
+    leadTimeWeeks: " weeks",
+    
+    // Energy units
+    annualOutputkWh: " kWh",
+    annualConsumptionkWh: " kWh",
+    annualExportkWh: " kWh",
+    annualEnergykWh: " kWh",
+    energyDemandW: " W",
+    systemCapacity: " kWp",
+    
+    // Warranty/Lifespan units
+    panelWarrantyYears: " years",
+    inverterWarrantyYears: " years",
+    workmanshipWarrantyYears: " years",
+    componentWarrantyYears: " years",
+    equipmentWarrantyYears: " years",
+    lampWarrantyYears: " years",
+    systemLifetimeYears: " years",
+    solutionLifespanYears: " years",
+    maintenanceTerm: " years",
+    capexMinTermYears: " years",
+    hpTermYears: " years",
+    ppaTermYears: " years",
+    
+    // Percentage units
+    selfSufficiencyPercent: "%",
+    materialsPercent: "%",
+    labourPercent: "%",
+    
+    // Currency units (GBP)
+    capexUpfrontGBP: "£",
+    capexAnnualGBP: "£",
+    hpUpfrontGBP: "£",
+    hpAnnualGBP: "£",
+    ppaUpfrontGBP: "£",
+    ppaAnnualGBP: "£",
+    maintenancePriceGBP: "£",
+    costPerLampEUR: "€",
+    materialsEUR: "€",
+    labourEUR: "€",
+    maintenanceEUR: "€",
+    totalCostEUR: "€",
+    maxCostEUR: "€",
+    
+    // Other units
+    runningHoursPerYear: " hours",
+    numberOfLights: " lights",
+    totalLamps: " lamps",
+  }
+  
+  return unitMap[fieldKey] || ""
+}
+
+// Format value with unit if it's a numeric field
+function formatValueWithUnit(value: string | number, fieldKey: string): string {
+  if (value === "—" || value === "" || value === null || value === undefined) {
+    return "—"
+  }
+  
+  // Get unit for this field
+  const unit = getFieldUnit(fieldKey)
+  if (!unit) {
+    // No unit mapping, return value as-is
+    return String(value)
+  }
+  
+  // If it's already a string with units or special text, check if it's a number
+  if (typeof value === "string") {
+    // Check if it's a number string
+    const numValue = parseFloat(value)
+    if (isNaN(numValue)) {
+      return value // Return as-is if not a number
+    }
+    
+    // Format number with thousand separators and add unit
+    // For percentages, don't add thousand separators for small numbers
+    if (unit === "%") {
+      return `${numValue}${unit}`
+    }
+    // For currency, put symbol before the number
+    if (unit === "£" || unit === "€") {
+      return `${unit}${numValue.toLocaleString()}`
+    }
+    return `${numValue.toLocaleString()}${unit}`
+  }
+  
+  // If it's a number, format it
+  if (typeof value === "number") {
+    // For percentages, don't add thousand separators
+    if (unit === "%") {
+      return `${value}${unit}`
+    }
+    // For currency, put symbol before the number
+    if (unit === "£" || unit === "€") {
+      return `${unit}${value.toLocaleString()}`
+    }
+    return `${value.toLocaleString()}${unit}`
+  }
+  
+  return String(value)
+}
+
 export function ComparisonTable({ suppliers, categories, onSupplierClick, onShowKeyFields, onExportCsv }: ComparisonTableProps) {
   const [expandedCategories, setExpandedCategories] = useState<string[]>(() => categories.map((c) => c.name))
   const [selectedScoreModal, setSelectedScoreModal] = useState<{category: string, supplier: string, isGeneralScore?: boolean} | null>(null)
   const [selectedOMApproach, setSelectedOMApproach] = useState<{supplierName: string, text: string} | null>(null)
   const [tooltipVisible, setTooltipVisible] = useState<{field: string, supplierId: string} | null>(null)
   const [activeFilter, setActiveFilter] = useState<"financial" | "relevance" | "speed" | "technical">("relevance")
+  const [orderedSuppliers, setOrderedSuppliers] = useState<Supplier[]>(suppliers)
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
+
+  // Update ordered suppliers when suppliers prop changes
+  useEffect(() => {
+    setOrderedSuppliers(suppliers)
+  }, [suppliers])
+
+  // Handle drag start
+  const handleDragStart = (index: number) => {
+    setDraggedIndex(index)
+  }
+
+  // Handle drag over
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault()
+    if (draggedIndex === null || draggedIndex === index) return
+    setDragOverIndex(index)
+  }
+
+  // Handle drop
+  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault()
+    if (draggedIndex === null || draggedIndex === dropIndex) {
+      setDraggedIndex(null)
+      setDragOverIndex(null)
+      return
+    }
+
+    const newOrderedSuppliers = [...orderedSuppliers]
+    const draggedSupplier = newOrderedSuppliers[draggedIndex]
+    newOrderedSuppliers.splice(draggedIndex, 1)
+    newOrderedSuppliers.splice(dropIndex, 0, draggedSupplier)
+    
+    setOrderedSuppliers(newOrderedSuppliers)
+    setDraggedIndex(null)
+    setDragOverIndex(null)
+  }
+
+  // Handle drag end
+  const handleDragEnd = () => {
+    setDraggedIndex(null)
+    setDragOverIndex(null)
+  }
 
   // Reorder categories based on active filter
   const getOrderedCategories = () => {
@@ -253,7 +420,7 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
       </div>
 
       <div style={{ marginLeft: '-24px', marginRight: '-24px', paddingLeft: '24px', paddingRight: '0', overflowX: 'auto', width: 'calc(100% + 48px)', position: 'relative' }}>
-        <table style={{ width: '100%', minWidth: `${200 + (suppliers.length * 180)}px`, margin: '0', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
+        <table style={{ width: '100%', minWidth: `${200 + (orderedSuppliers.length * 180)}px`, margin: '0', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
           <tbody>
             {orderedCategories.map((category) => {
               const isExpanded = expandedCategories.includes(category.name)
@@ -271,13 +438,30 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                         {category.name}
                       </span>
                     </td>
-                    {suppliers.map((supplier, index) => (
+                    {orderedSuppliers.map((supplier, index) => (
                       <td
                         key={`header-${category.name}-${supplier.id}`}
-                        className="p-3 text-sm font-semibold text-[#1E2832] border-r border-gray-200"
-                        style={{ minWidth: '180px', width: '180px', borderRight: index === suppliers.length - 1 ? 'none' : '1px solid #e5e7eb' }}
+                        draggable
+                        onDragStart={() => handleDragStart(index)}
+                        onDragOver={(e) => handleDragOver(e, index)}
+                        onDrop={(e) => handleDrop(e, index)}
+                        onDragEnd={handleDragEnd}
+                        className={`p-3 text-sm font-semibold text-[#1E2832] border-r border-gray-200 cursor-move select-none ${
+                          draggedIndex === index ? 'opacity-50' : ''
+                        } ${
+                          dragOverIndex === index ? 'bg-blue-100 border-blue-300' : ''
+                        } hover:bg-gray-100 transition-colors`}
+                        style={{ 
+                          minWidth: '180px', 
+                          width: '180px', 
+                          borderRight: index === orderedSuppliers.length - 1 ? 'none' : '1px solid #e5e7eb' 
+                        }}
+                        title="Drag to reorder columns"
                       >
-                        {supplier.name}
+                        <div className="flex items-center gap-2">
+                          <GripVertical className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                          <span>{supplier.name}</span>
+                        </div>
                       </td>
                     ))}
                   </tr>
@@ -289,11 +473,11 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                           style={{ minWidth: '200px', width: '200px', left: '0', position: 'sticky', backgroundColor: 'white', zIndex: 30, boxShadow: '2px 0 4px rgba(0,0,0,0.05)' }}>
                         Score Results
                       </td>
-                      {suppliers.map((supplier, index) => (
+                      {orderedSuppliers.map((supplier, index) => (
                         <td
                           key={`scores-${category.name}-${supplier.id}`}
                           className="p-3 border-r border-gray-200 text-sm leading-tight"
-                          style={{ minWidth: '180px', width: '180px', borderRight: index === suppliers.length - 1 ? 'none' : '1px solid #e5e7eb' }}
+                          style={{ minWidth: '180px', width: '180px', borderRight: index === orderedSuppliers.length - 1 ? 'none' : '1px solid #e5e7eb' }}
                         >
                           <button
                             onClick={() => openScoreModal(category.name, supplier.name)}
@@ -348,7 +532,7 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                                  )}
                                </div>
                              </td>
-                             {suppliers.map((supplier, index) => {
+                             {orderedSuppliers.map((supplier, index) => {
                                // Handle Supplier relevance scores
                                let value: string | number = "—"
                                if (category.name === "Supplier relevance" && supplier.supplierRelevance) {
@@ -375,8 +559,12 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                           return (
                                  <td
                                    key={`${category.name}-${field.label}-${supplier.id}`}
-                                   className="p-3 border-r border-gray-200 text-sm leading-tight text-[#4D5761]"
-                                   style={{ minWidth: '180px', width: '180px', maxWidth: '180px', borderRight: index === suppliers.length - 1 ? 'none' : '1px solid #e5e7eb' }}
+                                   className={`p-3 border-r border-gray-200 text-sm leading-tight ${
+                                     value === "—" || value === "" || (typeof value === "string" && value.trim() === "")
+                                       ? "bg-yellow-100"
+                                       : ""
+                                   }`}
+                                   style={{ minWidth: '180px', width: '180px', maxWidth: '180px', borderRight: index === orderedSuppliers.length - 1 ? 'none' : '1px solid #e5e7eb' }}
                                  >
                                    {field.key === "price" && typeof value === "number" ? (
                                      <span className="font-bold text-[#1E2832]"
@@ -411,11 +599,23 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                                        className={
                                          isTBCOrNotRequired(value as string)
                                            ? "bg-orange-100 text-orange-700 px-2 py-1 inline-block rounded"
+                                           : value === "Yes" || value === "yes"
+                                           ? "text-green-600 font-semibold"
+                                           : value === "No" || value === "no"
+                                           ? "text-red-600 font-semibold"
+                                           : value === "—" || value === ""
+                                           ? "bg-yellow-100 px-2 py-1 inline-block rounded"
                                            : ""
                                        }
-                                       style={isTBCOrNotRequired(value as string) ? { fontSize: '14px' } : {}}
+                                       style={
+                                         isTBCOrNotRequired(value as string) 
+                                           ? { fontSize: '14px' } 
+                                           : value === "—" || value === ""
+                                           ? { fontSize: '14px' }
+                                           : {}
+                                       }
                                      >
-                                {value}
+                                {formatValueWithUnit(value, field.key)}
                               </span>
                                    )}
                             </td>
@@ -430,9 +630,9 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
             <tr className="border-b border-gray-200 bg-white hover:bg-blue-50 text-sm group">
               <td className="p-3 pl-8 border-r border-gray-200 sticky group-hover:bg-blue-50 text-sm leading-tight font-medium text-[#4D5761]"
                   style={{ minWidth: '200px', width: '200px', left: '0', position: 'sticky', backgroundColor: 'white', zIndex: 30, boxShadow: '2px 0 4px rgba(0,0,0,0.05)' }}>General score</td>
-              {suppliers.map((supplier, index) => (
+              {orderedSuppliers.map((supplier, index) => (
                 <td key={`general-score-${supplier.id}`} className="p-3 border-r border-gray-200 text-sm leading-tight"
-                    style={{ minWidth: '180px', width: '180px', borderRight: index === suppliers.length - 1 ? 'none' : '1px solid #e5e7eb' }}>
+                    style={{ minWidth: '180px', width: '180px', borderRight: index === orderedSuppliers.length - 1 ? 'none' : '1px solid #e5e7eb' }}>
                   <button
                     onClick={() => {
                       const categoryName = activeFilter === "relevance" ? "Supplier relevance" : activeFilter === "financial" ? "Financial scope" : activeFilter === "speed" ? "Speed" : "Technical scope"
@@ -450,9 +650,9 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                    <tr className="border-b border-gray-200 bg-white text-sm group">
                      <td className="p-3 pl-8 border-r border-gray-200 sticky text-sm leading-tight font-medium text-[#4D5761]"
                          style={{ minWidth: '200px', width: '200px', left: '0', position: 'sticky', backgroundColor: 'white', zIndex: 30, boxShadow: '2px 0 4px rgba(0,0,0,0.05)' }}>Contact</td>
-                     {suppliers.map((supplier, index) => (
+                     {orderedSuppliers.map((supplier, index) => (
                        <td key={`contact-${supplier.id}`} className="p-3 border-r border-gray-200 text-sm leading-tight"
-                           style={{ minWidth: '180px', width: '180px', borderRight: index === suppliers.length - 1 ? 'none' : '1px solid #e5e7eb' }}>
+                           style={{ minWidth: '180px', width: '180px', borderRight: index === orderedSuppliers.length - 1 ? 'none' : '1px solid #e5e7eb' }}>
                          <button
                            className="w-full flex h-10 px-4 flex-col justify-center items-center gap-2 rounded-lg bg-[#29B273] text-white hover:bg-[#239f63]"
                            style={{ boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.02)', fontSize: '14px', fontWeight: 700, lineHeight: 'normal' }}
@@ -547,7 +747,7 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                   Score Results
                 </h4>
                 <div className="flex flex-col items-start self-stretch">
-                  {suppliers.map((supplier, index) => (
+                  {orderedSuppliers.map((supplier, index) => (
                     <div 
                       key={supplier.id} 
                       className="flex justify-between items-center self-stretch border-t border-b border-[#D3D7DC]"

@@ -3,17 +3,18 @@ import { getTenderConfig, tenderList } from "@/lib/tender-data"
 import { TenderComparisonPage } from "@/components/tender-comparison-page"
 
 interface TenderPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export function generateStaticParams() {
   return tenderList.map((tender) => ({ slug: tender.slug }))
 }
 
-export default function TenderPage({ params }: TenderPageProps) {
-  const config = getTenderConfig(params.slug)
+export default async function TenderPage({ params }: TenderPageProps) {
+  const { slug } = await params
+  const config = getTenderConfig(slug)
 
   if (!config) {
     return notFound()

@@ -17,6 +17,16 @@ function isTBCOrNotRequired(value?: string): boolean {
   return v.includes("tbc") || v.includes("not required")
 }
 
+// Format price in user-friendly abbreviated format (e.g., 1.16k, 1.5M)
+function formatPrice(price: number, currency: string = "£"): string {
+  if (price >= 1000000) {
+    return `${currency}${(price / 1000000).toFixed(2).replace(/\.?0+$/, '')}M`
+  } else if (price >= 1000) {
+    return `${currency}${(price / 1000).toFixed(2).replace(/\.?0+$/, '')}k`
+  }
+  return `${currency}${price.toLocaleString()}`
+}
+
 export function SupplierCard({ supplier, onViewDetails }: SupplierCardProps) {
   return (
     <Card className="flex flex-col justify-center items-start gap-5 self-stretch border border-gray-200 w-full" style={{ padding: '20px' }}>
@@ -44,7 +54,7 @@ export function SupplierCard({ supplier, onViewDetails }: SupplierCardProps) {
             <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
               <div className="text-xs text-[#4D5761] font-normal">Price</div>
               <div className="text-base font-bold text-[#1E2832]">
-                {(supplier.fields.totalLamps !== undefined || supplier.fields.systemLifespanYears !== undefined) ? '€' : '£'}{supplier.price.toLocaleString()}
+                {formatPrice(supplier.price, (supplier.fields.totalLamps !== undefined || supplier.fields.systemLifespanYears !== undefined) ? '€' : '£')}
               </div>
             </div>
             {/* Show LED-specific fields if they exist, otherwise show HVAC or Solar PV fields */}
@@ -117,7 +127,7 @@ export function SupplierCard({ supplier, onViewDetails }: SupplierCardProps) {
           <>
             <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
               <div className="text-xs text-[#4D5761] font-normal">Price</div>
-              <div className="text-base font-bold text-[#1E2832]">£{supplier.price.toLocaleString()}</div>
+              <div className="text-base font-bold text-[#1E2832]">{formatPrice(supplier.price)}</div>
             </div>
             <div className="flex flex-col items-start gap-2 flex-1 p-3 rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]">
               <div className="text-xs text-[#4D5761] font-normal">Equipment removal</div>
