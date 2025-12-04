@@ -5,6 +5,7 @@ import { Info, ChevronUp, ChevronDown, GripVertical } from "lucide-react"
 import type { Supplier, Category } from "@/types/tender"
 import { ChevronDown as ChevronDownIcon, ChevronRight, Download } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { OMApproachDisplay } from "./om-approach-display"
 
 interface ComparisonTableProps {
   suppliers: Supplier[]
@@ -553,7 +554,7 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                                // Handle long O&M approach text
                                const isOMApproach = field.key === "oMApproach"
                                const isLongText = typeof value === "string" && value.length > 150
-                               const truncatedValue = isLongText ? value.substring(0, 150) + "..." : value
+                               const truncatedValue = isLongText && typeof value === "string" ? value.substring(0, 150) + "..." : value
                                const isScore = field.isScore || false
                                
                           return (
@@ -806,15 +807,10 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
           {selectedOMApproach && (
             <div className="flex flex-col items-start w-full">
               <div 
-                className="flex flex-col items-start self-stretch rounded-lg border border-[#F3F4F6] bg-[#F9FAFB]"
-                style={{ padding: '16px', gap: '12px' }}
+                className="flex flex-col items-start self-stretch rounded-lg"
+                style={{ padding: '24px' }}
               >
-                <p 
-                  className="text-sm text-[#4D5761] whitespace-pre-wrap"
-                  style={{ lineHeight: '1.6' }}
-                >
-                  {selectedOMApproach.text}
-                </p>
+                <OMApproachDisplay text={selectedOMApproach.text} />
               </div>
             </div>
           )}
