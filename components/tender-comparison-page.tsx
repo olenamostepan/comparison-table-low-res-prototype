@@ -122,6 +122,44 @@ export function TenderComparisonPage({ config }: TenderComparisonPageProps) {
                 </span>
               ))}
             </div>
+            
+            {/* Project Details Section */}
+            {config.projectDetails && (
+              <div className="mt-4">
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+                  {config.projectDetails.type && (
+                    <div>
+                      <div className="text-xs text-[#4D5761] mb-1">Type</div>
+                      <div className="text-sm font-medium text-[#1E2832]">{config.projectDetails.type}</div>
+                    </div>
+                  )}
+                  {config.projectDetails.expectedStartDate && (
+                    <div>
+                      <div className="text-xs text-[#4D5761] mb-1">Expected start date</div>
+                      <div className="text-sm font-medium text-[#1E2832]">{config.projectDetails.expectedStartDate}</div>
+                    </div>
+                  )}
+                  {config.projectDetails.sizeOfInstallation && (
+                    <div>
+                      <div className="text-xs text-[#4D5761] mb-1">Size of installation</div>
+                      <div className="text-sm font-medium text-[#1E2832]">{config.projectDetails.sizeOfInstallation}</div>
+                    </div>
+                  )}
+                  {config.projectDetails.usableRoofArea && (
+                    <div>
+                      <div className="text-xs text-[#4D5761] mb-1">Usable roof area</div>
+                      <div className="text-sm font-medium text-[#1E2832]">{config.projectDetails.usableRoofArea}</div>
+                    </div>
+                  )}
+                  {config.projectDetails.totalEnergyDemand && (
+                    <div>
+                      <div className="text-xs text-[#4D5761] mb-1">Total energy demand</div>
+                      <div className="text-sm font-medium text-[#1E2832]">{config.projectDetails.totalEnergyDemand}</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

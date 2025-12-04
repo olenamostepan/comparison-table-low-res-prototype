@@ -968,6 +968,13 @@ export const tenderConfigs: Record<TenderScenario, TenderConfig> = {
     location: "Waldemarstraße 57, Berlin, 10997, DE",
     avatar: "/site elements/Avatar.svg",
     tags: ["OCCUPIED", "OFFICE"],
+    projectDetails: {
+      type: "LED Retrofit",
+      expectedStartDate: "Mon 15 Oct, 2025",
+      sizeOfInstallation: "2,494 lights",
+      usableRoofArea: "—",
+      totalEnergyDemand: "—",
+    },
     overview: {
       invited: 10,
       submitted: 4,
@@ -992,6 +999,13 @@ export const tenderConfigs: Record<TenderScenario, TenderConfig> = {
     location: "4 Market Square, Northampton, NN1 1DE, UK",
     avatar: "/site elements/Avatar.svg",
     tags: ["COMMERCIAL", "+1MW SOLAR"],
+    projectDetails: {
+      type: "Solar PV",
+      expectedStartDate: "Mon 7 Apr, 2025",
+      sizeOfInstallation: "101.7 kWp",
+      usableRoofArea: "494.3 m²",
+      totalEnergyDemand: "90,809 kWh",
+    },
     overview: {
       invited: 20,
       submitted: 7,
@@ -1017,6 +1031,13 @@ export const tenderConfigs: Record<TenderScenario, TenderConfig> = {
     location: "Erfstraße 15-20, Köln, 50672, DE",
     avatar: "/site elements/Avatar.svg",
     tags: ["HOTEL", "OCCUPIED"],
+    projectDetails: {
+      type: "Air-Source Heat Pump",
+      expectedStartDate: "Mon 5 Nov, 2025",
+      sizeOfInstallation: "12 outdoor units",
+      usableRoofArea: "—",
+      totalEnergyDemand: "—",
+    },
     overview: {
       invited: 10,
       submitted: 5,

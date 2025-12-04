@@ -79,6 +79,15 @@ export type TenderOverview = {
 
 export type TenderScenario = "led" | "solar-pv" | "hvac"
 
+export type ProjectDetails = {
+  type?: string
+  expectedStartDate?: string
+  sizeOfInstallation?: string
+  usableRoofArea?: string
+  totalEnergyDemand?: string
+  [key: string]: string | undefined
+}
+
 export type TenderConfig = {
   slug: TenderScenario
   title: string
@@ -87,6 +96,7 @@ export type TenderConfig = {
   avatar: string
   tags: string[]
   overview: TenderOverview
+  projectDetails?: ProjectDetails
   suppliers: Supplier[]
   categories: Category[]
   fieldExplanations: Record<string, string>
