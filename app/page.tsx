@@ -1,15 +1,22 @@
 import Link from "next/link"
 import Image from "next/image"
-import { tenderList } from "@/lib/tender-data"
 
-const getIconPath = (slug: string) => {
-  const iconMap: Record<string, string> = {
-    "led": "/site elements/LED.svg",
-    "solar-pv": "/site elements/solar.svg",
-    "hvac": "/site elements/heat pumps.svg",
-  }
-  return iconMap[slug] || "/site elements/Avatar.svg"
-}
+const projects = [
+  {
+    slug: "solar",
+    title: "Solar",
+    description: "Project 322 — ranked by £/kWp with cluster tabs, view modes, and CQuel Intelligence.",
+    href: "/supplier-comparison",
+    icon: "/site elements/solar.svg",
+  },
+  {
+    slug: "led",
+    title: "LED",
+    description: "Project 310 — Alexanderstraße 1/3/5, Berlin. 2,494 luminaires, ranked by €/luminaire.",
+    href: "/supplier-comparison/led",
+    icon: "/site elements/Avatar.svg",
+  },
+]
 
 export default function HomePage() {
   return (
@@ -26,37 +33,36 @@ export default function HomePage() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-10 grid gap-6 md:grid-cols-2">
-        {tenderList.map((tender) => (
-          <div
-            key={tender.slug}
-            className="group rounded-2xl border border-[#E4E7EC] bg-white shadow-sm hover:shadow-lg transition-shadow p-6 flex flex-col gap-4 h-full"
-          >
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-16 h-16 flex items-center justify-center">
-                <Image
-                  src={getIconPath(tender.slug)}
-                  alt={tender.title}
-                  width={64}
-                  height={64}
-                  className="object-contain"
-                />
-              </div>
-              <div className="flex-1">
-                <p className="text-xs font-semibold text-[#4D5761] uppercase tracking-wide mb-1">Scenario</p>
-                <h2 className="text-2xl font-extrabold text-[#1E2832] mb-2">{tender.title}</h2>
-                <p className="text-sm text-[#4D5761]">{tender.description}</p>
-          </div>
-            </div>
+      <main className="max-w-6xl mx-auto px-6 py-10">
+        <div className="grid gap-6 md:grid-cols-2 max-w-2xl">
+          {projects.map((project) => (
             <Link
-              href={`/tender/${tender.slug}`}
-              className="flex h-10 px-4 flex-col justify-center items-center gap-2 rounded-lg bg-[#29B273] text-white hover:bg-[#239f63] transition-colors mt-auto"
-              style={{ boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.02)', fontSize: '14px', fontWeight: 700, lineHeight: 'normal' }}
+              key={project.slug}
+              href={project.href}
+              className="group rounded-2xl border border-[#E4E7EC] bg-white shadow-sm hover:shadow-lg transition-shadow p-6 flex flex-col gap-4"
             >
-              View Scenario
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-16 h-16 flex items-center justify-center">
+                  <Image
+                    src={project.icon}
+                    alt={project.title}
+                    width={64}
+                    height={64}
+                    className="object-contain"
+                  />
+                </div>
+                <div className="flex-1">
+                  <p className="text-xs font-semibold text-[#4D5761] uppercase tracking-wide mb-1">Project</p>
+                  <h2 className="text-2xl font-extrabold text-[#1E2832] mb-2">{project.title}</h2>
+                  <p className="text-sm text-[#4D5761]">{project.description}</p>
+                </div>
+              </div>
+              <span className="flex h-10 px-4 items-center gap-2 rounded-lg bg-[#29B273] text-white font-bold text-sm group-hover:bg-[#239f63] transition-colors w-fit">
+                View Comparison
+              </span>
             </Link>
-          </div>
-        ))}
+          ))}
+        </div>
       </main>
     </div>
   )

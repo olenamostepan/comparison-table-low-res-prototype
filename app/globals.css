@@ -4,6 +4,21 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* CQuel brand & UI (existing project palette) */
+  --cq-green: #29b273;
+  --cq-green-hover: #239f63;
+  --cq-dark: #126e53;
+  --cq-text: #1e2832;
+  --cq-text-secondary: #4d5761;
+  --cq-link: #1c75bc;
+  --cq-border: #e5e7eb;
+  --cq-border-light: #f3f4f6;
+  --cq-bg: #f9fafb;
+  --cq-muted: #9ca3af;
+  --cq-amber: #f59e0b;
+  --cq-amber-bg: #fef3c7;
+  --icon-disabled: #9ca3af;
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -40,6 +55,7 @@
 }
 
 .dark {
+  --icon-disabled: oklch(0.556 0 0);
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.145 0 0);
@@ -77,6 +93,18 @@
 @theme inline {
   --font-sans: 'Wix Madefor Display', ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+  --color-cq-green: var(--cq-green);
+  --color-cq-green-hover: var(--cq-green-hover);
+  --color-cq-dark: var(--cq-dark);
+  --color-cq-text: var(--cq-text);
+  --color-cq-text-secondary: var(--cq-text-secondary);
+  --color-cq-link: var(--cq-link);
+  --color-cq-border: var(--cq-border);
+  --color-cq-border-light: var(--cq-border-light);
+  --color-cq-bg: var(--cq-bg);
+  --color-cq-muted: var(--cq-muted);
+  --color-cq-amber: var(--cq-amber);
+  --color-icon-disabled: var(--icon-disabled);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

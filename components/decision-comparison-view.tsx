@@ -1,0 +1,520 @@
+'use client'
+
+import * as React from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { ChevronDown, ChevronUp } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import type { DecisionComparisonSupplier } from '@/lib/decision-comparison-data'
+import { DEFAULT_DECISION_SUPPLIERS } from '@/lib/decision-comparison-data'
+
+type DecisionComparisonViewProps = {
+  suppliers?: DecisionComparisonSupplier[]
+  totalSupplierCount?: number
+  clusterLabel?: string
+  projectType?: 'solar' | 'led'
+}
+
+// ─── Sub-components ────────────────────────────────────────────────────
+
+const TRANSPARENCY_TOOLTIP =
+  'Transparency — how extractable and readable the submitted documentation is (1–5 scale)'
+
+function TransparencyBars({ stars }: { stars: number }) {
+  const filled = Math.min(stars, 4)
+  const heights = [6, 10, 14, 18]
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <div
+          className="flex items-end gap-0.5 h-5 cursor-help"
+          tabIndex={0}
+        >
+          {heights.map((h, i) => (
+            <div
+              key={i}
+              className={cn(
+                'w-[5px] rounded-sm transition-colors',
+                i < filled ? 'bg-cq-green' : 'bg-cq-green/20'
+              )}
+              style={{ height: h }}
+            />
+          ))}
+        </div>
+      </TooltipTrigger>
+      <TooltipContent side="top" className="max-w-[260px]">
+        {TRANSPARENCY_TOOLTIP}
+      </TooltipContent>
+    </Tooltip>
+  )
+}
+
+const QUALITY_LABELS: Record<1 | 2 | 3, string> = {
+  1: 'Detailed — full itemised breakdown with equipment, labour, overheads, design, and O&M',
+  2: 'Partial — some categories broken down, others bundled or missing',
+  3: 'Summary — high-level totals only, no detailed category split',
+}
+
+function QualityBadge({ quality }: { quality: 1 | 2 | 3 }) {
+  const labels: Record<1 | 2 | 3, string> = { 1: 'Detailed', 2: 'Partial', 3: 'Summary' }
+  const shades: Record<1 | 2 | 3, string> = {
+    1: 'bg-cq-dark text-white',
+    2: 'bg-cq-green text-white',
+    3: 'bg-cq-green/60 text-white',
+  }
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span
+          className={cn(
+            'inline-flex items-center justify-center min-w-[72px] px-2 py-0.5 rounded text-xs font-semibold cursor-help',
+            shades[quality]
+          )}
+        >
+          {labels[quality]}
+        </span>
+      </TooltipTrigger>
+      <TooltipContent side="top" className="max-w-[260px]">
+        {QUALITY_LABELS[quality]}
+      </TooltipContent>
+    </Tooltip>
+  )
+}
+
+
+function CellValue({
+  value,
+  isWarning,
+}: {
+  value: string
+  isWarning?: boolean
+}) {
+  if (value === '—' || value === '') {
+    return <span className="text-cq-muted">—</span>
+  }
+  if (isWarning) {
+    return (
+      <span className="inline-flex items-center gap-1 text-cq-text-secondary text-sm">
+        ⚠️ {value.replace(/^⚠+\s*/, '')}
+      </span>
+    )
+  }
+  return <span className="text-cq-text">{value}</span>
+}
+
+// ─── Main component ────────────────────────────────────────────────────
+
+export function DecisionComparisonView({
+  suppliers = DEFAULT_DECISION_SUPPLIERS,
+  totalSupplierCount = 13,
+  clusterLabel = 'full-scope systems',
+  projectType = 'solar',
+}: DecisionComparisonViewProps) {
+  const selectedCount = suppliers.length
+  const [whatAmIGettingExpanded, setWhatAmIGettingExpanded] = React.useState(false)
+  const [whatHappensAfterExpanded, setWhatHappensAfterExpanded] = React.useState(false)
+  const currency = projectType === 'led' ? '€' : '£'
+  const formatAmount = (n: number) => {
+    if (n >= 1_000_000) return `${currency}${(n / 1_000_000).toFixed(2)}M`
+    if (n >= 1_000) return `${currency}${(n / 1_000).toFixed(1)}k`
+    return `${currency}${n.toLocaleString()}`
+  }
+  const basePath = projectType === 'led' ? '/supplier-comparison/led' : '/supplier-comparison'
+
+  return (
+    <div className="min-h-screen bg-cq-bg">
+      <div className="max-w-7xl mx-auto px-6 py-4">
+        <Link
+          href={basePath}
+          className="inline-block mb-2 text-sm font-bold text-cq-link hover:underline"
+        >
+          ← Back to all suppliers
+        </Link>
+        {/* 1. Header */}
+        <div className="flex items-center justify-between gap-4 mb-4">
+          <header>
+            <h1 className="text-xl font-extrabold text-cq-text leading-tight">
+              Supplier Price Comparison
+            </h1>
+            <p className="text-sm text-cq-text-secondary mt-0.5">
+              Compare Shortlisted Suppliers
+            </p>
+          </header>
+          <p className="text-sm text-cq-text-secondary shrink-0">
+            {selectedCount} of {totalSupplierCount} suppliers selected · {clusterLabel}
+          </p>
+        </div>
+
+        {/* 2. Comparison table */}
+        <div className="rounded-xl border border-cq-border bg-white overflow-hidden">
+          <div className="overflow-auto max-h-[calc(100vh-7rem)]">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="sticky top-0 z-10 bg-cq-bg">
+                  <th className="w-40 min-w-[140px] text-left py-2 px-4 font-semibold text-cq-text-secondary bg-cq-bg border-b border-r border-cq-border" />
+                  {suppliers.map((s) => (
+                    <th
+                      key={s.id}
+                      className="min-w-[200px] text-left py-2 px-4 bg-cq-bg border-b border-cq-border last:border-r-0"
+                    >
+                      <div className="flex items-start gap-2">
+                        {s.logo ? (
+                          <Image
+                            src={s.logo}
+                            alt=""
+                            width={56}
+                            height={56}
+                            className="object-contain rounded-lg flex-shrink-0"
+                          />
+                        ) : (
+                          <div className="w-14 h-14 rounded-lg bg-cq-border-light flex items-center justify-center text-sm font-bold text-cq-text-secondary flex-shrink-0">
+                            {s.name.slice(0, 2).toUpperCase()}
+                          </div>
+                        )}
+                        <div>
+                          <div className="font-bold text-cq-text text-sm whitespace-nowrap">{s.name}</div>
+                          {s.badge && (
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span className="inline-block text-xs font-bold text-cq-dark mt-0.5 leading-tight cursor-help">
+                                  {s.badge}
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent side="top" className="max-w-[260px]">
+                                {projectType === 'led'
+                                  ? 'Ranked by €/luminaire — Rank 1 = lowest price (best value)'
+                                  : 'Ranked by £/kWp — lower rank = lower price per kWp (better value)'}
+                              </TooltipContent>
+                            </Tooltip>
+                          )}
+                          <Link
+                            href={`${basePath}/${s.id}`}
+                            className="inline-flex items-center justify-center mt-2 px-8 py-1.5 rounded-lg border border-cq-border bg-white text-cq-text font-bold text-sm hover:bg-cq-bg hover:border-cq-green transition-colors min-w-[100px]"
+                          >
+                            View
+                          </Link>
+                        </div>
+                      </div>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {/* Section 1: What am I paying */}
+                <tr>
+                  <td
+                    colSpan={suppliers.length + 1}
+                    className="py-1.5 px-4 font-extrabold text-cq-text text-center bg-cq-bg border-b border-cq-border text-sm"
+                  >
+                    What am I paying
+                  </td>
+                </tr>
+                <tr className="border-b border-cq-border">
+                  <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
+                    {projectType === 'led' ? '€/luminaire' : '£/kWp'}
+                  </td>
+                  {suppliers.map((s) => (
+                    <td
+                      key={s.id}
+                      className="py-2 px-4 font-bold text-cq-text tabular-nums"
+                    >
+                      {currency}{s.perKwp.toLocaleString()}
+                    </td>
+                  ))}
+                </tr>
+                <tr className="border-b border-cq-border">
+                  <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
+                    Total
+                  </td>
+                  {suppliers.map((s) => (
+                    <td key={s.id} className="py-2 px-4 text-cq-text tabular-nums">
+                      {formatAmount(s.totalPounds)}
+                    </td>
+                  ))}
+                </tr>
+                <tr className="border-b border-cq-border">
+                  <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
+                    Adjusted cost
+                  </td>
+                  {suppliers.map((s) => (
+                    <td key={s.id} className="py-2 px-4">
+                      <CellValue
+                        value={s.adjustedCost}
+                        isWarning={s.adjustedCost !== 'As quoted'}
+                      />
+                    </td>
+                  ))}
+                </tr>
+
+                {/* Section 2: What am I getting */}
+                <tr>
+                  <td
+                    colSpan={suppliers.length + 1}
+                    className={cn(
+                      'py-1.5 px-4 font-extrabold text-cq-text text-center bg-cq-bg border-b border-cq-border text-sm',
+                      'cursor-pointer hover:bg-cq-border-light/50 transition-colors'
+                    )}
+                    onClick={() => setWhatAmIGettingExpanded((v) => !v)}
+                  >
+                    <span className="inline-flex items-center justify-center gap-1.5">
+                      What am I getting
+                      {whatAmIGettingExpanded ? (
+                        <ChevronUp className="w-4 h-4 text-cq-text-secondary" />
+                      ) : (
+                        <ChevronDown className="w-4 h-4 text-cq-text-secondary" />
+                      )}
+                    </span>
+                  </td>
+                </tr>
+                <tr className="border-b border-cq-border">
+                  <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
+                    {projectType === 'led' ? 'Luminaires' : 'System size'}
+                  </td>
+                  {suppliers.map((s) => (
+                    <td key={s.id} className="py-2 px-4 text-cq-text tabular-nums">
+                      {projectType === 'led'
+                        ? `${s.systemKwp.toLocaleString()} luminaires`
+                        : `${s.systemKwp.toLocaleString()} kWp`}
+                    </td>
+                  ))}
+                </tr>
+                <tr className="border-b border-cq-border">
+                  <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
+                    Coverage
+                  </td>
+                  {suppliers.map((s) => (
+                    <td key={s.id} className="py-2 px-4 text-cq-text">
+                      {s.coverage}
+                    </td>
+                  ))}
+                </tr>
+                {whatAmIGettingExpanded && (
+                  projectType === 'led' ? (
+                    <>
+                      <tr className="border-b border-cq-border">
+                        <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
+                          Equipment
+                        </td>
+                        {suppliers.map((s) => (
+                          <td key={s.id} className="py-2 px-4 text-cq-text">
+                            {s.panels}
+                          </td>
+                        ))}
+                      </tr>
+                      <tr className="border-b border-cq-border">
+                        <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
+                          Product warranty
+                        </td>
+                        {suppliers.map((s) => (
+                          <td key={s.id} className="py-2 px-4 text-cq-text">
+                            {s.panelWarranty}
+                          </td>
+                        ))}
+                      </tr>
+                      <tr className="border-b border-cq-border">
+                        <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
+                          Workmanship warranty
+                        </td>
+                        {suppliers.map((s) => (
+                          <td key={s.id} className="py-2 px-4 text-cq-text">
+                            {s.workmanship}
+                          </td>
+                        ))}
+                      </tr>
+                    </>
+                  ) : (
+                    <>
+                      <tr className="border-b border-cq-border">
+                        <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
+                          Panels
+                        </td>
+                        {suppliers.map((s) => (
+                          <td key={s.id} className="py-2 px-4 text-cq-text">
+                            {s.panels}
+                          </td>
+                        ))}
+                      </tr>
+                      <tr className="border-b border-cq-border">
+                        <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
+                          Inverters
+                        </td>
+                        {suppliers.map((s) => (
+                          <td key={s.id} className="py-2 px-4 text-cq-text">
+                            {s.inverters}
+                          </td>
+                        ))}
+                      </tr>
+                      <tr className="border-b border-cq-border">
+                        <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
+                          Mounting
+                        </td>
+                        {suppliers.map((s) => (
+                          <td key={s.id} className="py-2 px-4 text-cq-text">
+                            {s.mounting}
+                          </td>
+                        ))}
+                      </tr>
+                    </>
+                  )
+                )}
+                <tr className="border-b border-cq-border">
+                  <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
+                    Exclusions
+                  </td>
+                  {suppliers.map((s) => (
+                    <td key={s.id} className="py-2 px-4">
+                      <CellValue
+                        value={s.exclusions}
+                        isWarning={s.exclusions !== '—'}
+                      />
+                    </td>
+                  ))}
+                </tr>
+
+                {/* Section 3: Can I trust this number */}
+                <tr>
+                  <td
+                    colSpan={suppliers.length + 1}
+                    className="py-1.5 px-4 font-extrabold text-cq-text text-center bg-cq-bg border-b border-cq-border text-sm"
+                  >
+                    Can I trust this number
+                  </td>
+                </tr>
+                <tr className="border-b border-cq-border">
+                  <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
+                    Quality
+                  </td>
+                  {suppliers.map((s) => (
+                    <td key={s.id} className="py-2 px-4">
+                      <div className="flex items-center gap-5">
+                        <QualityBadge quality={s.quality} />
+                        <TransparencyBars stars={s.transparency} />
+                      </div>
+                    </td>
+                  ))}
+                </tr>
+                <tr className="border-b border-cq-border">
+                  <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
+                    Documentation
+                  </td>
+                  {suppliers.map((s) => (
+                    <td key={s.id} className="py-2 px-4 text-cq-text">
+                      {s.documentation}
+                    </td>
+                  ))}
+                </tr>
+                <tr className="border-b border-cq-border">
+                  <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
+                    Reconciliation
+                  </td>
+                  {suppliers.map((s) => (
+                    <td key={s.id} className="py-2 px-4">
+                      <CellValue
+                        value={s.reconciliation}
+                        isWarning={s.reconciliation !== 'No issues found'}
+                      />
+                    </td>
+                  ))}
+                </tr>
+                <tr className="border-b border-cq-border">
+                  <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border align-top">
+                    Flags
+                  </td>
+                  {suppliers.map((s) => (
+                    <td key={s.id} className="py-2 px-4 align-top">
+                      {s.flags.length > 0 ? (
+                        <div className="flex flex-col gap-1">
+                          {s.flags.map((flag, i) => (
+                            <span
+                              key={i}
+                              className="inline-flex items-start gap-1 text-cq-text-secondary text-sm"
+                            >
+                              ⚠️ {flag.replace(/^⚠+\s*/, '')}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-cq-muted">—</span>
+                      )}
+                    </td>
+                  ))}
+                </tr>
+
+                {/* Section 4: What happens after */}
+                <tr>
+                  <td
+                    colSpan={suppliers.length + 1}
+                    className={cn(
+                      'py-1.5 px-4 font-extrabold text-cq-text text-center bg-cq-bg border-b border-cq-border text-sm',
+                      'cursor-pointer hover:bg-cq-border-light/50 transition-colors'
+                    )}
+                    onClick={() => setWhatHappensAfterExpanded((v) => !v)}
+                  >
+                    <span className="inline-flex items-center justify-center gap-1.5">
+                      What happens after
+                      {whatHappensAfterExpanded ? (
+                        <ChevronUp className="w-4 h-4 text-cq-text-secondary" />
+                      ) : (
+                        <ChevronDown className="w-4 h-4 text-cq-text-secondary" />
+                      )}
+                    </span>
+                  </td>
+                </tr>
+                <tr className="border-b border-cq-border">
+                  <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
+                    Maintenance Contract
+                  </td>
+                  {suppliers.map((s) => (
+                    <td key={s.id} className="py-2 px-4 text-cq-text">
+                      {s.maintenanceContract}
+                    </td>
+                  ))}
+                </tr>
+                {whatHappensAfterExpanded && (
+                  <>
+                    <tr className="border-b border-cq-border">
+                      <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
+                        Panel warranty
+                      </td>
+                      {suppliers.map((s) => (
+                        <td key={s.id} className="py-2 px-4 text-cq-text">
+                          {s.panelWarranty}
+                        </td>
+                      ))}
+                    </tr>
+                    <tr className="border-b border-cq-border">
+                      <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
+                        Inverter warranty
+                      </td>
+                      {suppliers.map((s) => (
+                        <td key={s.id} className="py-2 px-4 text-cq-text">
+                          {s.inverterWarranty}
+                        </td>
+                      ))}
+                    </tr>
+                    <tr className="border-b border-cq-border">
+                      <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
+                        Workmanship
+                      </td>
+                      {suppliers.map((s) => (
+                        <td key={s.id} className="py-2 px-4 text-cq-text">
+                          {s.workmanship}
+                        </td>
+                      ))}
+                    </tr>
+                  </>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  )
+}

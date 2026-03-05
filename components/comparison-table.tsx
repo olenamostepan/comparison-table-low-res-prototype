@@ -493,8 +493,8 @@ export function ComparisonTable({ suppliers, categories, onSupplierClick, onShow
                   )}
 
                   {/* Field rows */}
-                         {isExpanded && category.fields.map((field) => (
-                           <tr key={`${category.name}-${field.label}`} className="border-b border-gray-200 bg-white hover:bg-blue-50 group">
+                         {isExpanded && category.fields.map((field, fieldIndex) => (
+                           <tr key={`${category.name}-${field.key}-${fieldIndex}`} className="border-b border-gray-200 bg-white hover:bg-blue-50 group">
                              <td className="p-3 pl-8 border-r border-gray-200 sticky group-hover:bg-blue-50 text-sm leading-tight font-medium text-[#4D5761]"
                                  style={{ minWidth: '200px', width: '200px', left: '0', position: 'sticky', backgroundColor: 'white', zIndex: 30, boxShadow: '2px 0 4px rgba(0,0,0,0.05)' }}>
                                <div className="flex items-center gap-1">
