@@ -6,8 +6,13 @@ import { cn } from '@/lib/utils'
 
 export function ProjectSwitcher() {
   const pathname = usePathname()
-  const isSolar = pathname.startsWith('/supplier-comparison')
-  const isLed = pathname.startsWith('/supplier-comparison/led')
+  const isSolar =
+    pathname.startsWith('/supplier-comparison') &&
+    !pathname.startsWith('/supplier-comparison/led')
+  const isLedBerlin =
+    pathname.startsWith('/supplier-comparison/led') &&
+    !pathname.startsWith('/supplier-comparison/led-rostock')
+  const isLedRostock = pathname.startsWith('/supplier-comparison/led-rostock')
 
   return (
     <div className="border-b border-cq-border bg-white">
@@ -28,12 +33,23 @@ export function ProjectSwitcher() {
             href="/supplier-comparison/led"
             className={cn(
               'px-4 py-2 rounded-md text-sm font-semibold transition-colors',
-              isLed
+              isLedBerlin
                 ? 'bg-white text-cq-text shadow-sm border border-cq-border'
                 : 'text-cq-text-secondary hover:text-cq-text'
             )}
           >
-            LED project
+            LED (Berlin)
+          </Link>
+          <Link
+            href="/supplier-comparison/led-rostock"
+            className={cn(
+              'px-4 py-2 rounded-md text-sm font-semibold transition-colors',
+              isLedRostock
+                ? 'bg-white text-cq-text shadow-sm border border-cq-border'
+                : 'text-cq-text-secondary hover:text-cq-text'
+            )}
+          >
+            LED (Rostock)
           </Link>
         </div>
       </div>

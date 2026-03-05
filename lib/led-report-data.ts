@@ -1,6 +1,6 @@
 /**
- * LED Project 310 — report-derived content for bid profiles
- * Extracted from report (1).html
+ * LED Project 310 — Alexanderstraße 1/3/5, Berlin
+ * Report-derived content from breakdown.html
  */
 
 import type { KeyFlag } from '@/components/supplier-profile-view'
@@ -51,7 +51,8 @@ export const LED_REPORT_OVERLAYS: Record<string, LedReportOverlay> = {
   },
   ecowatt: {
     characterisation:
-      'Second-lowest price with good cost structure transparency from PDF; uniquely includes BAFA funding support and on-site container logistics, but critically omits all warranty and technical performance data.',
+      'Itemized PDF with named products and separate labour, container, disposal, and BAFA service lines, but no warranty or technical performance data.',
+    specs: { workmanshipWarranty: '—', panelWarranty: '—' },
     keyFlags: [
       { icon: 'warn', text: 'All warranty fields show 0 years; no warranty terms mentioned anywhere in submission' },
       { icon: 'warn', text: 'All energy performance fields (demand, consumption pa, lifetime) show 0.00—form fields left blank' },
@@ -77,9 +78,10 @@ export const LED_REPORT_OVERLAYS: Record<string, LedReportOverlay> = {
   },
   'die-stromspar': {
     characterisation:
-      'Best-documented submission after SAFLUX; line-item PDF clearly shows product selection, per-fixture material cost, and zone-by-zone installation rate, enabling straightforward audit of the €270,290 total.',
+      'Fully itemized 11-page PDF with named products, per-unit costs, installation rates per zone, and a separate documentation/acceptance line item.',
+    specs: { workmanshipWarranty: '5 years', panelWarranty: '5 years' },
     keyFlags: [
-      { icon: 'info', text: 'Labour (€166,682) is high relative to materials (€103,607); ratio inverted vs industry norm' },
+      { icon: 'warn', text: 'Labour field (€166,682) is disproportionately high relative to materials (€103,607)' },
       { icon: 'info', text: '5-year product and workmanship warranty included; no separate cost' },
     ],
     equipmentSubs: [
@@ -100,7 +102,8 @@ export const LED_REPORT_OVERLAYS: Record<string, LedReportOverlay> = {
   },
   'led-on': {
     characterisation:
-      'Premium product selection from named European manufacturers (RZB KALEEA BASIC dominates at €234,890 for 1,522 units) but structurally opaque pricing with labour absorbed into materials and complete absence of warranty commitments.',
+      'Detailed product-level PDF with premium named brands but labour embedded in materials and zero warranty data provided.',
+    specs: { workmanshipWarranty: '—', panelWarranty: '—' },
     keyFlags: [
       { icon: 'warn', text: 'All warranty fields show 0 years—no warranty terms provided anywhere' },
       { icon: 'warn', text: 'Labour embedded in materials; optional 90-hour add-on at €58/hr (€5,220) creates pricing ambiguity' },
@@ -122,7 +125,8 @@ export const LED_REPORT_OVERLAYS: Record<string, LedReportOverlay> = {
   },
   'beka-solar': {
     characterisation:
-      'Simple two-page quote with fixture-type breakdown matching the survey document but using generic descriptions and no brand specification; flat per-fixture installation rate and complete absence of technical or warranty data raises significant quality concerns given the company\'s primary HVAC/solar focus.',
+      'Two-page PDF with per-fixture type unit costs and a flat installation rate, but no product specifications, warranties, or technical performance data.',
+    specs: { workmanshipWarranty: '—', panelWarranty: '—' },
     keyFlags: [
       { icon: 'warn', text: 'All warranty fields show 0 years; no warranty mentioned anywhere' },
       { icon: 'warn', text: 'All energy/technical performance fields show 0.00; no durability standard specified' },
@@ -141,7 +145,8 @@ export const LED_REPORT_OVERLAYS: Record<string, LedReportOverlay> = {
   },
   genesis: {
     characterisation:
-      'UK-based supplier with a well-structured fixture schedule showing energy modelling per zone, but the highest labour cost (€193,285) is unexplained and no workmanship warranty is offered, creating risk on both cost and quality dimensions.',
+      'Detailed fixture schedule PDF with per-line energy and cost data, but labour/materials split only; no breakdown of overheads, warranty costs, or subcontractor structure.',
+    specs: { workmanshipWarranty: '0 years', panelWarranty: '5 years' },
     keyFlags: [
       { icon: 'warn', text: 'Workmanship warranty explicitly 0 years—significant gap vs German competitors offering 5 years' },
       { icon: 'warn', text: 'Labour at €193,285 is 54% higher than next-highest (Die Stromspar €166,682) with no justification' },
@@ -163,8 +168,10 @@ export const LED_REPORT_OVERLAYS: Record<string, LedReportOverlay> = {
   },
   saflux: {
     characterisation:
-      'Most expensive and most comprehensively documented submission; the €449,000 base price includes explicit line items for H&S and administration that other suppliers absorb silently, and the optional maintenance contract (€13,470/year) if taken over 10 years adds €134,700 to lifetime cost.',
+      'Fully itemized submission with six explicit cost categories, detailed 26-page technical proposal, BEG NWG funding evidence, and optional maintenance contract pricing.',
+    specs: { workmanshipWarranty: '5 years', panelWarranty: '7 years' },
     keyFlags: [
+      { icon: 'warn', text: 'term_maintenance shows 10 years in structured data but maintenance contract specifies 5-year term' },
       { icon: 'info', text: 'Only supplier with six explicit cost categories; fully itemized with H&S, admin, electrical, maintenance lines' },
       { icon: 'info', text: '7-year product and 5-year workmanship warranty; BEG NWG eligible fixtures' },
     ],

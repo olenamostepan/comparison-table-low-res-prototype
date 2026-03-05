@@ -17,7 +17,7 @@ type DecisionComparisonViewProps = {
   suppliers?: DecisionComparisonSupplier[]
   totalSupplierCount?: number
   clusterLabel?: string
-  projectType?: 'solar' | 'led'
+  projectType?: 'solar' | 'led' | 'led-rostock'
 }
 
 // ─── Sub-components ────────────────────────────────────────────────────
@@ -118,13 +118,19 @@ export function DecisionComparisonView({
   const selectedCount = suppliers.length
   const [whatAmIGettingExpanded, setWhatAmIGettingExpanded] = React.useState(false)
   const [whatHappensAfterExpanded, setWhatHappensAfterExpanded] = React.useState(false)
-  const currency = projectType === 'led' ? '€' : '£'
+  const currency = (projectType === 'led' || projectType === 'led-rostock') ? '€' : '£'
   const formatAmount = (n: number) => {
     if (n >= 1_000_000) return `${currency}${(n / 1_000_000).toFixed(2)}M`
     if (n >= 1_000) return `${currency}${(n / 1_000).toFixed(1)}k`
     return `${currency}${n.toLocaleString()}`
   }
-  const basePath = projectType === 'led' ? '/supplier-comparison/led' : '/supplier-comparison'
+  const basePath =
+    projectType === 'led'
+      ? '/supplier-comparison/led'
+      : projectType === 'led-rostock'
+        ? '/supplier-comparison/led-rostock'
+        : '/supplier-comparison'
+  const isLedLike = projectType === 'led' || projectType === 'led-rostock'
 
   return (
     <div className="min-h-screen bg-cq-bg">
@@ -186,7 +192,7 @@ export function DecisionComparisonView({
                                 </span>
                               </TooltipTrigger>
                               <TooltipContent side="top" className="max-w-[260px]">
-                                {projectType === 'led'
+                                {isLedLike
                                   ? 'Ranked by €/luminaire — Rank 1 = lowest price (best value)'
                                   : 'Ranked by £/kWp — lower rank = lower price per kWp (better value)'}
                               </TooltipContent>
@@ -216,7 +222,7 @@ export function DecisionComparisonView({
                 </tr>
                 <tr className="border-b border-cq-border">
                   <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
-                    {projectType === 'led' ? '€/luminaire' : '£/kWp'}
+                    {isLedLike ? '€/luminaire' : '£/kWp'}
                   </td>
                   {suppliers.map((s) => (
                     <td
@@ -273,11 +279,11 @@ export function DecisionComparisonView({
                 </tr>
                 <tr className="border-b border-cq-border">
                   <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
-                    {projectType === 'led' ? 'Luminaires' : 'System size'}
+                    {isLedLike ? 'Luminaires' : 'System size'}
                   </td>
                   {suppliers.map((s) => (
                     <td key={s.id} className="py-2 px-4 text-cq-text tabular-nums">
-                      {projectType === 'led'
+                      {isLedLike
                         ? `${s.systemKwp.toLocaleString()} luminaires`
                         : `${s.systemKwp.toLocaleString()} kWp`}
                     </td>
@@ -294,7 +300,7 @@ export function DecisionComparisonView({
                   ))}
                 </tr>
                 {whatAmIGettingExpanded && (
-                  projectType === 'led' ? (
+                  isLedLike ? (
                     <>
                       <tr className="border-b border-cq-border">
                         <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">

@@ -16,8 +16,8 @@ export default async function CompareSuppliersPage({
   return (
     <DecisionComparisonView
       suppliers={displaySuppliers}
-      totalSupplierCount={13}
-      clusterLabel="full-scope systems"
+      totalSupplierCount={15}
+      clusterLabel="Project 322 Braehead — smaller systems (1,670–2,333 kWp)"
     />
   )
 }

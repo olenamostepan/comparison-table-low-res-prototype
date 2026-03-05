@@ -5,15 +5,22 @@ const projects = [
   {
     slug: "solar",
     title: "Solar",
-    description: "Project 322 — ranked by £/kWp with cluster tabs, view modes, and CQuel Intelligence.",
+    description: "Project 322 — Braehead shopping centre. 12 CapEx, 3 PPA excluded. Ranked by £/kWp.",
     href: "/supplier-comparison",
     icon: "/site elements/solar.svg",
   },
   {
     slug: "led",
-    title: "LED",
+    title: "LED (Berlin)",
     description: "Project 310 — Alexanderstraße 1/3/5, Berlin. 2,494 luminaires, ranked by €/luminaire.",
     href: "/supplier-comparison/led",
+    icon: "/site elements/Avatar.svg",
+  },
+  {
+    slug: "led-rostock",
+    title: "LED (Rostock)",
+    description: "tender_651_650 — Doberaner Straße 114-116, Rostock. 2 suppliers (490 / 1,029 luminaires).",
+    href: "/supplier-comparison/led-rostock",
     icon: "/site elements/Avatar.svg",
   },
 ]

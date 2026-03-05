@@ -1,6 +1,6 @@
 /**
- * LED Project 310 data — mapped from report (1).html and comparison (1).html
- * Alexanderstraße 1/3/5, Berlin — 2,494 luminaires
+ * LED Project 310 data — Alexanderstraße 1/3/5, Berlin
+ * Mapped from all_suppliers.html, breakdown.html, shortlist.html
  */
 
 export type LedSupplier = {
@@ -29,13 +29,13 @@ export const LED_SUPPLIERS: LedSupplier[] = [
   {
     id: 'german-led-tech',
     name: 'German LED Tech',
-    badge: 'Rank #1',
+    badge: 'Lowest',
     totalEur: 230_885,
     perLuminaire: 93,
     luminaireCount: 2_494,
     quality: 2,
     transparency: 3,
-    note: { type: 'warn', text: 'Retrofit-tube approach — different scope than full fixture replacement' },
+    note: { type: 'warn', text: 'Total luminaire count in Excel is 2,680 vs. 2,494 lamps—discrepancy likely due to multi-lamp fittings' },
     qualitySummary: 'Single headline price from Excel schedule with per-product unit costs but no labour/materials split provided.',
     breakdown: { equipment: 143_749, labour: undefined, materials: undefined, projectOverheads: undefined },
   },
@@ -48,7 +48,7 @@ export const LED_SUPPLIERS: LedSupplier[] = [
     luminaireCount: 2_494,
     quality: 2,
     transparency: 3,
-    note: { type: 'warn', text: 'Zero warranty data provided' },
+    note: { type: 'warn', text: 'All warranty fields show 0 years; no warranty terms mentioned anywhere in submission' },
     qualitySummary: 'Itemized PDF with named products and separate labour, container, disposal, and BAFA service lines.',
     breakdown: { equipment: 164_261, labour: 91_549, projectOverheads: 11_725 },
   },
@@ -61,6 +61,7 @@ export const LED_SUPPLIERS: LedSupplier[] = [
     luminaireCount: 2_494,
     quality: 1,
     transparency: 5,
+    note: { type: 'warn', text: 'Labour field (€166,682) is disproportionately high relative to materials (€103,607)' },
     qualitySummary: 'Fully itemized 11-page PDF with named products, per-unit costs, installation rates per zone.',
     breakdown: { equipment: 103_607, labour: 166_682, projectOverheads: 1_350 },
   },
@@ -73,7 +74,7 @@ export const LED_SUPPLIERS: LedSupplier[] = [
     luminaireCount: 2_494,
     quality: 2,
     transparency: 2,
-    note: { type: 'warn', text: 'Labour embedded in materials — zero warranty data' },
+    note: { type: 'warn', text: 'All warranty fields show 0 years—no warranty terms provided anywhere in submission' },
     qualitySummary: 'Detailed product-level PDF with premium named brands but labour embedded in materials.',
     breakdown: { equipment: 299_987, labour: undefined, projectOverheads: 58 },
   },
@@ -86,20 +87,20 @@ export const LED_SUPPLIERS: LedSupplier[] = [
     luminaireCount: 2_494,
     quality: 3,
     transparency: 2,
-    note: { type: 'warn', text: 'Generic fixture types — no product specs or warranties' },
-    qualitySummary: 'Two-page PDF with per-fixture type unit costs and flat installation rate.',
+    note: { type: 'warn', text: 'All warranty fields show 0 years; no warranty mentioned anywhere in submission' },
+    qualitySummary: 'Two-page PDF with per-fixture type unit costs and a flat installation rate.',
     breakdown: { equipment: 180_132, labour: 156_573 },
   },
   {
     id: 'genesis',
     name: 'Genesis 1.3 Limited',
     badge: 'Rank #6',
-    totalEur: 355_789,
+    totalEur: 355_790,
     perLuminaire: 143,
     luminaireCount: 2_494,
     quality: 2,
     transparency: 3,
-    note: { type: 'warn', text: 'UK-based — highest labour cost; 0-year workmanship warranty' },
+    note: { type: 'warn', text: 'Workmanship warranty is explicitly 0 years—a significant gap versus all German competitors' },
     qualitySummary: 'Detailed fixture schedule PDF with per-line energy and cost data.',
     breakdown: { equipment: 162_505, labour: 193_285 },
   },
@@ -112,7 +113,7 @@ export const LED_SUPPLIERS: LedSupplier[] = [
     luminaireCount: 2_494,
     quality: 1,
     transparency: 5,
-    note: { type: 'info', text: 'Most comprehensive — explicit H&S, admin, electrical, maintenance lines' },
+    note: { type: 'warn', text: 'term_maintenance shows 10 years in data but maintenance contract specifies 5-year term' },
     qualitySummary: 'Fully itemized submission with six explicit cost categories and 26-page technical proposal.',
     breakdown: {
       equipment: 260_000,

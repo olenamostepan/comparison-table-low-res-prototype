@@ -53,41 +53,32 @@ type Supplier = {
 
 // ─── Data ───────────────────────────────────────────────────────────────
 
+// Project 322 — Braehead — from breakdown.html, comparison.html
 const FULL_SCOPE_SUPPLIERS: Supplier[] = [
   {
     id: 'green-nation',
     name: 'Green Nation',
-    badge: 'Best value',
+    badge: 'Rank #5',
     totalPounds: 2_070_513,
     perKwp: 518,
-    systemKwp: 3998,
+    systemKwp: 3997,
     quality: 1,
     transparency: 4,
-    note: { type: 'warn', text: '£112k gap between PDF and submitted price' },
+    note: { type: 'warn', text: 'PDF total (£2.18M) is £112k higher than cost_estimated (£2.07M)—clarify which applies' },
     hasEstimates: true,
-    breakdown: { equipment: 1_100_000, labour: 580_000, overheads: 220_000, design: 80_000, commission: 50_000, om: 40_513 },
+    breakdown: { equipment: 1_181_031, labour: 1_124_459, overheads: 333_223, om: 5_286 },
   },
   {
     id: 'arin-power',
     name: 'Arin Power',
+    badge: 'Rank #6',
     totalPounds: 2_295_708,
     perKwp: 574,
     systemKwp: 3997,
     quality: 2,
     transparency: 3,
-    note: { type: 'warn', text: 'Excludes scaffolding — true cost higher' },
-    breakdown: { equipment: 1_200_000, labour: 620_000, overheads: 350_000, om: 45_708 },
-  },
-  {
-    id: 'green-volt',
-    name: 'Green Volt',
-    totalPounds: 2_657_373,
-    perKwp: 589,
-    systemKwp: 4513,
-    quality: 2,
-    transparency: 3,
-    note: { type: 'info', text: 'Largest system (4,513 kWp) — 13% more capacity' },
-    breakdown: { equipment: 1_450_000, labour: 750_000, overheads: 380_000, design: 77_373 },
+    note: { type: 'warn', text: 'Scaffolding explicitly excluded—add £150–300k for true comparability' },
+    breakdown: { equipment: 817_673, labour: 921_520, overheads: 87_000, om: 19_800 },
   },
   {
     id: 'sustain',
@@ -98,9 +89,21 @@ const FULL_SCOPE_SUPPLIERS: Supplier[] = [
     perKwp: 607,
     systemKwp: 3997,
     quality: 1,
-    transparency: 5,
+    transparency: 4,
     hasEstimates: true,
-    breakdown: { equipment: 1_280_000, labour: 650_000, overheads: 350_000, design: 95_568, om: 50_000 },
+    breakdown: { equipment: 1_020_467, labour: 1_032_768, overheads: 353_026, om: 33_976 },
+  },
+  {
+    id: 'green-volt',
+    name: 'Green Volt',
+    badge: 'Rank #8',
+    totalPounds: 2_657_373,
+    perKwp: 589,
+    systemKwp: 4513,
+    quality: 2,
+    transparency: 3,
+    note: { type: 'warn', text: 'PDF categories sum to £2.17M but cost_estimated £2.66M—£485k gap unaccounted' },
+    breakdown: { equipment: 1_517_000, labour: 560_000, overheads: 95_000, om: 25_500 },
   },
   {
     id: 'ortus',
@@ -110,30 +113,32 @@ const FULL_SCOPE_SUPPLIERS: Supplier[] = [
     systemKwp: 3996,
     quality: 3,
     transparency: 2,
-    note: { type: 'warn', text: 'No breakdown provided' },
-    breakdown: { equipment: 1_500_000, labour: 800_000, overheads: 400_000 },
+    note: { type: 'warn', text: 'No breakdown provided; PPA/CapEx classification ambiguous' },
+    breakdown: { equipment: undefined, labour: undefined, overheads: undefined, om: 47_952 },
   },
   {
     id: 'electron-green',
     name: 'Electron Green',
+    badge: 'Rank #9',
     totalPounds: 2_830_049,
     perKwp: 708,
     systemKwp: 3996,
     quality: 3,
     transparency: 1,
-    note: { type: 'warn', text: 'No breakdown — references other tender' },
-    breakdown: { equipment: 1_520_000, labour: 810_000, overheads: 410_000 },
+    note: { type: 'warn', text: 'No breakdown; description references Lakeside—cross-project submission' },
+    breakdown: { equipment: undefined, labour: undefined, overheads: undefined, om: 25_000 },
   },
   {
     id: 'shawton',
     name: 'Shawton Energy',
+    badge: 'PPA',
     totalPounds: 3_449_203,
     perKwp: 863,
     systemKwp: 3996,
     quality: 3,
     transparency: 2,
-    note: { type: 'warn', text: 'Likely embeds PPA fund overhead, not true EPC cost' },
-    breakdown: { equipment: 1_900_000, labour: 950_000, overheads: 520_000, om: 79_203 },
+    note: { type: 'warn', text: 'PPA offer; capex figure is indicative benchmark, not client purchase price' },
+    breakdown: { equipment: undefined, labour: undefined, overheads: undefined, om: 39_960 },
   },
   {
     id: 'ees',
@@ -144,36 +149,49 @@ const FULL_SCOPE_SUPPLIERS: Supplier[] = [
     systemKwp: 3630,
     quality: 1,
     transparency: 4,
-    note: { type: 'info', text: 'Includes batteries + RC62 fire protection' },
-    breakdown: { equipment: 2_400_000, labour: 1_100_000, overheads: 600_000, design: 99_607 },
+    note: { type: 'info', text: 'Includes batteries + RC62 fire protection; solar-only cost would be lower' },
+    breakdown: { equipment: 2_066_800, labour: 1_533_606, overheads: 811_494, om: 36_940 },
   },
 ]
 
 const SMALLER_SUPPLIERS: Supplier[] = [
   {
+    id: 'photon',
+    name: 'Photon Energy',
+    badge: 'Lowest',
+    totalPounds: 1_131_500,
+    perKwp: 582,
+    systemKwp: 1945,
+    quality: 1,
+    transparency: 4,
+    note: { type: 'warn', text: '£180k H&S provisional—crane, edge protection, pallet splitting subject to site survey' },
+    hasEstimates: true,
+    breakdown: { equipment: 594_000, labour: 357_500, overheads: 180_000, om: 23_350 },
+  },
+  {
     id: 'low-carbon',
     name: 'Low Carbon Energy',
-    badge: 'Lowest £/kWp',
+    badge: '2nd lowest',
     totalPounds: 1_163_127,
     perKwp: 499,
     systemKwp: 2333,
     quality: 2,
     transparency: 3,
-    note: { type: 'warn', text: '£397k unreconciled gap between fields and total' },
+    note: { type: 'warn', text: 'Materials £240k (~£103/kWp) exceptionally low—typical modules £200–280/kWp' },
     hasEstimates: true,
-    breakdown: { equipment: 520_000, labour: 246_000, overheads: 180_000, om: 18_127 },
+    breakdown: { equipment: 240_111, labour: 465_863, overheads: 60_500, om: 7_000 },
   },
   {
-    id: 'photon',
-    name: 'Photon Energy',
-    badge: 'Lowest total',
-    totalPounds: 1_131_500,
-    perKwp: 582,
-    systemKwp: 1946,
-    quality: 1,
-    transparency: 5,
-    note: { type: 'info', text: 'H&S £180k provisional — may reduce' },
-    breakdown: { equipment: 450_000, labour: 220_000, overheads: 158_500, om: 23_350 },
+    id: 'olympus',
+    name: 'Olympus Power',
+    badge: '3rd lowest',
+    totalPounds: 1_226_053,
+    perKwp: 734,
+    systemKwp: 1670,
+    quality: 3,
+    transparency: 2,
+    note: { type: 'warn', text: 'No breakdown available; 1,670 kWp is smallest scope in CapEx set' },
+    breakdown: { equipment: undefined, labour: undefined, overheads: undefined, om: 16_000 },
   },
   {
     id: 'your-eco',
@@ -181,21 +199,10 @@ const SMALLER_SUPPLIERS: Supplier[] = [
     totalPounds: 1_726_089,
     perKwp: 799,
     systemKwp: 2161,
-    quality: 2,
-    transparency: 3,
-    note: { type: 'info', text: 'Premium spec — SolarEdge optimisers, 20yr warranty' },
-    breakdown: { equipment: 900_000, labour: 450_000, overheads: 220_000, design: 80_000, commission: 76_089 },
-  },
-  {
-    id: 'olympus',
-    name: 'Olympus Power',
-    totalPounds: 1_226_053,
-    perKwp: 734,
-    systemKwp: 1670,
-    quality: 3,
-    transparency: 2,
-    note: { type: 'warn', text: 'No breakdown — smallest system, possibly incomplete' },
-    breakdown: { equipment: 650_000, labour: 320_000, overheads: 180_000 },
+    quality: 1,
+    transparency: 4,
+    note: { type: 'info', text: 'SolarEdge Platinum; sum of price_* £56k less than cost_estimated' },
+    breakdown: { equipment: 974_838, labour: 584_749, overheads: 109_942, om: 3_250 },
   },
 ]
 
@@ -209,7 +216,7 @@ function formatPounds(n: number, currency: 'gbp' | 'eur' = 'gbp'): string {
 }
 
 function formatKwp(n: number, projectType?: ProjectType): string {
-  if (projectType === 'led') return `${n.toLocaleString()} luminaires`
+  if (projectType === 'led' || projectType === 'led-rostock') return `${n.toLocaleString()} luminaires`
   return `${n.toLocaleString()} kWp`
 }
 
@@ -293,7 +300,7 @@ function QualityBadge({ quality }: { quality: Supplier['quality'] }) {
 
 const ALL_SUPPLIERS = [...FULL_SCOPE_SUPPLIERS, ...SMALLER_SUPPLIERS]
 
-export type ProjectType = 'solar' | 'led'
+export type ProjectType = 'solar' | 'led' | 'led-rostock'
 
 function mapLedToSupplier(led: import('@/lib/led-supplier-data').LedSupplier): Supplier {
   const b = led.breakdown
@@ -342,7 +349,12 @@ export function SupplierComparisonTable({
           const { LED_SUPPLIERS } = require('@/lib/led-supplier-data')
           return LED_SUPPLIERS.map(mapLedToSupplier)
         })()
-      : cluster === 'full-scope'
+      : projectType === 'led-rostock'
+        ? (() => {
+            const { ROSTOCK_LED_SUPPLIERS } = require('@/lib/led-rostock-supplier-data')
+            return ROSTOCK_LED_SUPPLIERS.map(mapLedToSupplier)
+          })()
+        : cluster === 'full-scope'
         ? FULL_SCOPE_SUPPLIERS
         : SMALLER_SUPPLIERS
   const suppliers =
@@ -381,8 +393,13 @@ export function SupplierComparisonTable({
     })
   }
 
-  const basePath = projectType === 'led' ? '/supplier-comparison/led' : '/supplier-comparison'
-  const currency = projectType === 'led' ? 'eur' as const : 'gbp' as const
+  const basePath =
+    projectType === 'led'
+      ? '/supplier-comparison/led'
+      : projectType === 'led-rostock'
+        ? '/supplier-comparison/led-rostock'
+        : '/supplier-comparison'
+  const currency = (projectType === 'led' || projectType === 'led-rostock') ? 'eur' as const : 'gbp' as const
   const formatAmount = (n: number) => formatPounds(n, currency)
   const handleCompare = () => {
     const ids = Array.from(selectedIds)
@@ -421,7 +438,7 @@ export function SupplierComparisonTable({
         <div className="mb-6">
           <div className="flex items-start gap-3 mb-5">
             <Image
-              src={projectType === 'led' ? '/site elements/Avatar.svg' : '/site elements/solar.svg'}
+              src={(projectType === 'led' || projectType === 'led-rostock') ? '/site elements/Avatar.svg' : '/site elements/solar.svg'}
               alt=""
               width={40}
               height={40}
@@ -431,17 +448,21 @@ export function SupplierComparisonTable({
               <h2 className="text-xl font-extrabold text-cq-text leading-tight">
                 {projectType === 'led'
                   ? 'Project 310 — Alexanderstraße 1/3/5'
-                  : 'Project 322 — Lakeside Retail Park'}
+                  : projectType === 'led-rostock'
+                    ? 'tender_651_650 — Doberaner Straße 114-116'
+                    : 'Project 322 — Braehead'}
               </h2>
               <p className="text-sm text-cq-text-secondary mt-0.5">
                 {projectType === 'led'
                   ? 'Berlin, 2,494 luminaires'
-                  : '123 Commercial Road, Northampton NN3 8AB'}
+                  : projectType === 'led-rostock'
+                    ? 'Rostock, 2 suppliers (490 / 1,029 luminaires)'
+                    : 'Shopping centre, LL1–LL3, Red Parking, car park roofs'}
               </p>
             </div>
           </div>
           <div className="flex flex-wrap gap-4 mb-8">
-            {(projectType === 'led'
+            {((projectType === 'led' || projectType === 'led-rostock')
               ? ['Commercial', 'Occupied', 'LED Retrofit']
               : ['Residential', 'Occupied', '> 70kW Solar']
             ).map((tag) => (
@@ -457,7 +478,7 @@ export function SupplierComparisonTable({
 
         {/* Cluster tabs — hide for LED. Defer Radix Tabs to client to avoid hydration mismatch. */}
         <div className="mt-6">
-          {projectType !== 'led' && (
+          {(projectType !== 'led' && projectType !== 'led-rostock') && (
             mounted ? (
               <Tabs.Root value={cluster} onValueChange={(v) => { setCluster(v as Cluster); setExpandedIds(new Set()) }}>
                 <Tabs.List className="flex gap-8 border-b border-cq-border mb-4">
@@ -506,8 +527,8 @@ export function SupplierComparisonTable({
               className="inline-flex rounded-lg border border-cq-border bg-cq-bg overflow-hidden"
             >
               {[
-                { value: 'absolute', label: projectType === 'led' ? 'Absolute €' : 'Absolute £' },
-                { value: 'per-kwp', label: projectType === 'led' ? '€/luminaire' : '£/kWp' },
+                { value: 'absolute', label: (projectType === 'led' || projectType === 'led-rostock') ? 'Absolute €' : 'Absolute £' },
+                { value: 'per-kwp', label: (projectType === 'led' || projectType === 'led-rostock') ? '€/luminaire' : '£/kWp' },
                 { value: 'pct-total', label: '% of total' },
               ].map(({ value, label }) => (
                 <ToggleGroup.Item
@@ -568,7 +589,7 @@ export function SupplierComparisonTable({
                       Supplier
                     </th>
                     <th className="text-right py-3 px-6 font-semibold text-cq-text-secondary text-xs uppercase tracking-wider w-20">
-                      {projectType === 'led' ? '€/luminaire' : '£/kWp'}
+                      {(projectType === 'led' || projectType === 'led-rostock') ? '€/luminaire' : '£/kWp'}
                     </th>
                     <th className="text-right py-3 px-6 font-semibold text-cq-text-secondary text-xs uppercase tracking-wider w-24">
                       Total
@@ -740,7 +761,7 @@ export function SupplierComparisonTable({
                                 </span>
                               </TooltipTrigger>
                               <TooltipContent side="top" className="max-w-[260px]">
-                                {projectType === 'led'
+                                {(projectType === 'led' || projectType === 'led-rostock')
                                   ? 'Ranked by €/luminaire — Rank 1 = lowest price (best value)'
                                   : 'Ranked by £/kWp — lower rank = lower price per kWp (better value)'}
                               </TooltipContent>
@@ -805,7 +826,7 @@ export function SupplierComparisonTable({
                     </tr>,
                       isExpanded &&
                         hasBreakdown && (() => {
-                          const breakdownCols = projectType === 'led'
+                          const breakdownCols = (projectType === 'led' || projectType === 'led-rostock')
                             ? [
                                 { key: 'equipment' as const, label: 'Equipment' },
                                 { key: 'labour' as const, label: 'Labour' },
@@ -827,7 +848,7 @@ export function SupplierComparisonTable({
                                 <div className="w-full pl-[4.5rem] pr-6 py-3">
                                   <div className={cn(
                                     'grid gap-x-6 gap-y-2 w-full',
-                                    projectType === 'led'
+                                    (projectType === 'led' || projectType === 'led-rostock')
                                       ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'
                                       : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-6'
                                   )}>
@@ -871,11 +892,13 @@ export function SupplierComparisonTable({
           <footer className="mt-4 text-sm text-cq-text-secondary">
             {projectType === 'led'
               ? '7 CapEx submissions · ranked by €/luminaire'
-              : '13 CapEx submissions · 1 PPA excluded · ranked by £/kWp'}
+              : projectType === 'led-rostock'
+                ? '2 CapEx submissions · ranked by €/luminaire'
+                : '12 CapEx submissions · 3 PPA excluded · ranked by £/kWp'}
           </footer>
-          {projectType !== 'led' && (
+          {(projectType !== 'led' && projectType !== 'led-rostock') && (
           <p className="mt-2 text-xs text-cq-text-secondary">
-            Power-Zero — PPA-only, no CapEx, 4,072 kWp, excluded from ranking
+            Shawton — PPA-only; Ortus, Electron Green — no breakdown. Power-Zero, SNRG excluded.
           </p>
           )}
         </div>

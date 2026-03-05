@@ -68,6 +68,7 @@ export type SupplierProfileData = {
 
 // ─── Default data: Photon Energy ───────────────────────────────────────
 
+// Project 322 — Braehead — Photon Energy profile from breakdown.html
 const PHOTON_ENERGY_PROFILE: SupplierProfileData = {
   id: 'photon',
   name: 'Photon Energy',
@@ -75,99 +76,84 @@ const PHOTON_ENERGY_PROFILE: SupplierProfileData = {
   cluster: 'smaller',
   totalPounds: 1_131_500,
   perKwp: 582,
-  systemKwp: 1946,
+  systemKwp: 1945,
   totalPosition: 'below',
   perKwpPosition: 'below',
   totalPercentPosition: 22,
   perKwpPercentPosition: 35,
   specs: {
-    panels: 'Trina TSM-DE09.08 455W (×4,276)',
-    inverters: 'Solis S6-GR3P10K (×15)',
-    mounting: 'K2 Basic Rail',
-    workmanshipWarranty: '2 years',
-    panelWarranty: '25 years',
-    inverterWarranty: '10 years',
+    panels: '4,276 × Trina 455W dual-glass modules',
+    inverters: '15 Solis three-phase inverters',
+    mounting: 'K2 Basic Rail (included)',
+    workmanshipWarranty: 'Not stated',
+    panelWarranty: 'Not stated',
+    inverterWarranty: 'Not stated',
   },
   characterisation:
-    "Strong transparency — detailed PDF quotation with itemized equipment, labour, design, and provisional sums. Covers only 4 MPANs at 1,946 kWp (roughly half the full-scope proposals). H&S at £180k (16%) seems high; PDF labels this as provisional 'Attendances' covering edge protection and lifting.",
+    "Detailed PDF quotation with itemised equipment, installation, design, and attendances across four MPANs. Smallest scope at 1,946 kWp covering LL1, LL2, LL3, and Red Parking—not the full six-roof brief. H&S at £180k (16%) is provisional for crane, edge protection, pallet splitting—subject to site survey.",
   keyFlags: [
-    { icon: 'doc', text: 'Detailed PDF with good document-to-field corroboration' },
-    { icon: 'warn', text: '£40k discrepancy between PDF subtotal and form fields (installation vs commissioning allocation)' },
-    { icon: 'info', text: 'Optimisers listed as "not included" with no explanation of substitution or cost impact' },
+    { icon: 'doc', text: 'Detailed PDF with good category coverage' },
+    { icon: 'warn', text: 'price_labour £247,500 vs PDF combined installation/commissioning £287,500—split inferred' },
+    { icon: 'warn', text: '£180k attendances provisional—crane hire, edge protection noted as estimates' },
   ],
   categories: [
     {
       name: 'Equipment',
-      rank: { position: 9, total: 13 },
+      rank: { position: 1, total: 4 },
       proportionPercent: 53,
       medianPercent: 44,
       totalAmount: 594_000,
       subCategories: [
-        { name: 'Main Equipment', description: '4,276 Trina 455W modules, 15 Solis inverters, BOS components', amount: 594_000 },
-        { name: 'Mounting Systems', description: 'Bundled into main_equipment (K2 Basic Rail included)', tag: 'bundled' },
-        { name: 'Protection Devices', description: 'Included within main_equipment line' },
-        { name: 'Monitoring Equipment', description: 'GSM meter and display included within main_equipment' },
+        { name: 'Main Equipment', description: '4,276 × 455W Trina dual-glass modules, 15 Solis inverters', amount: 594_000 },
+        { name: 'Mounting Systems', description: 'K2 Basic Rail included within main_equipment', tag: 'bundled' },
+        { name: 'Protection Devices', description: 'DC SPD, isolators, ArcBoxes included', tag: 'bundled' },
+        { name: 'Monitoring Equipment', description: 'GSM meter, generation meter included', tag: 'bundled' },
       ],
     },
     {
       name: 'Labour',
-      rank: { position: 3, total: 13 },
-      proportionPercent: 25,
+      rank: { position: 1, total: 4 },
+      proportionPercent: 32,
       medianPercent: 36,
-      totalAmount: 287_500,
+      totalAmount: 357_500,
       subCategories: [
-        { name: 'Installation Labour', description: 'In-house installation and commissioning labour across all MPANs', amount: 247_500 },
-        { name: 'Electrical Works', description: 'Electrical containment, AC/DC cabling, PVDB connections', amount: 40_000 },
+        { name: 'Installation Labour', description: 'In-house installation and commissioning across four roof areas', amount: 247_500 },
+        { name: 'Electrical Works', description: 'AC/DC electrical works, containment, PVDB connections', amount: 40_000 },
+        { name: 'Project Management', description: 'DNO application, PV system design, project management', amount: 70_000 },
       ],
     },
     {
       name: 'Project Overheads',
-      rank: { position: 12, total: 13 },
-      flag: 'Above typical range — driven by provisional H&S',
-      proportionPercent: 53,
-      medianPercent: 44,
-      totalAmount: 250_000,
+      rank: { position: 1, total: 4 },
+      flag: 'Provisional—subject to site survey',
+      proportionPercent: 16,
+      medianPercent: 10,
+      totalAmount: 180_000,
       subCategories: [
-        { name: 'Health Safety Management', description: 'Edge protection, lifting, scaffolding, site safety', amount: 180_000, tag: 'provisional' },
-        { name: 'Contract Administration', description: 'DNO application, project management, design fees', amount: 70_000 },
-      ],
-    },
-    {
-      name: 'Design & Technical Services',
-      dimmed: true,
-      subCategories: [
-        { name: 'Detailed Design', description: 'Included within administration/project management line' },
-      ],
-    },
-    {
-      name: 'Commissioning & Assurance',
-      dimmed: true,
-      subCategories: [
-        { name: 'Grid Connection', description: 'DNO application cost within administration; G99 relay included' },
-        { name: 'Installation Warranty', description: '2-year workmanship warranty; no separate cost stated' },
+        { name: 'Health Safety Management', description: 'Provisional: edge protection, lifting, access, scaffolding', amount: 180_000, tag: 'provisional' },
       ],
     },
     {
       name: 'Ongoing Services',
-      rank: { position: 7, total: 13 },
-      proportionPercent: 25,
-      medianPercent: 36,
+      rank: { position: 1, total: 4 },
+      proportionPercent: 2,
+      medianPercent: 3,
       totalAmount: 23_350,
       subCategories: [
-        { name: 'Maintenance Contract', description: '5-year full-scope O&M, paid quarterly; RPI-linked', amount: 23_350 },
+        { name: 'Maintenance Contract', description: '5-year full-scope O&M paid quarterly; RPI-linked; excludes cleaning', amount: 23_350 },
       ],
     },
   ],
 }
 
-// Shortlisted suppliers for navigation (Smaller Systems cluster)
+// Shortlisted suppliers for navigation (Project 322 Braehead — top 3)
 const SHORTLISTED_SUPPLIERS = [
-  { id: 'your-eco', name: 'Your Eco' },
   { id: 'photon', name: 'Photon Energy' },
   { id: 'low-carbon', name: 'Low Carbon Energy' },
+  { id: 'olympus', name: 'Olympus Power' },
 ]
 
-// All supplier names for breadcrumb/header when not in shortlist
+// All supplier names for breadcrumb/header when not in shortlist (Project 322 Braehead)
 const ALL_SUPPLIER_NAMES: Record<string, string> = {
   'green-nation': 'Green Nation',
   'arin-power': 'Arin Power',
@@ -314,7 +300,7 @@ type SupplierProfileViewProps = {
   data?: SupplierProfileData
   shortlist?: { id: string; name: string }[]
   supplierId?: string // From URL — used to determine nav position; data comes from lookup
-  projectType?: 'solar' | 'led'
+  projectType?: 'solar' | 'led' | 'led-rostock'
 }
 
 export function SupplierProfileView({
@@ -339,13 +325,19 @@ export function SupplierProfileView({
 
   const clusterLabel =
     data.cluster === 'full-scope' ? 'FULL SCOPE SYSTEM' : 'SMALLER SYSTEM'
-  const basePath = projectType === 'led' ? '/supplier-comparison/led' : '/supplier-comparison'
+  const basePath =
+    projectType === 'led'
+      ? '/supplier-comparison/led'
+      : projectType === 'led-rostock'
+        ? '/supplier-comparison/led-rostock'
+        : '/supplier-comparison'
+  const isLedLike = projectType === 'led' || projectType === 'led-rostock'
 
   const formatAmount = (amount: number) => {
-    if (viewMode === 'absolute') return projectType === 'led' ? formatEur(amount) : formatPounds(amount)
+    if (viewMode === 'absolute') return isLedLike ? formatEur(amount) : formatPounds(amount)
     if (viewMode === 'per-kwp') {
       const perUnit = Math.round(amount / data.systemKwp)
-      return projectType === 'led' ? formatPerLuminaire(perUnit) : formatKwp(perUnit)
+      return isLedLike ? formatPerLuminaire(perUnit) : formatKwp(perUnit)
     }
     return `${((amount / totalSum) * 100).toFixed(1)}%`
   }
@@ -381,7 +373,7 @@ export function SupplierProfileView({
             </div>
             <div className="grid grid-cols-3 gap-x-8 gap-y-6 text-sm">
               {(
-                projectType === 'led'
+                isLedLike
                   ? [
                       { label: 'Luminaires', value: data.specs.panels },
                       { label: 'Workmanship warranty', value: data.specs.workmanshipWarranty },
@@ -425,7 +417,7 @@ export function SupplierProfileView({
               <div className="w-44 rounded-xl border border-cq-border bg-white p-4">
                 <p className="text-xs font-semibold uppercase tracking-wider text-cq-text-secondary mb-1">Total</p>
                 <p className="text-2xl font-bold text-cq-text tabular-nums">
-                  {projectType === 'led' ? formatEur(data.totalPounds) : formatPounds(data.totalPounds)}
+                  {isLedLike ? formatEur(data.totalPounds) : formatPounds(data.totalPounds)}
                 </p>
                 <div className="mt-3">
                   <PositionBar
@@ -436,10 +428,10 @@ export function SupplierProfileView({
               </div>
               <div className="w-44 rounded-xl border border-cq-border bg-white p-4">
                 <p className="text-xs font-semibold uppercase tracking-wider text-cq-text-secondary mb-1">
-                  {projectType === 'led' ? '€/luminaire' : '£/kWp'}
+                  {isLedLike ? '€/luminaire' : '£/kWp'}
                 </p>
                 <p className="text-2xl font-bold text-cq-text tabular-nums">
-                  {projectType === 'led' ? formatPerLuminaire(data.perKwp) : formatKwp(data.perKwp)}
+                  {isLedLike ? formatPerLuminaire(data.perKwp) : formatKwp(data.perKwp)}
                 </p>
                 <div className="mt-3">
                   <PositionBar
@@ -479,8 +471,8 @@ export function SupplierProfileView({
             className="inline-flex rounded-lg border border-cq-border bg-cq-bg overflow-hidden"
           >
             {[
-              { value: 'absolute', label: projectType === 'led' ? 'Absolute €' : 'Absolute £' },
-              { value: 'per-kwp', label: projectType === 'led' ? '€/luminaire' : '£/kWp' },
+              { value: 'absolute', label: isLedLike ? 'Absolute €' : 'Absolute £' },
+              { value: 'per-kwp', label: isLedLike ? '€/luminaire' : '£/kWp' },
               { value: 'pct-total', label: '% of total' },
             ].map(({ value, label }) => (
               <ToggleGroup.Item
