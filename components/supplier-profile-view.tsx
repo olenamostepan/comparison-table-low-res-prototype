@@ -3,7 +3,7 @@
 import * as React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ChevronLeft, ChevronRight, FileText, Sparkles } from 'lucide-react'
+import { ChevronLeft, ChevronRight, FileText, Sparkles, Sun, Zap, Wrench, Shield, Lamp } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import * as ToggleGroup from '@radix-ui/react-toggle-group'
 import { Switch } from '@/components/ui/switch'
@@ -12,6 +12,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { Button } from '@/components/ui/button'
+import { ChartContainer } from '@/components/ui/chart'
+import { PieChart, Pie, Cell, Tooltip as RechartsTooltip } from 'recharts'
+import { SupplierCompanyProfile } from '@/components/supplier-company-profile'
 
 // ─── Types ─────────────────────────────────────────────────────────────
 
@@ -21,6 +25,12 @@ type ClusterType = 'full-scope' | 'smaller'
 type KeyFlag = {
   icon: 'doc' | 'warn' | 'info'
   text: string
+}
+
+type SourceDocument = {
+  filename: string
+  size: string
+  status: 'extracted' | 'unreadable'
 }
 
 type SubCategory = {
@@ -63,6 +73,7 @@ export type SupplierProfileData = {
   }
   characterisation: string
   keyFlags: KeyFlag[]
+  sourceDocuments?: SourceDocument[]
   categories: Category[]
 }
 
@@ -92,9 +103,13 @@ const PHOTON_ENERGY_PROFILE: SupplierProfileData = {
   characterisation:
     "Detailed PDF quotation with itemised equipment, installation, design, and attendances across four MPANs. Smallest scope at 1,946 kWp covering LL1, LL2, LL3, and Red Parking—not the full six-roof brief. H&S at £180k (16%) is provisional for crane, edge protection, pallet splitting—subject to site survey.",
   keyFlags: [
-    { icon: 'doc', text: 'Detailed PDF with good category coverage' },
-    { icon: 'warn', text: 'price_labour £247,500 vs PDF combined installation/commissioning £287,500—split inferred' },
-    { icon: 'warn', text: '£180k attendances provisional—crane hire, edge protection noted as estimates' },
+    { icon: 'doc', text: 'Detailed PDF with good document-to-field corroboration' },
+    { icon: 'warn', text: '£40k discrepancy between PDF subtotal and form fields' },
+    { icon: 'warn', text: "Optimisers listed as 'not included' with no explanation" },
+  ],
+  sourceDocuments: [
+    { filename: 'Pricing Quotation.pdf', size: '2.3 MB', status: 'extracted' },
+    { filename: 'Technical Specification.pdf', size: '1.1 MB', status: 'extracted' },
   ],
   categories: [
     {
@@ -171,6 +186,7 @@ const ALL_SUPPLIER_NAMES: Record<string, string> = {
 
 const SUPPLIER_LOGOS: Record<string, string> = {
   photon: '/site elements/beba.svg',
+  ortus: '/site elements/Avatar.svg',
   'your-eco': '/site elements/gogreen.svg',
   'low-carbon': '/site elements/lowcarbon.svg',
 }
@@ -208,9 +224,9 @@ const QUALITY_LABELS: Record<1 | 2 | 3, string> = {
 function QualityBadge({ quality }: { quality: 1 | 2 | 3 }) {
   const labels: Record<1 | 2 | 3, string> = { 1: 'Detailed', 2: 'Partial', 3: 'Summary' }
   const shades: Record<1 | 2 | 3, string> = {
-    1: 'bg-cq-dark text-white',
-    2: 'bg-cq-green text-white',
-    3: 'bg-cq-green/60 text-white',
+    1: 'bg-gray-900 text-white',
+    2: 'bg-gray-600 text-white',
+    3: 'bg-gray-300 text-gray-800',
   }
   return (
     <Tooltip>
@@ -294,6 +310,86 @@ function KeyFlagIcon({ icon }: { icon: KeyFlag['icon'] }) {
   }
 }
 
+const CHART_COLORS = ['#126e53', '#29b273', '#239f63', '#1c75bc', '#4d5761', '#9ca3af']
+
+function CategoryBreakdownChart({
+  categories,
+  totalSum,
+  isLedLike,
+  formatAmount,
+}: {
+  categories: Category[]
+  totalSum: number
+  isLedLike: boolean
+  formatAmount: (n: number) => string
+}) {
+  const chartData = categories
+    .filter((c) => (c.totalAmount ?? 0) > 0 && !c.dimmed)
+    .map((c, i) => ({
+      name: c.name,
+      value: c.totalAmount ?? 0,
+      proportion: c.proportionPercent ?? 0,
+      fill: CHART_COLORS[i % CHART_COLORS.length],
+    }))
+  if (chartData.length === 0) return null
+  return (
+    <div className="rounded-xl border border-cq-border bg-white p-4 flex flex-col">
+      <p className="text-xs font-semibold uppercase tracking-wider text-cq-text-secondary mb-3 shrink-0">Cost breakdown</p>
+      <div className="flex gap-4 items-center">
+        <div className="flex flex-col gap-1.5 shrink-0">
+          {chartData.map((d, i) => (
+            <div key={i} className="flex items-center gap-2 text-sm">
+              <div
+                className="w-2.5 h-2.5 rounded-sm shrink-0"
+                style={{ backgroundColor: d.fill }}
+              />
+              <span className="text-cq-text font-medium">{d.name}</span>
+              <span className="text-cq-text-secondary tabular-nums">{d.proportion}%</span>
+            </div>
+          ))}
+        </div>
+        <div className="flex-1 min-w-0">
+        <ChartContainer
+          id="cost-breakdown-chart"
+          config={Object.fromEntries(chartData.map((d, i) => [d.name, { label: d.name, color: d.fill }]))}
+          className="h-[140px] w-full"
+        >
+        <PieChart>
+          <Pie
+            data={chartData}
+            dataKey="value"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            innerRadius={35}
+            outerRadius={55}
+            paddingAngle={2}
+          >
+            {chartData.map((d, i) => (
+              <Cell key={i} fill={d.fill} />
+            ))}
+          </Pie>
+          <RechartsTooltip
+            formatter={(value: number) => [formatAmount(value), 'Amount']}
+            content={({ active, payload }) =>
+              active && payload?.[0] ? (
+                <div className="rounded-lg border border-cq-border bg-white px-3 py-2 shadow-sm text-sm">
+                  <p className="font-semibold text-cq-text">{payload[0].name}</p>
+                  <p className="text-cq-text-secondary">
+                    {formatAmount(payload[0].value as number)} ({payload[0].payload.proportion}%)
+                  </p>
+                </div>
+              ) : null
+            }
+          />
+        </PieChart>
+      </ChartContainer>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ─── Main component ─────────────────────────────────────────────────────
 
 type SupplierProfileViewProps = {
@@ -317,6 +413,7 @@ export function SupplierProfileView({
   const currentIndex = shortlist.findIndex((s) => s.id === currentId)
   const prevSupplier = currentIndex > 0 ? shortlist[currentIndex - 1] : null
   const nextSupplier = currentIndex >= 0 && currentIndex < shortlist.length - 1 ? shortlist[currentIndex + 1] : null
+  const [showCompanyProfile, setShowCompanyProfile] = React.useState(false)
 
   const totalSum = data.categories.reduce(
     (sum, c) => sum + (c.totalAmount ?? 0),
@@ -343,6 +440,7 @@ export function SupplierProfileView({
   }
 
   return (
+    <>
     <div className="min-h-screen bg-cq-bg">
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* 1. Header */}
@@ -359,111 +457,163 @@ export function SupplierProfileView({
           </span>
         </nav>
 
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 mb-8">
-          {/* Left: name, badge, specs (no box) */}
-          <div className="min-w-0 flex-1">
-            <h1 className="text-[28px] font-extrabold text-cq-text leading-tight mb-2">
-              {shortlist.find((s) => s.id === currentId)?.name ?? ALL_SUPPLIER_NAMES[currentId] ?? data.name}
-            </h1>
-            <div className="flex flex-wrap items-center gap-2 mb-4">
-              <QualityBadge quality={data.quality} />
-              <span className="text-xs font-bold uppercase tracking-wider text-cq-text-secondary">
-                {clusterLabel}
-              </span>
-            </div>
-            <div className="grid grid-cols-3 gap-x-8 gap-y-6 text-sm">
-              {(
-                isLedLike
-                  ? [
-                      { label: 'Luminaires', value: data.specs.panels },
-                      { label: 'Workmanship warranty', value: data.specs.workmanshipWarranty },
-                      { label: 'Luminaire warranty', value: data.specs.panelWarranty },
-                    ]
-                  : [
-                      { label: 'Panels', value: data.specs.panels },
-                      { label: 'Inverters', value: data.specs.inverters },
-                      { label: 'Mounting', value: data.specs.mounting },
-                      { label: 'Workmanship warranty', value: data.specs.workmanshipWarranty },
-                      { label: 'Panel warranty', value: data.specs.panelWarranty },
-                      { label: 'Inverter warranty', value: data.specs.inverterWarranty },
-                    ]
-              ).map(({ label, value }) => (
-                <div key={label}>
-                  <p className="text-xs text-cq-text-secondary mb-0.5">{label}</p>
-                  <p className="font-medium text-cq-text">{value}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Right: logo + price cards */}
-          <div className="flex flex-col items-end gap-4 shrink-0">
-            {SUPPLIER_LOGOS[currentId] ? (
-              <Image
-                src={SUPPLIER_LOGOS[currentId]}
-                alt=""
-                width={80}
-                height={80}
-                className="object-contain rounded-lg"
-              />
-            ) : (
-              <div className="w-20 h-20 rounded-lg bg-cq-border-light flex items-center justify-center text-xl font-bold text-cq-text-secondary">
-                {(shortlist.find((s) => s.id === currentId)?.name ?? ALL_SUPPLIER_NAMES[currentId] ?? data.name)
-                  .slice(0, 2)
-                  .toUpperCase()}
-              </div>
-            )}
-            <div className="flex gap-4">
-              <div className="w-44 rounded-xl border border-cq-border bg-white p-4">
-                <p className="text-xs font-semibold uppercase tracking-wider text-cq-text-secondary mb-1">Total</p>
-                <p className="text-2xl font-bold text-cq-text tabular-nums">
-                  {isLedLike ? formatEur(data.totalPounds) : formatPounds(data.totalPounds)}
-                </p>
-                <div className="mt-3">
-                  <PositionBar
-                    percent={data.totalPercentPosition}
-                    label={data.totalPosition === 'below' ? 'Below median' : 'Above median'}
+        {/* Block 1: Header — logo, name, badges + source docs */}
+        <div className="mb-8">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 lg:gap-8">
+            <div className="min-w-0 flex-1">
+              <div className="mb-4">
+                {SUPPLIER_LOGOS[currentId] ? (
+                  <Image
+                    src={SUPPLIER_LOGOS[currentId]}
+                    alt=""
+                    width={96}
+                    height={96}
+                    className="object-contain rounded-lg w-24 h-24"
                   />
+                ) : (
+                  <div className="w-24 h-24 rounded-lg bg-cq-border-light flex items-center justify-center text-lg font-bold text-cq-text-secondary">
+                    {(shortlist.find((s) => s.id === currentId)?.name ?? ALL_SUPPLIER_NAMES[currentId] ?? data.name)
+                      .slice(0, 2)
+                      .toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-wrap items-center gap-3 mb-3">
+                <h1 className="text-[28px] font-extrabold text-cq-text leading-tight">
+                  {shortlist.find((s) => s.id === currentId)?.name ?? ALL_SUPPLIER_NAMES[currentId] ?? data.name}
+                </h1>
+                <div className="flex flex-wrap items-center gap-2">
+                  <QualityBadge quality={data.quality} />
+                  <span className="text-xs font-bold uppercase tracking-wider text-cq-text-secondary">
+                    {clusterLabel}
+                  </span>
                 </div>
               </div>
-              <div className="w-44 rounded-xl border border-cq-border bg-white p-4">
-                <p className="text-xs font-semibold uppercase tracking-wider text-cq-text-secondary mb-1">
-                  {isLedLike ? '€/luminaire' : '£/kWp'}
-                </p>
-                <p className="text-2xl font-bold text-cq-text tabular-nums">
-                  {isLedLike ? formatPerLuminaire(data.perKwp) : formatKwp(data.perKwp)}
-                </p>
-                <div className="mt-3">
-                  <PositionBar
-                    percent={data.perKwpPercentPosition}
-                    label={data.perKwpPosition === 'below' ? 'Below median' : 'Above median'}
-                  />
-                </div>
+              <Button
+                onClick={() => setShowCompanyProfile(true)}
+                className="bg-cq-green hover:bg-cq-green-hover text-white font-semibold"
+              >
+                Supplier Profile
+              </Button>
+            </div>
+            <div className="w-full max-w-[340px] min-w-0">
+              <div className="flex items-center justify-between gap-4 mb-2">
+                <h3 className="text-base font-bold text-cq-text">Source Documents</h3>
+                {data.sourceDocuments && data.sourceDocuments.length >= 2 && (
+                  <Button variant="outline" size="sm" asChild className="border-cq-border bg-white hover:bg-cq-bg text-cq-text shrink-0 ml-auto">
+                    <a href="#">Download all</a>
+                  </Button>
+                )}
               </div>
+              {data.sourceDocuments && data.sourceDocuments.length > 0 ? (
+                <div className="space-y-1.5">
+                  {data.sourceDocuments.map((doc, i) => (
+                    <div key={i} className="flex items-center gap-3 text-sm flex-wrap">
+                      <FileText className="w-3.5 h-3.5 text-cq-text-secondary shrink-0" />
+                      <Button variant="link" size="sm" asChild className="h-auto p-0 font-medium text-cq-link hover:text-cq-green shrink-0">
+                        <a href="#">{doc.filename}</a>
+                      </Button>
+                      <span className="text-cq-muted text-xs tabular-nums shrink-0">{doc.size}</span>
+                      <span
+                        className={cn(
+                          'text-xs font-semibold shrink-0',
+                          doc.status === 'extracted' ? 'text-cq-muted' : 'text-cq-amber'
+                        )}
+                      >
+                        {doc.status === 'extracted' ? 'Extracted' : '⚠ Unreadable'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-cq-muted">No documents uploaded</p>
+              )}
             </div>
           </div>
         </div>
 
-        {/* 4. CQuel characterisation — Overview */}
-        <div className="rounded-xl border-2 border-cq-border bg-white p-6 mb-6">
-          <h2 className="text-sm font-extrabold text-cq-text uppercase tracking-wider mb-4">Overview</h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <p className="text-sm text-cq-text leading-relaxed">{data.characterisation}</p>
-            </div>
-            <div className="space-y-3">
-              {data.keyFlags.map((flag, i) => (
-                <div key={i} className="flex items-start gap-3 text-sm text-cq-text-secondary">
-                  <KeyFlagIcon icon={flag.icon} />
-                  <span>{flag.text}</span>
+        {/* Overview block: specs, numbers/graphs, characterisation, key flags */}
+        <div className="mb-8">
+          <div className="space-y-8">
+            <div className="flex flex-wrap gap-x-6 gap-y-4 text-sm min-w-0">
+              {(
+                isLedLike
+                  ? [
+                      { label: 'Luminaires', value: data.specs.panels, icon: Lamp },
+                      { label: 'Workmanship warranty', value: data.specs.workmanshipWarranty, icon: Shield },
+                      { label: 'Luminaire warranty', value: data.specs.panelWarranty, icon: Shield },
+                    ]
+                  : [
+                      { label: 'Panels', value: data.specs.panels, icon: Sun },
+                      { label: 'Inverters', value: data.specs.inverters, icon: Zap },
+                      { label: 'Mounting', value: data.specs.mounting, icon: Wrench },
+                      { label: 'Workmanship warranty', value: data.specs.workmanshipWarranty, icon: Shield },
+                      { label: 'Panel warranty', value: data.specs.panelWarranty, icon: Shield },
+                      { label: 'Inverter warranty', value: data.specs.inverterWarranty, icon: Shield },
+                    ]
+              ).map(({ label, value, icon: Icon }) => (
+                <div key={label} className="flex items-start gap-2 flex-shrink-0">
+                  <Icon className="w-4 h-4 text-cq-text-secondary mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-xs text-cq-text-secondary mb-0.5">{label}</p>
+                    <p className="font-medium text-cq-text">{value}</p>
+                  </div>
                 </div>
               ))}
+            </div>
+            <div className="grid md:grid-cols-2 gap-8 items-start">
+              <div>
+                <p className="text-sm text-cq-text leading-relaxed mb-4">{data.characterisation}</p>
+                <ul className="space-y-2 list-none">
+                  {data.keyFlags.map((flag, i) => (
+                    <li key={i} className="flex items-start gap-3 text-sm text-cq-text-secondary">
+                      <KeyFlagIcon icon={flag.icon} />
+                      <span>{flag.text}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="flex flex-col gap-4">
+                <CategoryBreakdownChart categories={data.categories} totalSum={totalSum} isLedLike={isLedLike} formatAmount={formatAmount} />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="rounded-xl border border-cq-border bg-white p-4 min-h-[100px]">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-cq-text-secondary mb-1">Total</p>
+                    <div className="flex items-center gap-4">
+                      <p className="text-2xl font-bold text-cq-text tabular-nums shrink-0">
+                        {isLedLike ? formatEur(data.totalPounds) : formatPounds(data.totalPounds)}
+                      </p>
+                      <div className="flex-1 min-w-0">
+                        <PositionBar
+                          percent={data.totalPercentPosition}
+                          label={data.totalPosition === 'below' ? 'Below median' : 'Above median'}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="rounded-xl border border-cq-border bg-white p-4 min-h-[100px]">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-cq-text-secondary mb-1">
+                      {isLedLike ? '€/luminaire' : '£/kWp'}
+                    </p>
+                    <div className="flex items-center gap-4">
+                      <p className="text-2xl font-bold text-cq-text tabular-nums shrink-0">
+                        {isLedLike ? formatPerLuminaire(data.perKwp) : formatKwp(data.perKwp)}
+                      </p>
+                      <div className="flex-1 min-w-0">
+                        <PositionBar
+                          percent={data.perKwpPercentPosition}
+                          label={data.perKwpPosition === 'below' ? 'Below median' : 'Above median'}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
         {/* 5. Controls */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4 mt-8">
           <ToggleGroup.Root
             type="single"
             value={viewMode}
@@ -528,11 +678,6 @@ export function SupplierProfileView({
                   <span className={cn('font-bold text-cq-text whitespace-nowrap w-48 shrink-0', cat.dimmed && 'text-cq-muted')}>
                     {cat.name}
                   </span>
-                  {cat.rank && (
-                    <span className="text-sm font-bold text-white shrink-0 px-2 py-0.5 rounded bg-cq-dark">
-                      {cat.rank.position}th of {cat.rank.total}
-                    </span>
-                  )}
                   {cat.flag && (
                     <span className="inline-flex items-center gap-1 text-xs text-cq-text-secondary shrink-0">
                       ⚠️ {cat.flag}
@@ -611,5 +756,21 @@ export function SupplierProfileView({
         </div>
       </div>
     </div>
+
+    {showCompanyProfile && (
+      <div className="fixed inset-0 z-[9999] flex items-center justify-end">
+        <div
+          className="absolute inset-0 bg-black/50"
+          onClick={() => setShowCompanyProfile(false)}
+          aria-hidden
+        />
+        <div className="relative w-full max-w-2xl h-full bg-white shadow-xl overflow-y-auto p-6">
+          <SupplierCompanyProfile
+            onClose={() => setShowCompanyProfile(false)}
+          />
+        </div>
+      </div>
+    )}
+    </>
   )
 }

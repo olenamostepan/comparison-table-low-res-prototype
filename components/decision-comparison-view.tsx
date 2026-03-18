@@ -22,38 +22,6 @@ type DecisionComparisonViewProps = {
 
 // ─── Sub-components ────────────────────────────────────────────────────
 
-const TRANSPARENCY_TOOLTIP =
-  'Transparency — how extractable and readable the submitted documentation is (1–5 scale)'
-
-function TransparencyBars({ stars }: { stars: number }) {
-  const filled = Math.min(stars, 4)
-  const heights = [6, 10, 14, 18]
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <div
-          className="flex items-end gap-0.5 h-5 cursor-help"
-          tabIndex={0}
-        >
-          {heights.map((h, i) => (
-            <div
-              key={i}
-              className={cn(
-                'w-[5px] rounded-sm transition-colors',
-                i < filled ? 'bg-cq-green' : 'bg-cq-green/20'
-              )}
-              style={{ height: h }}
-            />
-          ))}
-        </div>
-      </TooltipTrigger>
-      <TooltipContent side="top" className="max-w-[260px]">
-        {TRANSPARENCY_TOOLTIP}
-      </TooltipContent>
-    </Tooltip>
-  )
-}
-
 const QUALITY_LABELS: Record<1 | 2 | 3, string> = {
   1: 'Detailed — full itemised breakdown with equipment, labour, overheads, design, and O&M',
   2: 'Partial — some categories broken down, others bundled or missing',
@@ -63,9 +31,9 @@ const QUALITY_LABELS: Record<1 | 2 | 3, string> = {
 function QualityBadge({ quality }: { quality: 1 | 2 | 3 }) {
   const labels: Record<1 | 2 | 3, string> = { 1: 'Detailed', 2: 'Partial', 3: 'Summary' }
   const shades: Record<1 | 2 | 3, string> = {
-    1: 'bg-cq-dark text-white',
-    2: 'bg-cq-green text-white',
-    3: 'bg-cq-green/60 text-white',
+    1: 'bg-gray-900 text-white',
+    2: 'bg-gray-600 text-white',
+    3: 'bg-gray-300 text-gray-800',
   }
   return (
     <Tooltip>
@@ -184,20 +152,6 @@ export function DecisionComparisonView({
                         )}
                         <div>
                           <div className="font-bold text-cq-text text-sm whitespace-nowrap">{s.name}</div>
-                          {s.badge && (
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <span className="inline-block text-xs font-bold text-cq-dark mt-0.5 leading-tight cursor-help">
-                                  {s.badge}
-                                </span>
-                              </TooltipTrigger>
-                              <TooltipContent side="top" className="max-w-[260px]">
-                                {isLedLike
-                                  ? 'Ranked by €/luminaire — Rank 1 = lowest price (best value)'
-                                  : 'Ranked by £/kWp — lower rank = lower price per kWp (better value)'}
-                              </TooltipContent>
-                            </Tooltip>
-                          )}
                           <Link
                             href={`${basePath}/${s.id}`}
                             className="inline-flex items-center justify-center mt-2 px-8 py-1.5 rounded-lg border border-cq-border bg-white text-cq-text font-bold text-sm hover:bg-cq-bg hover:border-cq-green transition-colors min-w-[100px]"
@@ -392,15 +346,12 @@ export function DecisionComparisonView({
                   </td>
                 </tr>
                 <tr className="border-b border-cq-border">
-                  <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
+                    <td className="py-2 px-4 text-cq-text-secondary bg-white border-r border-cq-border">
                     Quality
                   </td>
                   {suppliers.map((s) => (
                     <td key={s.id} className="py-2 px-4">
-                      <div className="flex items-center gap-5">
-                        <QualityBadge quality={s.quality} />
-                        <TransparencyBars stars={s.transparency} />
-                      </div>
+                      <QualityBadge quality={s.quality} />
                     </td>
                   ))}
                 </tr>

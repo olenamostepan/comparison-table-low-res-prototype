@@ -220,48 +220,7 @@ function formatKwp(n: number, projectType?: ProjectType): string {
   return `${n.toLocaleString()} kWp`
 }
 
-// Stars 1–5 map to filled bars 1–4 (5 stars = 4 bars)
-function starsToBars(stars: number): number {
-  return Math.min(stars, 4)
-}
-
 // ─── Sub-components ────────────────────────────────────────────────────
-
-const TRANSPARENCY_LABELS: Record<number, string> = {
-  1: 'Minimal — summary or no breakdown provided',
-  2: 'Low — limited breakdown available',
-  3: 'Moderate — partial breakdown with some itemisation',
-  4: 'High — detailed breakdown provided',
-  5: 'Very high — comprehensive itemised breakdown',
-}
-
-function TransparencyBars({ stars }: { stars: number }) {
-  const filled = starsToBars(stars)
-  const heights = [8, 13, 17, 22]
-  const label = TRANSPARENCY_LABELS[stars] ?? TRANSPARENCY_LABELS[1]
-
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <div className="flex items-end gap-0.5 h-6 cursor-help inline-flex">
-          {heights.map((h, i) => (
-            <div
-              key={i}
-              className={cn(
-                'w-[5px] rounded-sm transition-colors',
-                i < filled ? 'bg-cq-green' : 'bg-cq-green/20'
-              )}
-              style={{ height: h }}
-            />
-          ))}
-        </div>
-      </TooltipTrigger>
-      <TooltipContent side="top" className="max-w-[240px]">
-        {label}
-      </TooltipContent>
-    </Tooltip>
-  )
-}
 
 const QUALITY_LABELS: Record<1 | 2 | 3, string> = {
   1: 'Detailed — full itemised breakdown with equipment, labour, overheads, design, and O&M',
@@ -272,9 +231,9 @@ const QUALITY_LABELS: Record<1 | 2 | 3, string> = {
 function QualityBadge({ quality }: { quality: Supplier['quality'] }) {
   const labels: Record<1 | 2 | 3, string> = { 1: 'Detailed', 2: 'Partial', 3: 'Summary' }
   const shades: Record<1 | 2 | 3, string> = {
-    1: 'bg-cq-dark text-white',
-    2: 'bg-cq-green text-white',
-    3: 'bg-cq-green/60 text-white',
+    1: 'bg-gray-900 text-white',
+    2: 'bg-gray-600 text-white',
+    3: 'bg-gray-300 text-gray-800',
   }
 
   return (
@@ -340,7 +299,7 @@ export function SupplierComparisonTable({
   const [intelligenceOn, setIntelligenceOn] = React.useState(false)
   const [selectedIds, setSelectedIds] = React.useState<Set<string>>(new Set())
   const [expandedIds, setExpandedIds] = React.useState<Set<string>>(new Set())
-  const [sortBy, setSortBy] = React.useState<'transparency' | 'quality' | null>(null)
+  const [sortBy, setSortBy] = React.useState<'quality' | null>(null)
   const [sortDir, setSortDir] = React.useState<'asc' | 'desc'>('desc')
 
   const baseSuppliers =
@@ -358,13 +317,7 @@ export function SupplierComparisonTable({
         ? FULL_SCOPE_SUPPLIERS
         : SMALLER_SUPPLIERS
   const suppliers =
-    sortBy === 'transparency'
-      ? [...baseSuppliers].sort((a, b) =>
-          sortDir === 'desc'
-            ? b.transparency - a.transparency
-            : a.transparency - b.transparency
-        )
-      : sortBy === 'quality'
+    sortBy === 'quality'
         ? [...baseSuppliers].sort((a, b) =>
             sortDir === 'desc'
               ? b.quality - a.quality
@@ -634,43 +587,6 @@ export function SupplierComparisonTable({
                         </div>
                       </div>
                     </th>
-                    <th className="w-16">
-                      <div className="flex items-center justify-center gap-1 py-3 px-6">
-                        <span className="font-semibold text-cq-text-secondary text-xs uppercase tracking-wider">
-                          Transparency
-                        </span>
-                        <div className="flex flex-col items-center gap-0">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setSortBy('transparency')
-                              setSortDir('asc')
-                            }}
-                            className={cn(
-                              'p-0.5 rounded hover:bg-cq-border/50 transition-colors -my-0.5',
-                              sortBy === 'transparency' && sortDir === 'asc' && 'text-cq-green'
-                            )}
-                            aria-label="Sort ascending"
-                          >
-                            <ChevronUp className="w-3 h-3" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setSortBy('transparency')
-                              setSortDir('desc')
-                            }}
-                            className={cn(
-                              'p-0.5 rounded hover:bg-cq-border/50 transition-colors -my-0.5',
-                              sortBy === 'transparency' && sortDir === 'desc' && 'text-cq-green'
-                            )}
-                            aria-label="Sort descending"
-                          >
-                            <ChevronDown className="w-3 h-3" />
-                          </button>
-                        </div>
-                      </div>
-                    </th>
                     <th className="text-left py-3 px-6 font-semibold text-cq-text-secondary text-xs uppercase tracking-wider min-w-[180px]">
                       Note
                     </th>
@@ -753,20 +669,6 @@ export function SupplierComparisonTable({
                                 {row.name}
                               </span>
                             </span>
-                            {row.badge && (
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <span className="text-xs font-medium text-cq-dark cursor-help">
-                                  {row.badge}
-                                </span>
-                              </TooltipTrigger>
-                              <TooltipContent side="top" className="max-w-[260px]">
-                                {(projectType === 'led' || projectType === 'led-rostock')
-                                  ? 'Ranked by €/luminaire — Rank 1 = lowest price (best value)'
-                                  : 'Ranked by £/kWp — lower rank = lower price per kWp (better value)'}
-                              </TooltipContent>
-                            </Tooltip>
-                          )}
                         </div>
                       </td>
                       <td
@@ -784,11 +686,6 @@ export function SupplierComparisonTable({
                       </td>
                       <td className="py-3 px-6" onClick={(e) => e.stopPropagation()}>
                         <QualityBadge quality={row.quality} />
-                      </td>
-                      <td className="py-3 px-6" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex justify-center">
-                          <TransparencyBars stars={row.transparency} />
-                        </div>
                       </td>
                       <td className="py-3 px-6">
                         <div className="flex flex-wrap items-center gap-2">

@@ -3,14 +3,17 @@
 import type { Supplier } from "@/types/tender"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import { ChevronDown, ChevronUp, Download, Info } from "lucide-react"
+import { Building2, ChevronDown, ChevronUp, Download, Info } from "lucide-react"
 import Image from "next/image"
 import { useState } from "react"
+import type { SupplierCompanyProfileData } from "@/components/supplier-company-profile"
 
 interface BidDetailsModalProps {
   supplier: Supplier | null
   open: boolean
   onOpenChange: (open: boolean) => void
+  /** Optional company profile data; falls back to Photon Energy default when absent */
+  companyProfile?: SupplierCompanyProfileData | null
 }
 
 function isTBCOrNotRequired(value: string): boolean {
@@ -27,11 +30,10 @@ function formatPrice(price: number, currency: string = "£"): string {
   return `${currency}${price.toLocaleString()}`
 }
 
-export function BidDetailsModal({ supplier, open, onOpenChange }: BidDetailsModalProps) {
+export function BidDetailsModal({ supplier, open, onOpenChange, companyProfile }: BidDetailsModalProps) {
   const [activeTab, setActiveTab] = useState<"proposal" | "about">("proposal")
   const [expandedSections, setExpandedSections] = useState<string[]>(["Price"])
   const [showRelevanceTooltip, setShowRelevanceTooltip] = useState(false)
-
   if (!supplier) return null
 
   const toggleSection = (section: string) => {
@@ -41,18 +43,21 @@ export function BidDetailsModal({ supplier, open, onOpenChange }: BidDetailsModa
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:max-w-2xl overflow-y-auto bg-white p-0">
+        <>
         {/* Header with Logo and Company Name - Green Gradient Background */}
         <SheetHeader 
           className="p-6 pb-4 pr-14"
           style={{ background: 'linear-gradient(136deg, rgba(201, 255, 230, 0.33) 26.24%, rgba(7, 163, 91, 0.27) 98.78%)' }}
         >
-          <div className="flex items-center justify-between mb-4">
-            <SheetTitle 
-              className="text-[#1E2832] font-extrabold"
-              style={{ fontSize: '24px', lineHeight: 'normal' }}
-            >
-              {supplier.name}
-            </SheetTitle>
+          <div className="flex items-center justify-between mb-2">
+            <div>
+              <SheetTitle 
+                className="text-[#1E2832] font-extrabold block"
+                style={{ fontSize: '24px', lineHeight: 'normal' }}
+              >
+                {supplier.name}
+              </SheetTitle>
+            </div>
             <Image
               src={supplier.logo || "/placeholder.svg"}
               alt={`${supplier.name} logo`}
@@ -63,15 +68,25 @@ export function BidDetailsModal({ supplier, open, onOpenChange }: BidDetailsModa
           </div>
 
           {/* CTAs in header - in a row */}
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
+            <a
+              href={`/supplier-comparison/${supplier.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-10 flex-1 min-w-[120px] px-4 justify-center items-center gap-2 rounded-lg bg-[#29B273] text-white hover:bg-[#239f63] font-bold no-underline"
+              style={{ boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.02)', fontSize: '14px', lineHeight: 'normal' }}
+            >
+              <Building2 className="w-4 h-4" />
+              Supplier profile
+            </a>
             <button
-              className="flex h-10 flex-1 px-4 justify-center items-center gap-2 rounded-lg bg-[#29B273] text-white hover:bg-[#239f63]"
+              className="flex h-10 flex-1 min-w-[120px] px-4 justify-center items-center gap-2 rounded-lg bg-[#29B273] text-white hover:bg-[#239f63]"
               style={{ boxShadow: '0 2px 0 0 rgba(0, 0, 0, 0.02)', fontSize: '14px', fontWeight: 700, lineHeight: 'normal' }}
             >
               Contact supplier
             </button>
             <button
-              className="flex h-10 flex-1 px-3 justify-center items-center gap-2 rounded-lg border border-[#D3D7DC] bg-[#F9FAFB] text-[#1E2832] hover:bg-gray-100"
+              className="flex h-10 flex-1 min-w-[120px] px-3 justify-center items-center gap-2 rounded-lg border border-[#D3D7DC] bg-[#F9FAFB] text-[#1E2832] hover:bg-gray-100"
               style={{ fontSize: '14px', fontWeight: 700, lineHeight: 'normal' }}
             >
               <Download className="h-4 w-4" />
@@ -549,6 +564,7 @@ export function BidDetailsModal({ supplier, open, onOpenChange }: BidDetailsModa
           )}
 
         </div>
+        </>
       </SheetContent>
     </Sheet>
   )
